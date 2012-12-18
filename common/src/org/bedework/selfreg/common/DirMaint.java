@@ -27,9 +27,10 @@ import org.bedework.selfreg.common.exception.SelfregException;
  */
 public interface DirMaint {
   /**
+   * @param config
    * @throws SelfregException
    */
-  void init() throws SelfregException;
+  void init(SelfregConfigProperties config) throws SelfregException;
 
 	/** First step in obtaining a new account. The response is an encoded UUID
 	 * which identifies this request. It should be provided as a parameter to

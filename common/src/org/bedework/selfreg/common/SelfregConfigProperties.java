@@ -23,139 +23,196 @@ package org.bedework.selfreg.common;
  * @author douglm
  *
  */
-public class SelfregConfigProperties {
+public class SelfregConfigProperties implements SelfregConfigPropertiesI {
   private String ldapUrl;
 
-  private String protocol;
+  private String baseDn;
 
-  private String protocolClass;
+  private String accountsOu;
 
-  private String serverIp;
+  private String accountsDn;
 
-  private String serverPort;
+  private String accountsAttr;
 
-  private String from;
+  private String groupsOu;
 
-  private String subject;
+  private String groupsDn;
 
-  private boolean disabled;
+  private String adminId;
 
-  /** Used by configuration tools
-   *
-   * @param val
-   */
+  private String adminPw;
+
+  private String mailProtocol;
+
+  private String mailProtocolClass;
+
+  private String mailServerIp;
+
+  private String mailServerPort;
+
+  private String mailFrom;
+
+  private String mailSubject;
+
+  private boolean mailDisabled;
+
+  @Override
   public void setLdapUrl(final String val)  {
     ldapUrl  = val;
   }
 
-  /**
-   * @return String
-   */
+  @Override
   public String getLdapUrl()  {
     return ldapUrl;
   }
 
-  /** valid protocol for which an implementation exists, e.g "imap", "smtp"
-   *
-   * @param val
-   */
-  public void setProtocol(final String val)  {
-    protocol  = val;
+  @Override
+  public void setBaseDn(final String val)  {
+    baseDn = val;
   }
 
-  /**
-   * @return String
-   */
-  public String getProtocol()  {
-    return protocol;
+  @Override
+  public String getBaseDn()  {
+    return baseDn;
   }
 
-  /** Implementation for the selected protocol
-   *
-   * @param val
-   */
-  public void setProtocolClass(final String val)  {
-    protocolClass  = val;
+  @Override
+  public void setAccountsOu(final String val)  {
+    accountsOu  = val;
   }
 
-  /**
-   * @return String
-   */
-  public String getProtocolClass()  {
-    return protocolClass;
+  @Override
+  public String getAccountsOu()  {
+    return accountsOu;
   }
 
-  /** Where we send it.
-   *
-   * @param val
-   */
-  public void setServerIp(final String val)  {
-    serverIp  = val;
+  @Override
+  public void setAccountsDn(final String val)  {
+    accountsDn  = val;
   }
 
-  /**
-   * @return String
-   */
-  public String getServerIp()  {
-    return serverIp;
+  @Override
+  public String getAccountsDn()  {
+    return accountsDn;
   }
 
-  /**
-   * @param val
-   */
-  public void setServerPort(final String val)  {
-    serverPort  = val;
+  @Override
+  public void setAccountsAttr(final String val)  {
+    accountsAttr  = val;
   }
 
-  /**
-   * @return String
-   */
-  public String getServerPort()  {
-    return serverPort;
+  @Override
+  public String getAccountsAttr()  {
+    return accountsAttr;
   }
 
-  /** Address we use when none supplied
-   *
-   * @param val
-   */
-  public void setFrom(final String val)  {
-    from = val;
+  @Override
+  public void setGroupsOu(final String val)  {
+    groupsOu  = val;
   }
 
-  /**
-   * @return String
-   */
-  public String getFrom()  {
-    return from;
+  @Override
+  public String getGroupsOu()  {
+    return groupsOu;
   }
 
-  /** Subject we use when none supplied
-   *
-   * @param val
-   */
-  public void setSubject(final String val)  {
-    subject = val;
+  @Override
+  public void setGroupsDn(final String val)  {
+    groupsDn  = val;
   }
 
-  /**
-   * @return String
-   */
-  public String getSubject()  {
-    return subject;
+  @Override
+  public String getGroupsDn()  {
+    return groupsDn;
   }
 
-  /** Allow mailer to be disabled
-   *
-   * @param val
-   */
-  public void setDisabled(final boolean val)  {
-    disabled = val;
+  @Override
+  public void setAdminId(final String val)  {
+    adminId  = val;
   }
 
-  /**
-   * @return boolean
-   */
-  public boolean getDisabled()  {
-    return disabled;
+  @Override
+  public String getAdminId()  {
+    return adminId;
+  }
+
+  @Override
+  public void setAdminPw(final String val)  {
+    adminPw  = val;
+  }
+
+  @Override
+  public String getAdminPw()  {
+    return adminPw;
+  }
+
+  @Override
+  public void setMailProtocol(final String val)  {
+    mailProtocol  = val;
+  }
+
+  @Override
+  public String getMailProtocol()  {
+    return mailProtocol;
+  }
+
+  @Override
+  public void setMailProtocolClass(final String val)  {
+    mailProtocolClass  = val;
+  }
+
+  @Override
+  public String getMailProtocolClass()  {
+    return mailProtocolClass;
+  }
+
+  @Override
+  public void setMailServerIp(final String val)  {
+    mailServerIp  = val;
+  }
+
+  @Override
+  public String getMailServerIp()  {
+    return mailServerIp;
+  }
+
+  @Override
+  public void setMailServerPort(final String val)  {
+    mailServerPort  = val;
+  }
+
+  @Override
+  public String getMailServerPort()  {
+    return mailServerPort;
+  }
+
+  @Override
+  public void setMailFrom(final String val)  {
+    mailFrom  = val;
+  }
+
+  @Override
+  public String getMailFrom()  {
+    return mailFrom;
+  }
+
+  @Override
+  public void setMailSubject(final String val)  {
+    mailSubject = val;
+  }
+
+  @Override
+  public String getMailSubject()  {
+    return mailSubject;
+  }
+
+  @Override
+  public void setMailDisabled(final boolean val)  {
+    mailDisabled = val;
+  }
+
+  @Override
+  public boolean getMailDisabled()  {
+    return mailDisabled;
   }
 }

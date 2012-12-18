@@ -2,83 +2,48 @@
 <server>
   <!--  guarantee separate classloader -->
   <loader-repository> 
-    org.bedework:archive=synch-service 
+    org.bedework:archive=selfreg-service 
   </loader-repository> 
   
-  <mbean code="org.bedework.synch.service.Synch"
-         name="org.bedework:service=Synch">
-    <attribute name="Appname">Synch</attribute>
-    
-    <!-- Dump/restore attributes -->
+  <mbean code="org.bedework.selfreg.service.Selfreg"
+         name="org.bedework:service=Selfreg">
+    <!-- attributes -->
         
-    <!-- Create tables - false for safety - set true in console -->
-    <attribute name="Create">false</attribute>
+    <attribute name="LdapUrl">ldap://localhost:10389</attribute>
     
-    <!-- Statement delimiter -->
-    <attribute name="Delimiter">;</attribute>
+    <attribute name="BaseDn">dc=bedework, dc=org</attribute>
     
-    <!-- Drop tables - false for safety - set true in console -->
-    <attribute name="Drop">false</attribute>
+    <attribute name="AccountsOu">accounts</attribute>
     
-    <!-- Export to database? - false for safety - set true in console -->
-    <attribute name="Export">false</attribute>
+    <!-- "ou=" + accountsOu + ", " + baseDn -->
+    <attribute name="AccountsDn">ou=accounts, dc=bedework, dc=org</attribute>
     
-    <!-- Format the output? -->
-    <attribute name="Format">true</attribute>
+    <attribute name="AccountsAttr">uid</attribute>
     
-    <!-- Do we halt on error? -->
-    <attribute name="HaltOnError">true</attribute>
+    <attribute name="GroupsOu">groups</attribute>
     
-    <!-- Schema Output file name - full path, folders must exist -->
-    <attribute name="SchemaOutFile">${jboss.server.data.dir}/bedework/synch/schema.txt</attribute>
+    <!-- "ou=" + groupsOu + ", " + baseDn -->
+    <attribute name="GroupsDn">ou=groups, dc=bedework, dc=org</attribute>
     
-    <!-- SQL input file name - full path. Used instead of the configuration? -->
-    <!--  There appears to be a bug in the hibernate code. Everybody initialises
-        this to /import.sql. Set to null causes an NPE 
-        Make sure it refers to a non-existant file -->
-    <attribute name="SqlIn">not-a-file.sql</attribute>
+    <attribute name="AdminId">uid=admin,ou=system</attribute>
     
-    <!-- XML data input file name - full path. Used for data restore -->
-    <attribute name="DataIn">${jboss.server.data.dir}/bedework/synch/initdata.xml</attribute>
+    <attribute name="AdminPw">secret</attribute>
+
+    <attribute name="MailProtocol">imap</attribute>
+
+    <attribute name="MailProtocolClass"></attribute>
+
+    <attribute name="MailServerIp"></attribute>
+
+    <attribute name="MailServerPort"></attribute>
+
+    <attribute name="MailFrom">bedework@bedework.org</attribute>
+
+    <attribute name="MailSubject">Bedework self registration</attribute>
+
+    <attribute name="MailDisabled">false</attribute>
     
-    <!-- XML data output directory - full path. Used for data dump -->
-    <attribute name="DataOut">${jboss.server.data.dir}/bedework/synch/</attribute>
-    
-    <!-- XML data output file prefix - for data dump -->
-    <attribute name="DataOutPrefix">synchdata</attribute>
-    
-    <!-- We need activemq 
-    <depends>jboss.jca:service=ConnectionFactoryBinding,name=activemq/QueueConnectionFactory</depends>
-    -->    
-    
-    <!-- We also need the database -->
-    <depends>jboss.jca:service=DataSourceBinding,name=SynchDS</depends>
-  </mbean>
-  
-  <mbean code="org.bedework.synch.service.SynchConf"
-         name="org.bedework:service=SynchConf">
-    <attribute name="SynchlingPoolSize" />
-    <attribute name="SynchlingPoolTimeout" />
-    <attribute name="MissingTargetRetries" />
-    <attribute name="CallbackURI" />
-    <attribute name="TimezonesURI" />
-    <attribute name="Keystore" />
-    <attribute name="PrivKeys" />
-    <attribute name="PubKeys" />
-  </mbean>
-  
-  <mbean code="org.bedework.synch.service.SynchConnConf"
-         name="org.bedework:service=SynchConnConf">
-    <attribute name="Status" />
-    <attribute name="ConnectorId" />
-    <attribute name="ConnectorNames" />
-    <attribute name="ClassName" />
-    <attribute name="ReadOnly" />
-    <attribute name="TrustLastmod" />
-    <attribute name="Properties" />
-  </mbean>
-  
-  <mbean code="org.bedework.http.service.HttpOut"
-         name="org.bedework:service=SynchHttpOut">
+    <!-- We also need the database
+    <depends>jboss.jca:service=DataSourceBinding,name=SynchDS</depends> -->
   </mbean>
 </server>

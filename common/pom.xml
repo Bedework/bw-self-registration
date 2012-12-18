@@ -33,9 +33,9 @@
   </parent>
 
   <groupId>org.bedework.selfreg</groupId>
-  <artifactId>bw-selfreg</artifactId>
+  <artifactId>bw-selfreg-common</artifactId>
 
-  <name>Bedework selfreg http server classes</name>
-  <description>Bedework selfreg http server classes</description>
+  <name>Bedework selfreg common classes</name>
+  <description>Bedework selfreg common classes</description>
   <url>http://bedework.org/</url>
 </project>

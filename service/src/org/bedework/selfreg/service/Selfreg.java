@@ -19,15 +19,16 @@
 package org.bedework.selfreg.service;
 
 import org.apache.log4j.Logger;
+import org.bedework.selfreg.common.DirMaint;
+import org.bedework.selfreg.common.DirMaintImpl;
+import org.bedework.selfreg.common.SelfregConfigProperties;
 
 /**
  * @author douglm
  *
  */
-public class Selfreg implements SelfregMBean {
+public class Selfreg extends SelfregConfigProperties implements SelfregMBean {
   private transient Logger log;
-
-  private boolean running;
 
   /* ========================================================================
    * Attributes
@@ -45,40 +46,48 @@ public class Selfreg implements SelfregMBean {
   }
 
   /* ========================================================================
-   * Fields
-   * ======================================================================== */
-
-  /* ========================================================================
    * Operations
    * ======================================================================== */
 
   @Override
-  public void adduser(final String account,
-                      final String first,
-                      final String last,
-                      final String email,
-                      final String password) {
+  public String adduser(final String account,
+                        final String first,
+                        final String last,
+                        final String email,
+                        final String password) {
+    try {
+      if (!getDir().createAccount(account, first, last, email, password)) {
+        return "Account " + account + " exists already";
+      }
 
+      return "Created";
+    } catch (Throwable t) {
+      error(t);
+      return t.getLocalizedMessage();
+    }
   }
 
-  /** Set a user password
-   *
-   * @param account
-   * @param password
-   */
   @Override
-  public void setUserPassword(final String account,
-                              final String password) {
+  public String setUserPassword(final String account,
+                                final String password) {
+    try {
 
+      return "Ok";
+    } catch (Throwable t) {
+      error(t);
+      return t.getLocalizedMessage();
+    }
   }
 
-  /** Remove a user
-   *
-   * @param account
-   */
   @Override
-  public void removeUser(final String account) {
+  public String removeUser(final String account) {
+    try {
 
+      return "Ok";
+    } catch (Throwable t) {
+      error(t);
+      return t.getLocalizedMessage();
+    }
   }
 
   /* ========================================================================
@@ -120,6 +129,18 @@ public class Selfreg implements SelfregMBean {
    */
   @Override
   public void destroy() {
+  }
+
+  /* ====================================================================
+   *                   Private methods
+   * ==================================================================== */
+
+  private DirMaint getDir() throws Throwable {
+    DirMaint dir = new DirMaintImpl();
+
+    dir.init(this);
+
+    return dir;
   }
 
   /* ====================================================================

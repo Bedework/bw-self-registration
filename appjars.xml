@@ -16,48 +16,27 @@
     	
       <getJar lib="${org.bedework.temp.extrajars.dir}"
               libcache="${org.bedework.libcache.dir}"
-              name="bw-synch-common" version="${org.bedework.synch.version}"
+              name="bw-selfreg-common" version="${org.bedework.selfreg.version}"
               projecthome="${project.home}" />
       
       <getJar lib="${org.bedework.temp.extrajars.dir}"
               libcache="${org.bedework.libcache.dir}"
-              name="bw-synch" version="${org.bedework.synch.version}"
+              name="bw-selfreg" version="${org.bedework.selfreg.version}"
               projecthome="${project.home}" />
 
       <getJar lib="${org.bedework.temp.extrajars.dir}"
               libcache="${org.bedework.libcache.dir}"
-              name="bw-synchsvc" version="${org.bedework.synch.version}"
+              name="bw-selfregsvc" version="${org.bedework.selfreg.version}"
               projecthome="${project.home}" />
 
       <!-- ======================= Schema jars ============================= -->
-
-      <getJar lib="${org.bedework.temp.extrajars.dir}"
-              libcache="${org.bedework.libcache.dir}"
-              name="bw-exchangewsschema" version="${org.bedework.bwxml.version}"
-              projecthome="${bedework.home}/../bwxml" />
-
-      <getJar lib="${org.bedework.temp.extrajars.dir}"
-              libcache="${org.bedework.libcache.dir}"
-              name="bw-synchwsschema" version="${org.bedework.bwxml.version}"
-              projecthome="${bedework.home}/../bwxml" />
 
       <!-- ====================== Bedework jars ============================ -->
 
       <getJar lib="${org.bedework.temp.extrajars.dir}"
               libcache="${org.bedework.libcache.dir}"
-              name="rpiaccess" 
-      	      version="${org.bedework.access.version}" project="access"
-              projecthome="${bedework.home}/../access" />
-
-      <getJar lib="${org.bedework.temp.extrajars.dir}"
-              libcache="${org.bedework.libcache.dir}"
               name="rpiutil" version="${org.bedework.rpiutil.version}" project="rpiutil"
               projecthome="${bedework.home}/../rpiutil" />
-
-      <getJar lib="${org.bedework.temp.extrajars.dir}"
-              libcache="${org.bedework.libcache.dir}"
-              name="bw-davio" version="${org.bedework.davutil.version}"
-              projecthome="${bedework.home}/../davutil" />
 
       <!-- ======================= Commons jars ============================ -->
       
@@ -78,22 +57,6 @@
       <getJar lib="${org.bedework.temp.extrajars.dir}"
               libcache="${org.bedework.libcache.dir}"
               name="httpclient" version="4.2.1"/>
-      
-      <!-- ======================= Ical4j jars ============================ -->
-
-      <getJar lib="${org.bedework.temp.extrajars.dir}"
-              libcache="${org.bedework.libcache.dir}"
-              name="ical4j" version="head-20100601"/>
-
-      <getJar lib="${org.bedework.temp.extrajars.dir}"
-              libcache="${org.bedework.libcache.dir}"
-              name="backport-util-concurrent" />
-
-      <!--
-      <getJar lib="${org.bedework.temp.extrajars.dir}"
-              libcache="${org.bedework.libcache.dir}"
-              name="commons-logging" />
-              -->
 
       <!-- ======================= Hibernate jars ========================== -->
       
@@ -156,29 +119,15 @@
               name="exchangews" version="2010"/>
  -->
 
-      <!-- ======================= Geronimo jars ========================== -->
+      <!-- ======================= Other jars ========================== -->
 
       <getJar lib="${org.bedework.temp.extrajars.dir}"
               libcache="${org.bedework.libcache.dir}"
-              name="geronimo-kernel" version="2.2.1" />
-
-      <!-- ========================= Spring jars ========================== -->
+              name="imap" version="1.4.5"/>
 
       <getJar lib="${org.bedework.temp.extrajars.dir}"
               libcache="${org.bedework.libcache.dir}"
-              name="spring-beans" version="3.0.5.RELEASE" />
-
-      <getJar lib="${org.bedework.temp.extrajars.dir}"
-              libcache="${org.bedework.libcache.dir}"
-              name="spring-context" version="3.0.5.RELEASE" />
-
-      <getJar lib="${org.bedework.temp.extrajars.dir}"
-              libcache="${org.bedework.libcache.dir}"
-              name="spring-core" version="3.0.5.RELEASE" />
-
-      <getJar lib="${org.bedework.temp.extrajars.dir}"
-              libcache="${org.bedework.libcache.dir}"
-              name="spring-expression" version="3.0.5.RELEASE" />
+              name="mailapi" version="1.4.5"/>
     </sequential>
  </macrodef>
 </project>

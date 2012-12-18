@@ -57,11 +57,11 @@ public class Mailer implements MailerIntf {
 
     Properties props = new Properties();
 
-    props.put("mail." + config.getProtocol() + ".class", config.getProtocolClass());
-    props.put("mail." + config.getProtocol() + ".host", config.getServerIp());
-    if (config.getServerPort() != null) {
-      props.put("mail." + config.getProtocol() + ".port",
-                config.getServerPort());
+    props.put("mail." + config.getMailProtocol() + ".class", config.getMailProtocolClass());
+    props.put("mail." + config.getMailProtocol() + ".host", config.getMailServerIp());
+    if (config.getMailServerPort() != null) {
+      props.put("mail." + config.getMailProtocol() + ".port",
+                config.getMailServerPort());
     }
 
     //  add handlers for main MIME types
@@ -89,7 +89,7 @@ public class Mailer implements MailerIntf {
     debugMsg("Mailer called with:");
     debugMsg(val.toString());
 
-    if (config.getDisabled()) {
+    if (config.getMailDisabled()) {
       return;
     }
 
@@ -115,7 +115,7 @@ public class Mailer implements MailerIntf {
 
       msg.setContent(val.getContent(), "text/plain");
 
-      Transport tr = sess.getTransport(config.getProtocol());
+      Transport tr = sess.getTransport(config.getMailProtocol());
 
       tr.connect();
       tr.sendMessage(msg, tos);

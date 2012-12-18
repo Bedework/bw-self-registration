@@ -18,12 +18,14 @@
 */
 package org.bedework.selfreg.service;
 
+import org.bedework.selfreg.common.SelfregConfigPropertiesI;
+
 
 /** Run the Bedework synch engine service
  *
  * @author douglm
  */
-public interface SelfregMBean {
+public interface SelfregMBean extends SelfregConfigPropertiesI {
   /* ========================================================================
    * Attributes
    * ======================================================================== */
@@ -62,26 +64,29 @@ public interface SelfregMBean {
    * @param last
    * @param email
    * @param password
+   * @return status
    */
-  public void adduser(String account,
-                      String first,
-                      String last,
-                      String email,
-                      String password);
+  public String adduser(String account,
+                        String first,
+                        String last,
+                        String email,
+                        String password);
 
   /** Set a user password
    *
    * @param account
    * @param password
+   * @return status
    */
-  public void setUserPassword(String account,
-                              String password);
+  public String setUserPassword(String account,
+                                String password);
 
   /** Remove a user
    *
    * @param account
+   * @return status
    */
-  public void removeUser(String account);
+  public String removeUser(String account);
 
   /* ========================================================================
    * Lifecycle

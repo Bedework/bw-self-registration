@@ -43,6 +43,7 @@ public class DirMaintImpl implements DirMaint {
 
   private SelfregConfigProperties config;
 
+  /*
   private String ldapUrl = "ldap://localhost:10389";   // <providerUrl>
   private String baseDn = "dc=bedework, dc=org";
 
@@ -53,19 +54,20 @@ public class DirMaintImpl implements DirMaint {
   private String groupsOu = "groups";
   private String groupsDn = "ou=" + groupsOu + ", " + baseDn; // <groupContextDn>
 
-  private LdapDirectory ldir;
-
   private String adminId = "uid=admin,ou=system";  // <authDn>
 
   private String adminPw = "secret";               // <authPw>
+  */
 
   private static final String pwEncryption = "SHA";
+
+  private LdapDirectory ldir;
 
   private MailerIntf mailer;
 
   @Override
-  public void init() {
-
+  public void init(final SelfregConfigProperties config) {
+    this.config = config;
   }
 
   @Override
@@ -95,9 +97,10 @@ public class DirMaintImpl implements DirMaint {
        */
       DirRecord dirRec = new BasicDirRecord();
 
-      String userDn = accountsAttr + "=" + accountName + ", " + accountsDn;
+      String userDn = config.getAccountsAttr() + "=" + accountName + ", " +
+          config.getAccountsDn();
       dirRec.setDn(userDn);
-      dirRec.setAttr(accountsAttr, accountName);
+      dirRec.setAttr(config.getAccountsAttr(), accountName);
       dirRec.setAttr("objectclass", "top");
       dirRec.setAttr("objectclass", "person");
       dirRec.setAttr("objectclass", "organizationalPerson");
@@ -121,9 +124,7 @@ public class DirMaintImpl implements DirMaint {
       dirRec.setAttr("gidNumber", "999");
       */
 
-      getLdir().create(dirRec);
-
-      return false;
+      return getLdir().create(dirRec);
     } catch (SelfregException se) {
       throw se;
     } catch (Throwable t) {
@@ -163,9 +164,9 @@ public class DirMaintImpl implements DirMaint {
 
     Properties pr = new Properties();
 
-    pr.put(Context.PROVIDER_URL, ldapUrl);
+    pr.put(Context.PROVIDER_URL, config.getLdapUrl());
 
-    ldir = new LdapDirectory(pr, adminId, adminPw, debug);
+    ldir = new LdapDirectory(pr, config.getAdminId(), config.getAdminPw(), debug);
 
     return ldir;
   }
@@ -196,7 +197,7 @@ public class DirMaintImpl implements DirMaint {
     String[] to = new String[]{email};
     emsg.setMailTo(to);
 
-    emsg.setFrom(config.getFrom());
+    emsg.setFrom(config.getMailFrom());
     emsg.setSubject(subject);
     emsg.setContent(text);
 
@@ -205,22 +206,11 @@ public class DirMaintImpl implements DirMaint {
     return true;
   }
 
-  private SelfregConfigProperties getConfig() throws SelfregException {
-    if (config == null) {
-      try {
-        config = (SelfregConfigProperties)SelfregOptionsFactory.getOptions().getGlobalProperty("module.selfreg");
-      } catch (Throwable t) {
-        throw new SelfregException(t);
-      }
-    }
-    return config;
-  }
-
   private MailerIntf getMailer() throws SelfregException {
     if (mailer == null) {
       mailer = new Mailer();
 
-      mailer.init(getConfig());
+      mailer.init(config);
     }
 
     return mailer;
