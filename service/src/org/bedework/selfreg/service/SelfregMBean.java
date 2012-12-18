@@ -16,121 +16,81 @@
     specific language governing permissions and limitations
     under the License.
 */
-package org.bedework.synch.service;
+package org.bedework.selfreg.service;
 
-import java.util.List;
 
-/** Configure a connector for the Bedework synch engine service
+/** Run the Bedework synch engine service
  *
  * @author douglm
  */
-public interface SynchConnConfMBean {
+public interface SelfregMBean {
   /* ========================================================================
-   * Status
+   * Attributes
    * ======================================================================== */
+
+  /** Name apparently must be the same as the name attribute in the
+   * jboss service definition
+   *
+   * @return Name
+   */
+  public String getName();
+
+  /* ========================================================================
+   * Variables
+   * ======================================================================== */
+
+  /** Statement delimiter
+   *
+   * @param val
+   * /
+  public void setDelimiter(String val);
 
   /**
-   * @return status message
-   */
-  String getStatus();
-
-  /** web service push callback uri - null for no service
-   *
-   * @return String
-   */
-  String getConnectorId();
-
-  /** List connector names
-   *
-   * @return list of names
-   */
-  List<String> getConnectorNames();
-
-  /* ========================================================================
-   * Config properties
-   * ======================================================================== */
-
-  /** Class name
-   *
-   * @param val    String
-   */
-  void setClassName(final String val);
-
-  /** Class name
-   *
-   * @return String
-   */
-  String getClassName();
-
-  /** Read only?
-   *
-   * @param val    int seconds
-   */
-  void setReadOnly(final boolean val);
-
-  /** Read only?
-   *
-   * @return int seconds
-   */
-  boolean getReadOnly();
-
-  /** Can we trust the lastmod from this connector?
-   *
-   * @param val    boolean
-   */
-  void setTrustLastmod(final boolean val);
-
-  /** Can we trust the lastmod from this connector?
-   *
-   * @return boolean
-   */
-  boolean getTrustLastmod();
-
-  /** Set of properties
-   *
-   * @return String
-   */
-  String getProperties();
+   * @return Statement delimiter
+   * /
+  public String getDelimiter();
+  */
 
   /* ========================================================================
    * Operations
    * ======================================================================== */
 
-  /** Retrieve connector
+  /** Add a user
    *
-   * @param name    String
+   * @param account
+   * @param first
+   * @param last
+   * @param email
+   * @param password
    */
-  void getConnector(final String name);
+  public void adduser(String account,
+                      String first,
+                      String last,
+                      String email,
+                      String password);
 
-  /** Add a property
+  /** Set a user password
    *
-   * @param name
-   * @param value
+   * @param account
+   * @param password
    */
-  public void addProperty(String name, String value);
+  public void setUserPassword(String account,
+                              String password);
 
-  /** Set or add a property
+  /** Remove a user
    *
-   * @param name
-   * @param value
-   * @return completion message
+   * @param account
    */
-  public String setProperty(String name, String value);
-
-  /** Add the new connector config.
-   *
-   */
-  public void add();
-
-  /** Delete the named connector.
-   *
-   * @param name    String
-   */
-  public void delete(String name);
+  public void removeUser(String account);
 
   /* ========================================================================
    * Lifecycle
    * ======================================================================== */
+
+  /** Lifecycle
+   *
+   */
+  public void create();
 
   /** Lifecycle
    *
@@ -147,4 +107,9 @@ public interface SynchConnConfMBean {
    * @return true if started
    */
   public boolean isStarted();
+
+  /** Lifecycle
+   *
+   */
+  public void destroy();
 }

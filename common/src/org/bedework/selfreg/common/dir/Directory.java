@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 */
-package org.bedework.selfreg.common;
+package org.bedework.selfreg.common.dir;
 
 import java.util.Properties;
 
@@ -25,6 +25,7 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 
 import org.apache.log4j.Logger;
+import org.bedework.selfreg.common.exception.SelfregException;
 
 /** **********************************************************************
  Provide access to directory services.
@@ -56,9 +57,9 @@ public abstract class Directory {
   public abstract static class DirSearchResult {
     /**
      * @return DirRecord
-     * @throws Throwable
+     * @throws SelfregException
      */
-    public abstract DirRecord nextRecord() throws Throwable;
+    public abstract DirRecord nextRecord() throws SelfregException;
   }
 
   /** Constructor required so we can instantiate object dynamically
@@ -71,11 +72,11 @@ public abstract class Directory {
    * @param mngrDN
    * @param pw
    * @param debug
-   * @throws Throwable
+   * @throws SelfregException
    */
-  public Directory(Properties pr, String mngrDN,
-                   String pw,
-                   boolean debug) throws Throwable {
+  public Directory(final Properties pr, final String mngrDN,
+                   final String pw,
+                   final boolean debug) throws SelfregException {
     init(pr, mngrDN, pw, debug);
   }
 
@@ -84,10 +85,10 @@ public abstract class Directory {
    * @param mngrDN
    * @param pw
    * @param debug
-   * @throws Throwable
+   * @throws SelfregException
    */
-  public void init(Properties pr, String mngrDN, String pw,
-                   boolean debug) throws Throwable {
+  public void init(final Properties pr, final String mngrDN, final String pw,
+                   final boolean debug) throws SelfregException {
     if (pr == null) {
       this.pr = new Properties();
     } else {
@@ -99,15 +100,15 @@ public abstract class Directory {
 
   /** If possible, reInit should allow reuse after a close
    *
-   * @throws Throwable
+   * @throws SelfregException
    */
-  public abstract void reInit() throws Throwable;
+  public abstract void reInit() throws SelfregException;
 
   /**
    * @param dn
-   * @throws Throwable
+   * @throws SelfregException
    */
-  public abstract void destroy(String dn) throws Throwable;
+  public abstract void destroy(String dn) throws SelfregException;
 
   /* These define the values used for scope parameters
    */
@@ -124,9 +125,9 @@ public abstract class Directory {
    * @param base
    * @param filter
    * @return DirSearchResult
-   * @throws Throwable
+   * @throws SelfregException
    */
-  public DirSearchResult search(String base, String filter) throws Throwable {
+  public DirSearchResult search(final String base, final String filter) throws SelfregException {
     return search(base, filter, scopeSub);
   }
 
@@ -136,9 +137,9 @@ public abstract class Directory {
    * @param base
    * @param filter
    * @return DirSearchResult or null
-   * @throws Throwable
+   * @throws SelfregException
    */
-  public DirSearchResult searchBase(String base, String filter) throws Throwable {
+  public DirSearchResult searchBase(final String base, final String filter) throws SelfregException {
     return search(base, filter, scopeBase);
   }
 
@@ -147,9 +148,9 @@ public abstract class Directory {
    * @param base
    * @param filter
    * @return DirSearchResult
-   * @throws Throwable
+   * @throws SelfregException
    */
-  public DirSearchResult searchOne(String base, String filter) throws Throwable {
+  public DirSearchResult searchOne(final String base, final String filter) throws SelfregException {
     return search(base, filter, scopeOne);
   }
 
@@ -159,10 +160,10 @@ public abstract class Directory {
    * @param filter
    * @param scope
    * @return DirSearchResult null means no record(s) found.
-   * @throws Throwable
+   * @throws SelfregException
    */
   public abstract DirSearchResult search(String base, String filter, int scope)
-      throws Throwable;
+      throws SelfregException;
 
   /** newRecord - Return a record which can have attribute values added.
    *  create should be called to create the directory entry.
@@ -171,7 +172,7 @@ public abstract class Directory {
    * @return DirRecord
    * @throws NamingException
    */
-  public DirRecord newRecord(String entryDn) throws NamingException {
+  public DirRecord newRecord(final String entryDn) throws NamingException {
     DirRecord rec = new BasicDirRecord();
     rec.setDn(entryDn);
     return rec;
@@ -180,9 +181,9 @@ public abstract class Directory {
   /**
    * @param rec
    * @return boolean true if created, false if already exists
-   * @throws Throwable
+   * @throws SelfregException
    */
-  public abstract boolean create(DirRecord rec) throws Throwable;
+  public abstract boolean create(DirRecord rec) throws SelfregException;
 
   /* The replace methods modify a directory record in the directory.
    */
@@ -192,18 +193,18 @@ public abstract class Directory {
    * @param dn
    * @param attrName
    * @param val
-   * @throws Throwable
+   * @throws SelfregException
    */
-  public abstract void replace(String dn, String attrName, Object val) throws Throwable;
+  public abstract void replace(String dn, String attrName, Object val) throws SelfregException;
 
   /** Replace an entire attribute with one containing only the given values
    *
    * @param dn
    * @param attrName
    * @param val
-   * @throws Throwable
+   * @throws SelfregException
    */
-  public abstract void replace(String dn, String attrName, Object[] val) throws Throwable;
+  public abstract void replace(String dn, String attrName, Object[] val) throws SelfregException;
 
   /** Replace a single given attribute value with the given value
    *
@@ -211,23 +212,23 @@ public abstract class Directory {
    * @param attrName
    * @param oldval
    * @param newval
-   * @throws Throwable
+   * @throws SelfregException
    */
   public abstract void replace(String dn, String attrName, Object oldval,
-                               Object newval) throws Throwable;
+                               Object newval) throws SelfregException;
 
   /**
    * @param dn
    * @param mods
-   * @throws Throwable
+   * @throws SelfregException
    */
-  public abstract void modify(String dn, ModificationItem[] mods) throws Throwable;
+  public abstract void modify(String dn, ModificationItem[] mods) throws SelfregException;
 
   /**
    * @return Properties
-   * @throws Throwable
+   * @throws SelfregException
    */
-  public abstract Properties getEnvironment() throws Throwable;
+  public abstract Properties getEnvironment() throws SelfregException;
 
   /**
    *
@@ -242,11 +243,11 @@ public abstract class Directory {
     return log;
   }
 
-  protected void error(String msg) {
+  protected void error(final String msg) {
     getLog().error(msg);
   }
 
-  protected void debugMsg(String msg) {
+  protected void debugMsg(final String msg) {
     getLog().debug(msg);
   }
 

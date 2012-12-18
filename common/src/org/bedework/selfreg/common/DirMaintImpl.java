@@ -25,49 +25,61 @@ import javax.naming.Context;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
+import org.bedework.selfreg.common.dir.BasicDirRecord;
+import org.bedework.selfreg.common.dir.DirRecord;
+import org.bedework.selfreg.common.dir.LdapDirectory;
+import org.bedework.selfreg.common.exception.SelfregException;
 import org.bedework.selfreg.common.mail.Mailer;
 import org.bedework.selfreg.common.mail.MailerIntf;
 import org.bedework.selfreg.common.mail.Message;
 
+/** Handle accounts.
+ *
+ */
 public class DirMaintImpl implements DirMaint {
   private boolean debug = true;
 
   private transient Logger log;
 
-  private String fromUri = "bedework@bedework.org";
+  private SelfregConfigProperties config;
 
-  private String ldapUrl = "ldap://localhost:10389";
+  private String ldapUrl = "ldap://localhost:10389";   // <providerUrl>
   private String baseDn = "dc=bedework, dc=org";
 
   private String accountsOu = "accounts";
-  private String accountsDn = "ou=" + accountsOu + ", " + baseDn;
-  private String accountsAttr = "uid";
+  private String accountsDn = "ou=" + accountsOu + ", " + baseDn; // <userDnSuffix>
+  private String accountsAttr = "uid";      // <userDnPrefix>
 
   private String groupsOu = "groups";
-  private String groupsDn = "ou=" + groupsOu + ", " + baseDn;
+  private String groupsDn = "ou=" + groupsOu + ", " + baseDn; // <groupContextDn>
 
   private LdapDirectory ldir;
 
-  private String adminId = "uid=admin,ou=system";
+  private String adminId = "uid=admin,ou=system";  // <authDn>
 
-  private String adminPw = "secret";
+  private String adminPw = "secret";               // <authPw>
 
   private static final String pwEncryption = "SHA";
 
   private MailerIntf mailer;
 
   @Override
+  public void init() {
+
+  }
+
+  @Override
   public String requestId(final String accountName,
                           final String firstName,
                           final String lastName,
                           final String email,
-                          final String pw) throws Throwable {
+                          final String pw) throws SelfregException {
     // TODO Auto-generated method stub
     return null;
   }
 
   @Override
-  public boolean confirm(final String confId) throws Throwable {
+  public boolean confirm(final String confId) throws SelfregException {
     // TODO Auto-generated method stub
     return false;
   }
@@ -77,68 +89,74 @@ public class DirMaintImpl implements DirMaint {
                                final String firstName,
                                final String lastName,
                                final String email,
-                               final String pw) throws Throwable {
-    /** Build a directory record and add the attributes
-     */
-    DirRecord dirRec = new BasicDirRecord();
+                               final String pw) throws SelfregException {
+    try {
+      /** Build a directory record and add the attributes
+       */
+      DirRecord dirRec = new BasicDirRecord();
 
-    String userDn = accountsAttr + "=" + accountName + ", " + accountsDn;
-    dirRec.setDn(userDn);
-    dirRec.setAttr(accountsAttr, accountName);
-    dirRec.setAttr("objectclass", "top");
-    dirRec.setAttr("objectclass", "person");
-    dirRec.setAttr("objectclass", "organizationalPerson");
-    dirRec.setAttr("objectclass", "inetOrgPerson");
+      String userDn = accountsAttr + "=" + accountName + ", " + accountsDn;
+      dirRec.setDn(userDn);
+      dirRec.setAttr(accountsAttr, accountName);
+      dirRec.setAttr("objectclass", "top");
+      dirRec.setAttr("objectclass", "person");
+      dirRec.setAttr("objectclass", "organizationalPerson");
+      dirRec.setAttr("objectclass", "inetOrgPerson");
 
-    String cn = lastName + ", " + firstName;
-    dirRec.setAttr("cn", cn);
-    //dirRec.setAttr("gecos", cn);
-    dirRec.setAttr("sn", lastName);
-    dirRec.setAttr("mail", email);
+      String cn = lastName + ", " + firstName;
+      dirRec.setAttr("cn", cn);
+      //dirRec.setAttr("gecos", cn);
+      dirRec.setAttr("sn", lastName);
+      dirRec.setAttr("mail", email);
 
-    if (pw != null) {
-      dirRec.setAttr("userPassword", encodedPassword(pw.toCharArray()));
+      if (pw != null) {
+        dirRec.setAttr("userPassword", encodedPassword(pw.toCharArray()));
+      }
+
+      /* Posix account requires these but we just set them to dummy values
+       * /
+      dirRec.setAttr("homeDirectory", "dummy");
+      dirRec.setAttr("loginShell", "dummy");
+      dirRec.setAttr("uidNumber", "999");
+      dirRec.setAttr("gidNumber", "999");
+      */
+
+      getLdir().create(dirRec);
+
+      return false;
+    } catch (SelfregException se) {
+      throw se;
+    } catch (Throwable t) {
+      throw new SelfregException(t);
     }
-
-    /* Posix account requires these but we just set them to dummy values
-     * /
-    dirRec.setAttr("homeDirectory", "dummy");
-    dirRec.setAttr("loginShell", "dummy");
-    dirRec.setAttr("uidNumber", "999");
-    dirRec.setAttr("gidNumber", "999");
-    */
-
-    getLdir().create(dirRec);
-
-    return false;
   }
 
   @Override
-  public boolean lostId(final String email) throws Throwable {
+  public boolean lostId(final String email) throws SelfregException {
     // TODO Auto-generated method stub
     return false;
   }
 
   @Override
-  public boolean lostPw(final String id) throws Throwable {
+  public boolean lostPw(final String id) throws SelfregException {
     // TODO Auto-generated method stub
     return false;
   }
 
   @Override
-  public boolean confirmPwChange(final String confid) throws Throwable {
+  public boolean confirmPwChange(final String confid) throws SelfregException {
     // TODO Auto-generated method stub
     return false;
   }
 
   @Override
   public boolean confirmPwChange(final String confid,
-                                 final String newPw) throws Throwable {
+                                 final String newPw) throws SelfregException {
     // TODO Auto-generated method stub
     return false;
   }
 
-  private LdapDirectory getLdir() throws Throwable {
+  private LdapDirectory getLdir() throws SelfregException {
     if (ldir != null) {
       return ldir;
     }
@@ -152,19 +170,23 @@ public class DirMaintImpl implements DirMaint {
     return ldir;
   }
 
-  private String encodedPassword(final char[] pw) throws Exception {
-    MessageDigest md = MessageDigest.getInstance(pwEncryption);
+  private String encodedPassword(final char[] pw) throws SelfregException {
+    try {
+      MessageDigest md = MessageDigest.getInstance(pwEncryption);
 
-    md.update(new String(pw).getBytes());
+      md.update(new String(pw).getBytes());
 
-    byte[] b64s = new Base64().encode(md.digest());
+      byte[] b64s = new Base64().encode(md.digest());
 
-    return "{" + pwEncryption + "}" + new String(b64s);
+      return "{" + pwEncryption + "}" + new String(b64s);
+    } catch (Throwable t) {
+      throw new SelfregException(t);
+    }
   }
 
   private boolean sendConfirm(final String text,
                               final String subject,
-                              final String email) throws Throwable {
+                              final String email) throws SelfregException {
     if (email == null) {
       return false;
     }
@@ -174,7 +196,7 @@ public class DirMaintImpl implements DirMaint {
     String[] to = new String[]{email};
     emsg.setMailTo(to);
 
-    emsg.setFrom(fromUri);
+    emsg.setFrom(config.getFrom());
     emsg.setSubject(subject);
     emsg.setContent(text);
 
@@ -183,11 +205,22 @@ public class DirMaintImpl implements DirMaint {
     return true;
   }
 
-  private MailerIntf getMailer() throws Throwable {
+  private SelfregConfigProperties getConfig() throws SelfregException {
+    if (config == null) {
+      try {
+        config = (SelfregConfigProperties)SelfregOptionsFactory.getOptions().getGlobalProperty("module.selfreg");
+      } catch (Throwable t) {
+        throw new SelfregException(t);
+      }
+    }
+    return config;
+  }
+
+  private MailerIntf getMailer() throws SelfregException {
     if (mailer == null) {
       mailer = new Mailer();
 
-      mailer.init();
+      mailer.init(getConfig());
     }
 
     return mailer;

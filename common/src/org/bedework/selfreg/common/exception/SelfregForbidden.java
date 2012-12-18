@@ -6,9 +6,9 @@
     Version 2.0 (the "License"); you may not use this file
     except in compliance with the License. You may obtain a
     copy of the License at:
-        
+
     http://www.apache.org/licenses/LICENSE-2.0
-        
+
     Unless required by applicable law or agreed to in writing,
     software distributed under the License is distributed on
     an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -16,38 +16,44 @@
     specific language governing permissions and limitations
     under the License.
 */
-package org.bedework.selfreg.common;
+package org.bedework.selfreg.common.exception;
 
-import javax.naming.directory.Attributes;
-import javax.naming.directory.BasicAttributes;
-import javax.naming.NamingException;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.namespace.QName;
 
-/** This class represents a directory record which may be built from a
-    number of attributes represented as a BasicAttributes object.
+
+/** Forbidden exception thrown by synch classes
+ *
+ *   @author Mike Douglass   douglm@rpi.edu
  */
-public class BasicDirRecord extends DirRecord {
-  private Attributes attrs;
-
-  /** Create a record which can have values added.
+public class SelfregForbidden extends SelfregException {
+  /** Constructor
    */
-  public BasicDirRecord() {
+  public SelfregForbidden() {
+    super(HttpServletResponse.SC_FORBIDDEN);
   }
 
-  /** Create a record with the given attributes.
-   * @param attrs
+  /** Constructor
+   * @param msg
    */
-  public BasicDirRecord(Attributes attrs) {
-    this.attrs = attrs;
+  public SelfregForbidden(final String msg) {
+    super(HttpServletResponse.SC_FORBIDDEN, msg);
   }
 
-  public Attributes getAttributes() throws NamingException {
-    if (attrs == null) attrs = new BasicAttributes(true);
-
-    return attrs;
+  /** Constructor
+   *
+   * @param errorTag
+   */
+  public SelfregForbidden(final QName errorTag) {
+    super(HttpServletResponse.SC_FORBIDDEN, errorTag);
   }
 
-  public void clear() {
-    super.clear();
-    attrs = null;
+  /** Constructor
+   *
+   * @param errorTag
+   * @param msg
+   */
+  public SelfregForbidden(final QName errorTag, final String msg) {
+    super(HttpServletResponse.SC_FORBIDDEN, errorTag, msg);
   }
 }

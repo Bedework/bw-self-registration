@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 */
-package org.bedework.selfreg.common;
+package org.bedework.selfreg.common.dir;
 
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;

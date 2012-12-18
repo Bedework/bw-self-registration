@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="lib/servlet-api-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.5.jar"/>
 	<classpathentry kind="lib" path="lib/mailapi-1.4.5.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/rpiutil"/>
 	<classpathentry kind="output" path="bin/selfreg"/>
 </classpath>

@@ -32,6 +32,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.log4j.Logger;
+import org.bedework.selfreg.common.SelfregConfigProperties;
+import org.bedework.selfreg.common.exception.SelfregException;
 
 /** A mailer which provides some minimal functionality for testing.
  * We do not consider many issues such as spam prevention, efficiency in
@@ -42,18 +44,18 @@ import org.apache.log4j.Logger;
 public class Mailer implements MailerIntf {
   private boolean debug;
 
-  private MailConfigProperties config;
+  private SelfregConfigProperties config;
 
   private Session sess;
 
   private transient Logger log;
 
   @Override
-  public void init() throws Throwable {
+  public void init(final SelfregConfigProperties config) throws SelfregException {
     debug = getLog().isDebugEnabled();
+    this.config = config;
 
     Properties props = new Properties();
-    getConfig();
 
     props.put("mail." + config.getProtocol() + ".class", config.getProtocolClass());
     props.put("mail." + config.getProtocol() + ".host", config.getServerIp());
@@ -77,17 +79,15 @@ public class Mailer implements MailerIntf {
   }
 
   @Override
-  public Collection<String> listLists() throws Throwable {
+  public Collection<String> listLists() throws SelfregException {
     debugMsg("listLists called");
     return new ArrayList<String>();
   }
 
   @Override
-  public void post(final Message val) throws Throwable {
+  public void post(final Message val) throws SelfregException {
     debugMsg("Mailer called with:");
     debugMsg(val.toString());
-
-    getConfig();
 
     if (config.getDisabled()) {
       return;
@@ -124,19 +124,8 @@ public class Mailer implements MailerIntf {
         t.printStackTrace();
       }
 
-      throw new Throwable(t);
+      throw new SelfregException(t);
     }
-  }
-
-  private MailConfigProperties getConfig() throws Throwable {
-    if (config == null) {
-      try {
-        config = (MailConfigProperties)CalOptionsFactory.getOptions().getGlobalProperty("module.testmail");
-      } catch (Throwable t) {
-        throw new Throwable(t);
-      }
-    }
-    return config;
   }
 
   private Logger getLog() {

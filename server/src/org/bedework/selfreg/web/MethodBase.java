@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.log4j.Logger;
+import org.bedework.selfreg.common.exception.SelfregException;
 import org.w3c.dom.Document;
 
 /** Base class for all webdav servlet methods.
@@ -43,9 +44,9 @@ public abstract class MethodBase {
 
   /** Called at each request
    *
-   * @throws Throwable
+   * @throws SelfregException
    */
-  public abstract void init() throws Throwable;
+  public abstract void init() throws SelfregException;
 
   private SimpleDateFormat httpDateFormatter =
       new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss ");
@@ -53,11 +54,11 @@ public abstract class MethodBase {
   /**
    * @param req
    * @param resp
-   * @throws Throwable
+   * @throws SelfregException
    */
   public abstract void doMethod(HttpServletRequest req,
                                 HttpServletResponse resp)
-        throws Throwable;
+        throws SelfregException;
 
   /** Allow servlet to create method.
    */
@@ -96,13 +97,10 @@ public abstract class MethodBase {
 
   /** Called at each request
    *
-   * @param syncher
    * @param dumpContent
-   * @throws Throwable
+   * @throws SelfregException
    */
-  public void init(final SynchEngine syncher,
-                   final boolean dumpContent) throws Throwable {
-    this.syncher = syncher;
+  public void init(final boolean dumpContent) throws SelfregException {
     this.dumpContent = dumpContent;
 
     debug = getLogger().isDebugEnabled();
@@ -112,14 +110,6 @@ public abstract class MethodBase {
     //resourceUri = null;
 
     init();
-  }
-
-  /** Get syncher
-   *
-   * @return ExchangeSynch
-   */
-  public SynchEngine getSyncher() {
-    return syncher;
   }
 
   /** Get the decoded and fixed resource URI. This calls getServletPath() to
@@ -133,10 +123,10 @@ public abstract class MethodBase {
    *
    * @param req      Servlet request object
    * @return List    Path elements of fixed up uri
-   * @throws Throwable
+   * @throws SelfregException
    */
   public List<String> getResourceUri(final HttpServletRequest req)
-      throws Throwable {
+      throws SelfregException {
     String uri = req.getServletPath();
 
     if ((uri == null) || (uri.length() == 0)) {
@@ -154,9 +144,9 @@ public abstract class MethodBase {
    *
    * @param path      String path to be fixed
    * @return String[]   fixed path broken into elements
-   * @throws Throwable
+   * @throws SelfregException
    */
-  public static List<String> fixPath(final String path) throws Throwable {
+  public static List<String> fixPath(final String path) throws SelfregException {
     if (path == null) {
       return null;
     }
@@ -165,7 +155,7 @@ public abstract class MethodBase {
     try {
       decoded = URLDecoder.decode(path, "UTF8");
     } catch (Throwable t) {
-      throw new Exception("bad path: " + path);
+      throw new SelfregException("bad path: " + path);
     }
 
     if (decoded == null) {
@@ -217,24 +207,7 @@ public abstract class MethodBase {
     return al;
   }
 
-  /*
-  protected void addStatus(final int status,
-                           final String message) throws SynchException {
-    try {
-      if (message == null) {
-//        message = WebdavStatusCode.getMessage(status);
-      }
-
-      property(WebdavTags.status, "HTTP/1.1 " + status + " " + message);
-    } catch (SynchException wde) {
-      throw wde;
-    } catch (Throwable t) {
-      throw new SynchException(t);
-    }
-  }
-  */
-
-  protected void addHeaders(final HttpServletResponse resp) throws Throwable {
+  protected void addHeaders(final HttpServletResponse resp) throws SelfregException {
     // This probably needs changes
 /*
     StringBuilder methods = new StringBuilder();
@@ -260,7 +233,7 @@ public abstract class MethodBase {
    */
   protected Document parseContent(final HttpServletRequest req,
                                   final HttpServletResponse resp)
-      throws Throwable {
+      throws SelfregException {
     int len = req.getContentLength();
     if (len == 0) {
       return null;
@@ -286,7 +259,7 @@ public abstract class MethodBase {
     //  throw new SynchException(HttpServletResponse.SC_BAD_REQUEST);
     } catch (Throwable t) {
       resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      throw t;
+      throw new SelfregException(t);
     }
   }
 

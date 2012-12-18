@@ -16,56 +16,38 @@
     specific language governing permissions and limitations
     under the License.
 */
-package org.bedework.synch.web;
-
-import org.bedework.synch.cnctrs.Connector;
-import org.bedework.synch.cnctrs.Connector.NotificationBatch;
-import org.bedework.synch.exception.SynchException;
-
-import edu.rpi.sss.util.Util;
+package org.bedework.selfreg.web;
 
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Handle POST for exchange synch servlet.
+import org.bedework.selfreg.common.exception.SelfregException;
+
+import edu.rpi.sss.util.Util;
+
+/** Handle POST for selfreg servlet.
  */
 public class PostMethod extends MethodBase {
   @Override
-  public void init() throws SynchException {
+  public void init() throws SelfregException {
   }
 
   @SuppressWarnings({"unchecked"})
   @Override
   public void doMethod(final HttpServletRequest req,
-                       final HttpServletResponse resp) throws SynchException {
+                       final HttpServletResponse resp) throws SelfregException {
     try {
       List<String> resourceUri = getResourceUri(req);
 
       if (Util.isEmpty(resourceUri)) {
-        throw new SynchException("Bad resource url - no connector specified");
+        throw new SelfregException("Bad resource url - no connector specified");
       }
-
-      /* Find a connector to handle the incoming request.
-       */
-      Connector conn = syncher.getConnector(resourceUri.get(0));
-
-      if (conn == null) {
-        throw new SynchException("Bad resource url - unknown connector specified");
-      }
-
-      resourceUri.remove(0);
-      NotificationBatch notes = conn.handleCallback(req, resp, resourceUri);
-
-      if (notes != null) {
-        syncher.handleNotifications(notes);
-        conn.respondCallback(resp, notes);
-      }
-    } catch (SynchException se) {
+    } catch (SelfregException se) {
       throw se;
     } catch(Throwable t) {
-      throw new SynchException(t);
+      throw new SelfregException(t);
     }
   }
 }
