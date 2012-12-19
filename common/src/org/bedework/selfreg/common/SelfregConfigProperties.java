@@ -38,6 +38,8 @@ public class SelfregConfigProperties implements SelfregConfigPropertiesI {
 
   private String groupsDn;
 
+  private String groupsAttr;
+
   private String adminId;
 
   private String adminPw;
@@ -124,6 +126,16 @@ public class SelfregConfigProperties implements SelfregConfigPropertiesI {
   @Override
   public String getGroupsDn()  {
     return groupsDn;
+  }
+
+  @Override
+  public void setGroupsAttr(final String val)  {
+    groupsAttr  = val;
+  }
+
+  @Override
+  public String getGroupsAttr()  {
+    return groupsAttr;
   }
 
   @Override

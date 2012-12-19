@@ -247,6 +247,13 @@ public interface SelfregMBean extends ServiceMBean {
                         String email,
                         String password);
 
+  /** Display a user
+   *
+   * @param account
+   * @return status
+   */
+  public String displayUser(String account);
+
   /** Set a user password
    *
    * @param account
@@ -262,4 +269,22 @@ public interface SelfregMBean extends ServiceMBean {
    * @return status
    */
   public String removeUser(String account);
+
+  /** Add a group
+   *
+   * @param group
+   * @param account
+   * @return status
+   */
+  public String addGroup(String group,
+                         String account);
+
+  /** Add a group member
+   *
+   * @param group
+   * @param account
+   * @return status
+   */
+  public String addGroupMember(String group,
+                               String account);
 }

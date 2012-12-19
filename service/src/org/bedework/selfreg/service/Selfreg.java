@@ -224,6 +224,16 @@ public class Selfreg extends ServiceMBeanSupport implements SelfregMBean {
   }
 
   @Override
+  public String displayUser(final String account) {
+    try {
+      return getDir().displayAccount(account);
+    } catch (Throwable t) {
+      error(t);
+      return t.getLocalizedMessage();
+    }
+  }
+
+  @Override
   public String setUserPassword(final String account,
                                 final String password) {
     try {
@@ -238,6 +248,35 @@ public class Selfreg extends ServiceMBeanSupport implements SelfregMBean {
   @Override
   public String removeUser(final String account) {
     try {
+
+      return "Ok";
+    } catch (Throwable t) {
+      error(t);
+      return t.getLocalizedMessage();
+    }
+  }
+
+  @Override
+  public String addGroup(final String group,
+                         final String account) {
+    try {
+      if (!getDir().createGroup(group, account)) {
+        return "Group " + group + " exists already";
+      }
+
+
+      return "Ok";
+    } catch (Throwable t) {
+      error(t);
+      return t.getLocalizedMessage();
+    }
+  }
+
+  @Override
+  public String addGroupMember(final String group,
+                               final String account) {
+    try {
+      getDir().addGroupMember(group, account);
 
       return "Ok";
     } catch (Throwable t) {

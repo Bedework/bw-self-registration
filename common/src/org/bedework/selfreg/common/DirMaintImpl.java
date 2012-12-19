@@ -22,11 +22,16 @@ import java.security.MessageDigest;
 import java.util.Properties;
 
 import javax.naming.Context;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.ModificationItem;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.bedework.selfreg.common.dir.BasicDirRecord;
 import org.bedework.selfreg.common.dir.DirRecord;
+import org.bedework.selfreg.common.dir.Directory;
+import org.bedework.selfreg.common.dir.Directory.DirSearchResult;
 import org.bedework.selfreg.common.dir.LdapDirectory;
 import org.bedework.selfreg.common.exception.SelfregException;
 import org.bedework.selfreg.common.mail.Mailer;
@@ -87,6 +92,35 @@ public class DirMaintImpl implements DirMaint {
   }
 
   @Override
+  public boolean lostId(final String email) throws SelfregException {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean lostPw(final String id) throws SelfregException {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean confirmPwChange(final String confid) throws SelfregException {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean confirmPwChange(final String confid,
+                                 final String newPw) throws SelfregException {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  /* ========================================================================
+   * Service interface methods
+   * ======================================================================== */
+
+  @Override
   public boolean createAccount(final String accountName,
                                final String firstName,
                                final String lastName,
@@ -97,8 +131,7 @@ public class DirMaintImpl implements DirMaint {
        */
       DirRecord dirRec = new BasicDirRecord();
 
-      String userDn = config.getAccountsAttr() + "=" + accountName + ", " +
-          config.getAccountsDn();
+      String userDn = accountDn(accountName);
       dirRec.setDn(userDn);
       dirRec.setAttr(config.getAccountsAttr(), accountName);
       dirRec.setAttr("objectclass", "top");
@@ -132,29 +165,87 @@ public class DirMaintImpl implements DirMaint {
     }
   }
 
+  /** See if account exists
+   *
+   * @param account
+   * @return boolean
+   * @throws SelfregException
+   */
   @Override
-  public boolean lostId(final String email) throws SelfregException {
-    // TODO Auto-generated method stub
-    return false;
+  public String displayAccount(final String account) throws SelfregException {
+    StringBuilder sb = new StringBuilder();
+
+    sb.append("(&(");
+    sb.append(config.getAccountsAttr());
+    sb.append("=");
+    sb.append(account);
+    sb.append("))(objectClass=inetOrgPerson)");
+
+    DirSearchResult dsr = getLdir().search(config.getAccountsDn(),
+                                           sb.toString(),
+                                           Directory.scopeOne);
+
+    if (dsr == null) {
+      return "No entry found";
+    }
+
+    DirRecord dr = dsr.nextRecord();
+    if (dr == null) {
+      return "No entry found";
+    }
+
+    return dr.toString();
   }
 
   @Override
-  public boolean lostPw(final String id) throws SelfregException {
-    // TODO Auto-generated method stub
-    return false;
+  public boolean createGroup(final String group,
+                             final String account) throws SelfregException {
+    try {
+      DirRecord dirRec = new BasicDirRecord();
+
+      dirRec.setDn(groupDn(group));
+      dirRec.setAttr("cn", group);
+      dirRec.setAttr("objectclass", "top");
+      dirRec.setAttr("objectclass", "groupOfNames");
+
+      dirRec.setAttr("member", accountDn(account));
+
+      return getLdir().create(dirRec);
+    } catch (SelfregException se) {
+      throw se;
+    } catch (Throwable t) {
+      throw new SelfregException(t);
+    }
   }
 
   @Override
-  public boolean confirmPwChange(final String confid) throws SelfregException {
-    // TODO Auto-generated method stub
-    return false;
+  public void addGroupMember(final String group,
+                               final String account) throws SelfregException {
+    //if (!accountExists(account)) {
+    //  error("Account " + account + " does not exist");
+    //}
+
+    BasicAttribute attr = new BasicAttribute("member",
+                                             accountDn(account));
+    ModificationItem mi = new ModificationItem(DirContext.ADD_ATTRIBUTE,
+                                               attr);
+
+    ModificationItem[] mods = {mi};
+    getLdir().modify(groupDn(group), mods);
   }
 
-  @Override
-  public boolean confirmPwChange(final String confid,
-                                 final String newPw) throws SelfregException {
-    // TODO Auto-generated method stub
-    return false;
+  /* ========================================================================
+   * Private methods
+   * ======================================================================== */
+
+  private String accountDn(final String account) {
+    return config.getAccountsAttr() + "=" + account + ", " +
+        config.getAccountsDn();
+  }
+
+  private String groupDn(final String group) {
+    return config.getGroupsAttr() + "=" + group + ", " +
+        config.getGroupsDn();
   }
 
   private LdapDirectory getLdir() throws SelfregException {

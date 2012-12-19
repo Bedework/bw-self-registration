@@ -58,21 +58,6 @@ public interface DirMaint {
 	 */
 	boolean confirm(String confId) throws SelfregException;
 
-	/** Create an account. Used by the service interface
-	 * @param accountName
-	 * @param firstName
-	 * @param lastName
-	 * @param email
-	 * @param pw
-	 * @return true if created OK - false if exists
-	 * @throws SelfregException
-	 */
-	boolean createAccount(String accountName,
-	                      String firstName,
-	                      String lastName,
-	                      String email,
-	                      String pw) throws SelfregException;
-
 	/** Called to send a message providing the recipient with their id
 	 *
 	 * @param email
@@ -105,4 +90,50 @@ public interface DirMaint {
    */
   boolean confirmPwChange(String confid,
                           String newPw) throws SelfregException;
+
+  /* ========================================================================
+   * Service interface methods
+   * ======================================================================== */
+
+  /** Create an account. Used by the service interface
+   * @param accountName
+   * @param firstName
+   * @param lastName
+   * @param email
+   * @param pw
+   * @return true if created OK - false if exists
+   * @throws SelfregException
+   */
+  boolean createAccount(String accountName,
+                        String firstName,
+                        String lastName,
+                        String email,
+                        String pw) throws SelfregException;
+
+  /** Display an account
+   *
+   * @param account
+   * @return message or displayable information
+   * @throws SelfregException
+   */
+  public String displayAccount(String account) throws SelfregException;
+
+  /** Add a group
+   *
+   * @param group
+   * @param account
+   * @return true if created OK - false if exists
+   * @throws SelfregException
+   */
+  public boolean createGroup(String group,
+                             String account) throws SelfregException;
+
+  /** Add a group member
+   *
+   * @param group
+   * @param account
+   * @throws SelfregException
+   */
+  public void addGroupMember(String group,
+                             String account) throws SelfregException;
 }

@@ -105,6 +105,17 @@ public interface SelfregConfigPropertiesI {
    *
    * @param val
    */
+  void setGroupsAttr(final String val);
+
+  /**
+   * @return String
+   */
+  String getGroupsAttr();
+
+  /**
+   *
+   * @param val
+   */
   void setAdminId(final String val);
 
   /**

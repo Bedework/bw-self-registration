@@ -153,6 +153,18 @@
   </operation>
 
   <operation>
+    <description>Display user account.</description>
+    <name>displayUser</name>
+    <parameter>
+      <description>Account</description>
+      <name>account</name>
+      <type>java.lang.String</type>
+    </parameter>
+    
+    <return-type>java.lang.String</return-type>
+  </operation>
+
+  <operation>
     <description>Set the password for an existing account.</description>
     <name>setUserPassword</name>
     <parameter>
@@ -175,6 +187,42 @@
     <name>removeUser</name>
     <parameter>
       <description>Account</description>
+      <name>account</name>
+      <type>java.lang.String</type>
+    </parameter>
+    
+    <return-type>java.lang.String</return-type>
+  </operation>
+
+  <operation>
+    <description>Create new group.</description>
+    <name>addGroup</name>
+    <parameter>
+      <description>Group to be created</description>
+      <name>group</name>
+      <type>java.lang.String</type>
+    </parameter>
+    
+    <parameter>
+      <description>Account to be added to group (required)</description>
+      <name>account</name>
+      <type>java.lang.String</type>
+    </parameter>
+    
+    <return-type>java.lang.String</return-type>
+  </operation>
+
+  <operation>
+    <description>Add a group member.</description>
+    <name>addGroup</name>
+    <parameter>
+      <description>Group to be updated</description>
+      <name>group</name>
+      <type>java.lang.String</type>
+    </parameter>
+    
+    <parameter>
+      <description>Account to be added to group (required)</description>
       <name>account</name>
       <type>java.lang.String</type>
     </parameter>
