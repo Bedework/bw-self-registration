@@ -68,18 +68,16 @@
               location="${dist.home}/bw-selfregsvc-${project.version}.jar" />
   </target>
   
-  <target name="build-init" depends="init">
-    <resolveDependencies pomFile="pom.xml" />
-  </target>
-  
   <target name="deploy-init" depends="init">
     <deployInit ear-name="bw-${ant.project.name}" />
+
+    <property name="org.bedework.deploy.name"
+              value="${ant.project.name}" />
     
-    <property name="org.bedework.extra.properties.dir"
-              value="${org.bedework.configuration.defaults}" />
-    
-    <property name="org.bedework.extra.properties"
-              value="selfreg-config.xml" />
+    <propertyset id="deploy-app-properties">
+      <propertyref prefix="org.bedework.app.${org.bedework.deploy.name}"/>
+      <globmapper from="org.bedework.app.${org.bedework.deploy.name}.*" to="propval.app.*"/>
+    </propertyset>
   </target>
 
   <!-- ===================== build-source Target ===============================

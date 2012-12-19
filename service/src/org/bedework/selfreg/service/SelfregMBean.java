@@ -15,30 +15,205 @@
     KIND, either express or implied. See the License for the
     specific language governing permissions and limitations
     under the License.
-*/
+ */
 package org.bedework.selfreg.service;
 
-import org.bedework.selfreg.common.SelfregConfigPropertiesI;
+import javax.management.ObjectName;
+
+import org.jboss.mx.util.ObjectNameFactory;
+import org.jboss.system.ServiceMBean;
 
 
 /** Run the Bedework synch engine service
  *
  * @author douglm
  */
-public interface SelfregMBean extends SelfregConfigPropertiesI {
+public interface SelfregMBean extends ServiceMBean {
+  /** The default object name */
+  ObjectName OBJECT_NAME = ObjectNameFactory.create("org.bedework:service=Selfreg");
+
   /* ========================================================================
    * Attributes
    * ======================================================================== */
 
-  /** Name apparently must be the same as the name attribute in the
-   * jboss service definition
+  /**
    *
-   * @return Name
+   * @param val
    */
-  public String getName();
+  void setLdapUrl(final String val);
+
+  /**
+   * @return String
+   */
+  String getLdapUrl();
+
+  /** baseDn
+   *
+   * @param val
+   */
+  void setBaseDn(final String val);
+
+  /**
+   * @return String
+   */
+  String getBaseDn();
+
+  /**
+   *
+   * @param val
+   */
+  void setAccountsOu(final String val);
+
+  /**
+   * @return String
+   */
+  String getAccountsOu();
+
+  /**
+   *
+   * @param val
+   */
+  void setAccountsDn(final String val);
+
+  /**
+   * @return String
+   */
+  String getAccountsDn();
+
+  /**
+   *
+   * @param val
+   */
+  void setAccountsAttr(final String val);
+
+  /**
+   * @return String
+   */
+  String getAccountsAttr();
+
+  /**
+   *
+   * @param val
+   */
+  void setGroupsOu(final String val);
+
+  /**
+   * @return String
+   */
+  String getGroupsOu();
+
+  /**
+   *
+   * @param val
+   */
+  void setGroupsDn(final String val);
+
+  /**
+   * @return String
+   */
+  String getGroupsDn();
+
+  /**
+   *
+   * @param val
+   */
+  void setAdminId(final String val);
+
+  /**
+   * @return String
+   */
+  String getAdminId();
+
+  /**
+   *
+   * @param val
+   */
+  void setAdminPw(final String val);
+
+  /**
+   * @return String
+   */
+  String getAdminPw();
+
+  /** valid protocol for which an implementation exists, e.g "imap", "smtp"
+   *
+   * @param val
+   */
+  void setMailProtocol(final String val);
+
+  /**
+   * @return String
+   */
+  String getMailProtocol();
+
+  /** Implementation for the selected protocol
+   *
+   * @param val
+   */
+  void setMailProtocolClass(final String val);
+
+  /**
+   * @return String
+   */
+  String getMailProtocolClass();
+
+  /** Where we send it.
+   *
+   * @param val
+   */
+  void setMailServerIp(final String val);
+
+  /**
+   * @return String
+   */
+  String getMailServerIp();
+
+  /**
+   * @param val
+   */
+  void setMailServerPort(final String val);
+
+  /**
+   * @return String
+   */
+  String getMailServerPort();
+
+  /** Mailer:
+   *
+   * @param val
+   */
+  void setMailFrom(final String val);
+
+  /** Mailer:
+ /**
+   * @return String
+   */
+  String getMailFrom();
+
+  /** Mailer: Subject we use when none supplied
+   *
+   * @param val
+   */
+  void setMailSubject(final String val);
+
+  /**
+   * @return String
+   */
+  String getMailSubject();
+
+  /** Allow mailer to be disabled
+   *
+   * @param val
+   */
+  void setMailDisabled(final boolean val);
+
+  /**
+   * @return boolean
+   */
+  boolean getMailDisabled();
 
   /* ========================================================================
-   * Variables
+   * Config parameters
    * ======================================================================== */
 
   /** Statement delimiter
@@ -51,7 +226,7 @@ public interface SelfregMBean extends SelfregConfigPropertiesI {
    * @return Statement delimiter
    * /
   public String getDelimiter();
-  */
+   */
 
   /* ========================================================================
    * Operations
@@ -66,7 +241,7 @@ public interface SelfregMBean extends SelfregConfigPropertiesI {
    * @param password
    * @return status
    */
-  public String adduser(String account,
+  public String addUser(String account,
                         String first,
                         String last,
                         String email,
@@ -87,34 +262,4 @@ public interface SelfregMBean extends SelfregConfigPropertiesI {
    * @return status
    */
   public String removeUser(String account);
-
-  /* ========================================================================
-   * Lifecycle
-   * ======================================================================== */
-
-  /** Lifecycle
-   *
-   */
-  public void create();
-
-  /** Lifecycle
-   *
-   */
-  public void start();
-
-  /** Lifecycle
-   *
-   */
-  public void stop();
-
-  /** Lifecycle
-   *
-   * @return true if started
-   */
-  public boolean isStarted();
-
-  /** Lifecycle
-   *
-   */
-  public void destroy();
 }

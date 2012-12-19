@@ -24,7 +24,6 @@ package org.bedework.selfreg.common;
  *
  */
 public interface SelfregConfigPropertiesI {
-
   /**
    *
    * @param val

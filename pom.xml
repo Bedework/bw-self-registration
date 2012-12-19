@@ -53,6 +53,36 @@
         <artifactId>commons-codec</artifactId>
         <version>1.5</version>
       </dependency>
+      
+      <dependency>
+        <groupId>org.jboss.jbossas</groupId>
+        <artifactId>jboss-as-j2se</artifactId>
+        <version>5.1.0.GA</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.jboss.microcontainer</groupId>
+        <artifactId>jboss-kernel</artifactId>
+        <version>2.0.7.GA</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.jboss.jbossas</groupId>
+        <artifactId>jboss-as-system</artifactId>
+        <version>5.1.0.GA</version>
+        <exclusions>
+          <exclusion>
+            <groupId>trove</groupId>
+            <artifactId>trove</artifactId>
+          </exclusion>
+        </exclusions> 
+      </dependency>
+      
+      <dependency>
+        <groupId>org.jboss.jbossas</groupId>
+        <artifactId>jboss-as-system-jmx</artifactId>
+        <version>5.1.0.GA</version>
+      </dependency>
 
       <!-- 
       <dependency>

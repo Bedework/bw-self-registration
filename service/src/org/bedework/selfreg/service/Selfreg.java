@@ -18,31 +18,187 @@
 */
 package org.bedework.selfreg.service;
 
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 import org.apache.log4j.Logger;
 import org.bedework.selfreg.common.DirMaint;
 import org.bedework.selfreg.common.DirMaintImpl;
 import org.bedework.selfreg.common.SelfregConfigProperties;
+import org.jboss.system.ServiceMBeanSupport;
 
 /**
  * @author douglm
  *
  */
-public class Selfreg extends SelfregConfigProperties implements SelfregMBean {
+public class Selfreg extends ServiceMBeanSupport implements SelfregMBean {
   private transient Logger log;
+
+  private SelfregConfigProperties conf = new SelfregConfigProperties();
 
   /* ========================================================================
    * Attributes
    * ======================================================================== */
 
-  /* (non-Javadoc)
-   * @see org.bedework.dumprestore.BwDumpRestoreMBean#getName()
-   */
   @Override
-  public String getName() {
-    /* This apparently must be the same as the name attribute in the
-     * jboss service definition
-     */
-    return "org.bedework:service=Selfreg";
+  public void setLdapUrl(final String val)  {
+    conf.setLdapUrl(val);
+  }
+
+  @Override
+  public String getLdapUrl()  {
+    return conf.getLdapUrl();
+  }
+
+  @Override
+  public void setBaseDn(final String val)  {
+    conf.setBaseDn(val);
+  }
+
+  @Override
+  public String getBaseDn()  {
+    return getBaseDn();
+  }
+
+  @Override
+  public void setAccountsOu(final String val)  {
+    conf.setAccountsOu(val);
+  }
+
+  @Override
+  public String getAccountsOu()  {
+    return conf.getAccountsOu();
+  }
+
+  @Override
+  public void setAccountsDn(final String val)  {
+    conf.setAccountsDn(val);
+  }
+
+  @Override
+  public String getAccountsDn()  {
+    return conf.getAccountsDn();
+  }
+
+  @Override
+  public void setAccountsAttr(final String val)  {
+    conf.setAccountsAttr(val);
+  }
+
+  @Override
+  public String getAccountsAttr()  {
+    return conf.getAccountsAttr();
+  }
+
+  @Override
+  public void setGroupsOu(final String val)  {
+    conf.setGroupsOu(val);
+  }
+
+  @Override
+  public String getGroupsOu()  {
+    return conf.getGroupsOu();
+  }
+
+  @Override
+  public void setGroupsDn(final String val)  {
+    conf.setGroupsDn(val);
+  }
+
+  @Override
+  public String getGroupsDn()  {
+    return conf.getGroupsDn();
+  }
+
+  @Override
+  public void setAdminId(final String val)  {
+    conf.setAdminId(val);
+  }
+
+  @Override
+  public String getAdminId()  {
+    return conf.getAdminId();
+  }
+
+  @Override
+  public void setAdminPw(final String val)  {
+    conf.setAdminPw(val);
+  }
+
+  @Override
+  public String getAdminPw()  {
+    return conf.getAdminPw();
+  }
+
+  @Override
+  public void setMailProtocol(final String val)  {
+    conf.setMailProtocol(val);
+  }
+
+  @Override
+  public String getMailProtocol()  {
+    return conf.getMailProtocol();
+  }
+
+  @Override
+  public void setMailProtocolClass(final String val)  {
+    conf.setMailProtocolClass(val);
+  }
+
+  @Override
+  public String getMailProtocolClass()  {
+    return conf.getMailProtocolClass();
+  }
+
+  @Override
+  public void setMailServerIp(final String val)  {
+    conf.setMailServerIp(val);
+  }
+
+  @Override
+  public String getMailServerIp()  {
+    return conf.getMailServerIp();
+  }
+
+  @Override
+  public void setMailServerPort(final String val)  {
+    conf.setMailServerPort(val);
+  }
+
+  @Override
+  public String getMailServerPort()  {
+    return conf.getMailServerPort();
+  }
+
+  @Override
+  public void setMailFrom(final String val)  {
+    conf.setMailFrom(val);
+  }
+
+  @Override
+  public String getMailFrom()  {
+    return conf.getMailFrom();
+  }
+
+  @Override
+  public void setMailSubject(final String val)  {
+    conf.setMailSubject(val);
+  }
+
+  @Override
+  public String getMailSubject()  {
+    return conf.getMailSubject();
+  }
+
+  @Override
+  public void setMailDisabled(final boolean val)  {
+    conf.setMailDisabled(val);
+  }
+
+  @Override
+  public boolean getMailDisabled()  {
+    return conf.getMailDisabled();
   }
 
   /* ========================================================================
@@ -50,7 +206,7 @@ public class Selfreg extends SelfregConfigProperties implements SelfregMBean {
    * ======================================================================== */
 
   @Override
-  public String adduser(final String account,
+  public String addUser(final String account,
                         final String first,
                         final String last,
                         final String email,
@@ -94,41 +250,23 @@ public class Selfreg extends SelfregConfigProperties implements SelfregMBean {
    * Lifecycle
    * ======================================================================== */
 
-  /* (non-Javadoc)
-   * @see org.bedework.dumprestore.BwDumpRestoreMBean#create()
-   */
   @Override
-  public void create() {
-    // An opportunity to initialise
+  protected ObjectName getObjectName(final MBeanServer server,
+                                     final ObjectName name)
+      throws MalformedObjectNameException {
+    if (name == null) {
+      return OBJECT_NAME;
+    }
+
+    return name;
+   }
+
+  @Override
+  public void startService() throws Exception {
   }
 
-  /* (non-Javadoc)
-   * @see org.bedework.indexer.BwIndexerMBean#start()
-   */
   @Override
-  public void start() {
-  }
-
-  /* (non-Javadoc)
-   * @see org.bedework.indexer.BwIndexerMBean#stop()
-   */
-  @Override
-  public void stop() {
-  }
-
-  /* (non-Javadoc)
-   * @see org.bedework.indexer.BwIndexerMBean#isStarted()
-   */
-  @Override
-  public boolean isStarted() {
-    return true;
-  }
-
-  /* (non-Javadoc)
-   * @see org.bedework.dumprestore.BwDumpRestoreMBean#destroy()
-   */
-  @Override
-  public void destroy() {
+  public void stopService() throws Exception {
   }
 
   /* ====================================================================
@@ -138,7 +276,7 @@ public class Selfreg extends SelfregConfigProperties implements SelfregMBean {
   private DirMaint getDir() throws Throwable {
     DirMaint dir = new DirMaintImpl();
 
-    dir.init(this);
+    dir.init(conf);
 
     return dir;
   }

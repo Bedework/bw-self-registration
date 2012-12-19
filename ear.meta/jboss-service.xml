@@ -6,7 +6,8 @@
   </loader-repository> 
   
   <mbean code="org.bedework.selfreg.service.Selfreg"
-         name="org.bedework:service=Selfreg">
+         name="org.bedework:service=Selfreg"
+         xmbean-dd="resource:xmdesc/bw-selfreg-xmbean.xml">
     <!-- attributes -->
         
     <attribute name="LdapUrl">ldap://localhost:10389</attribute>

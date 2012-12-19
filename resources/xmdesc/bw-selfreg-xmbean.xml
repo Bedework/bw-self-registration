@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mbean PUBLIC "-//JBoss//DTD JBOSS XMBEAN 1.1//EN"
+   "http://www.jboss.org/j2ee/dtd/jboss_xmbean_1_1.dtd" [
+	<!ATTLIST interceptor
+	proxyName CDATA #IMPLIED
+>
+]>
+
+<mbean>
+	<description>
+	  This provides an account maintenance service
+   </description>
+	<class>org.bedework.selfreg.service.Selfreg</class>
+	<constructor>
+		<description>The default constructor</description>
+		<name>Selfreg</name>
+	</constructor>
+   
+   &defaultAttributes;
+
+   <attribute access="read-write" getMethod="getLdapUrl" setMethod="setLdapUrl">
+		<description>URL of ldap server.</description>
+		<name>LdapUrl</name>
+    <type>java.lang.String</type>
+	</attribute>
+
+	<attribute access="read-write" getMethod="getBaseDn" setMethod="setBaseDn">
+		<description>The LDAP basedn.</description>
+		<name>BaseDn</name>
+    <type>java.lang.String</type>
+	</attribute>
+
+	<attribute access="read-write" getMethod="getAccountsOu" setMethod="setAccountsOu">
+		<description>OU for accounts.</description>
+		<name>AccountsOu</name>
+    <type>java.lang.String</type>
+	</attribute>
+
+  <attribute access="read-write" getMethod="getAccountsDn" setMethod="setAccountsDn">
+    <description>DN for new accounts.</description>
+    <name>AccountsDn</name>
+    <type>java.lang.String</type>
+  </attribute>
+
+  <attribute access="read-write" getMethod="getAccountsAttr" setMethod="setAccountsAttr">
+    <description>Attribute for accounts.</description>
+    <name>AccountsAttr</name>
+    <type>java.lang.String</type>
+  </attribute>
+
+  <attribute access="read-write" getMethod="getGroupsOu" setMethod="setGroupsOu">
+    <description>OU for Groups.</description>
+    <name>GroupsOu</name>
+    <type>java.lang.String</type>
+  </attribute>
+
+  <attribute access="read-write" getMethod="getGroupsDn" setMethod="setGroupsDn">
+    <description>DN for new Groups.</description>
+    <name>GroupsDn</name>
+    <type>java.lang.String</type>
+  </attribute>
+
+	<attribute access="read-write" getMethod="getAdminId" setMethod="setAdminId">
+		<description>Administrative id.</description>
+		<name>AdminId</name>
+    <type>java.lang.String</type>
+	</attribute>
+
+  <attribute access="read-write" getMethod="getAdminPw" setMethod="setAdminPw">
+    <description>Administrative password.</description>
+    <name>AdminPw</name>
+    <type>java.lang.String</type>
+  </attribute>
+
+  <attribute access="read-write" getMethod="getMailProtocol" setMethod="setMailProtocol">
+    <description>valid protocol for which an implementation exists, e.g "imap", "smtp".</description>
+    <name>MailProtocol</name>
+    <type>java.lang.String</type>
+  </attribute>
+
+  <attribute access="read-write" getMethod="getMailProtocolClass" setMethod="setMailProtocolClass">
+    <description>class for protocol.</description>
+    <name>MailProtocolClass</name>
+    <type>java.lang.String</type>
+  </attribute>
+
+  <attribute access="read-write" getMethod="getMailServerIp" setMethod="setMailServerIp">
+    <description>Address of mail server.</description>
+    <name>MailServerIp</name>
+    <type>java.lang.String</type>
+  </attribute>
+
+  <attribute access="read-write" getMethod="getMailServerPort" setMethod="setMailServerPort">
+    <description>Port of mail server.</description>
+    <name>MailServerPort</name>
+    <type>java.lang.String</type>
+  </attribute>
+
+  <attribute access="read-write" getMethod="getMailFrom" setMethod="setMailFrom">
+    <description>From address for mail.</description>
+    <name>MailFrom</name>
+    <type>java.lang.String</type>
+  </attribute>
+
+  <attribute access="read-write" getMethod="getMailSubject" setMethod="setMailSubject">
+    <description>Subject fro mail.</description>
+    <name>MailSubject</name>
+    <type>java.lang.String</type>
+  </attribute>
+
+  <attribute access="read-write" getMethod="getMailDisabled" setMethod="setMailDisabled">
+    <description>Outgoing mail disabled - useful for testing.</description>
+    <name>MailDisabled</name>
+    <type>boolean</type>
+  </attribute>
+
+	<!-- Operations -->
+
+  <operation>
+    <description>Create new user account.</description>
+    <name>addUser</name>
+    <parameter>
+      <description>Account to be created</description>
+      <name>account</name>
+      <type>java.lang.String</type>
+    </parameter>
+    
+    <parameter>
+      <description>First name</description>
+      <name>first</name>
+      <type>java.lang.String</type>
+    </parameter>
+    
+    <parameter>
+      <description>last name</description>
+      <name>last</name>
+      <type>java.lang.String</type>
+    </parameter>
+    
+    <parameter>
+      <description>email</description>
+      <name>email</name>
+      <type>java.lang.String</type>
+    </parameter>
+    
+    <parameter>
+      <description>Password</description>
+      <name>password</name>
+      <type>java.lang.String</type>
+    </parameter>
+    
+    <return-type>java.lang.String</return-type>
+  </operation>
+
+  <operation>
+    <description>Set the password for an existing account.</description>
+    <name>setUserPassword</name>
+    <parameter>
+      <description>Account</description>
+      <name>account</name>
+      <type>java.lang.String</type>
+    </parameter>
+    
+    <parameter>
+      <description>Password</description>
+      <name>password</name>
+      <type>java.lang.String</type>
+    </parameter>
+    
+    <return-type>java.lang.String</return-type>
+  </operation>
+
+  <operation>
+    <description>Delete a user account.</description>
+    <name>removeUser</name>
+    <parameter>
+      <description>Account</description>
+      <name>account</name>
+      <type>java.lang.String</type>
+    </parameter>
+    
+    <return-type>java.lang.String</return-type>
+  </operation>
+
+   &defaultOperations;   			
+
+</mbean>
+
