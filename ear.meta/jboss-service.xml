@@ -30,11 +30,11 @@
     
     <attribute name="AdminPw">secret</attribute>
 
-    <attribute name="MailProtocol">imap</attribute>
+    <attribute name="MailProtocol">smtp</attribute>
 
-    <attribute name="MailProtocolClass"></attribute>
+    <attribute name="MailProtocolClass">com.sun.mail.smtp.SMTPTransport</attribute>
 
-    <attribute name="MailServerIp"></attribute>
+    <attribute name="MailServerIp">localhost</attribute>
 
     <attribute name="MailServerPort"></attribute>
 
@@ -43,7 +43,7 @@
     <attribute name="MailSubject">Bedework self registration</attribute>
 
     <attribute name="MailDisabled">false</attribute>
-    
+  
     <!-- We also need the database
     <depends>jboss.jca:service=DataSourceBinding,name=SynchDS</depends> -->
   </mbean>
