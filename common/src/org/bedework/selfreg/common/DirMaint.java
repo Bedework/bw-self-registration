@@ -118,6 +118,15 @@ public interface DirMaint {
    */
   public String displayAccount(String account) throws SelfregException;
 
+  /** Set account password
+   *
+   * @param account
+   * @param password
+   * @throws SelfregException
+   */
+  public void setUserPassword(String account,
+                                String password) throws SelfregException;
+
   /** Add a group
    *
    * @param group

@@ -237,6 +237,7 @@ public class Selfreg extends ServiceMBeanSupport implements SelfregMBean {
   public String setUserPassword(final String account,
                                 final String password) {
     try {
+      getDir().setUserPassword(account, password);
 
       return "Ok";
     } catch (Throwable t) {

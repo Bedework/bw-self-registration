@@ -198,6 +198,18 @@ public class DirMaintImpl implements DirMaint {
   }
 
   @Override
+  public void setUserPassword(final String account,
+                              final String password) throws SelfregException {
+    BasicAttribute attr = new BasicAttribute("userPassword",
+                                             encodedPassword(password.toCharArray()));
+    ModificationItem mi = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
+                                               attr);
+
+    ModificationItem[] mods = {mi};
+    getLdir().modify(accountDn(account), mods);
+  }
+
+  @Override
   public boolean createGroup(final String group,
                              final String account) throws SelfregException {
     try {
