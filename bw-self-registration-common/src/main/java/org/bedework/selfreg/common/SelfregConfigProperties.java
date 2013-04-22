@@ -15,216 +15,313 @@
     KIND, either express or implied. See the License for the
     specific language governing permissions and limitations
     under the License.
-*/
+ */
 package org.bedework.selfreg.common;
+
+import edu.rpi.cmt.config.ConfigBase;
+
+import javax.xml.namespace.QName;
 
 /** Properties for mailers.
  *
  * @author douglm
  *
  */
-public class SelfregConfigProperties implements SelfregConfigPropertiesI {
-  private String ldapUrl;
+public class SelfregConfigProperties extends ConfigBase<SelfregConfigProperties> {
+  /** */
+  public final static QName confElement = new QName(ns, "bwtz-confinfo");
 
-  private String baseDn;
+  private static final QName ldapUrlProperty = new QName(ns, "ldapUrl");
 
-  private String accountsOu;
+  private static final QName baseDnProperty = new QName(ns, "baseDn");
 
-  private String accountsDn;
+  private static final QName accountsOuProperty = new QName(ns, "accountsOu");
 
-  private String accountsAttr;
+  private static final QName accountsDnProperty = new QName(ns, "accountsDn");
 
-  private String groupsOu;
+  private static final QName accountsAttrProperty = new QName(ns, "accountsAttr");
 
-  private String groupsDn;
+  private static final QName groupsOuProperty = new QName(ns, "groupsOu");
 
-  private String groupsAttr;
+  private static final QName groupsDnProperty = new QName(ns, "groupsDn");
 
-  private String adminId;
+  private static final QName groupsAttrProperty = new QName(ns, "groupsAttr");
 
-  private String adminPw;
+  private static final QName adminIdProperty = new QName(ns, "adminId");
 
-  private String mailProtocol;
+  private static final QName adminPwProperty = new QName(ns, "adminPw");
 
-  private String mailProtocolClass;
+  private static final QName mailProtocolProperty = new QName(ns, "mailProtocol");
 
-  private String mailServerIp;
+  private static final QName mailProtocolClassProperty = new QName(ns, "mailProtocolClass");
 
-  private String mailServerPort;
+  private static final QName mailServerIpProperty = new QName(ns, "mailServerIp");
 
-  private String mailFrom;
+  private static final QName mailServerPortProperty = new QName(ns, "mailServerPort");
 
-  private String mailSubject;
+  private static final QName mailFromProperty = new QName(ns, "mailFrom");
 
-  private boolean mailDisabled;
+  private static final QName mailSubjectProperty = new QName(ns, "mailSubject");
+
+  private static final QName mailDisabledProperty = new QName(ns, "mailDisabled");
 
   @Override
+  public QName getConfElement() {
+    return confElement;
+  }
+
+  /**
+  *
+  * @param val
+  */
   public void setLdapUrl(final String val)  {
-    ldapUrl  = val;
+    setProperty(ldapUrlProperty, val);
   }
 
-  @Override
+  /**
+   * @return String
+   */
   public String getLdapUrl()  {
-    return ldapUrl;
+    return getPropertyValue(ldapUrlProperty);
   }
 
-  @Override
+  /**
+  *
+  * @param val
+  */
   public void setBaseDn(final String val)  {
-    baseDn = val;
+    setProperty(baseDnProperty, val);
   }
 
-  @Override
+  /**
+   * @return String
+   */
   public String getBaseDn()  {
-    return baseDn;
+    return getPropertyValue(baseDnProperty);
   }
 
-  @Override
+  /**
+   *
+   * @param val
+   */
   public void setAccountsOu(final String val)  {
-    accountsOu  = val;
+    setProperty(accountsOuProperty, val);
   }
 
-  @Override
+  /**
+   * @return String
+   */
   public String getAccountsOu()  {
-    return accountsOu;
+    return getPropertyValue(accountsOuProperty);
   }
 
-  @Override
+  /**
+   *
+   * @param val
+   */
   public void setAccountsDn(final String val)  {
-    accountsDn  = val;
+    setProperty(accountsDnProperty, val);
   }
 
-  @Override
+  /**
+   * @return String
+   */
   public String getAccountsDn()  {
-    return accountsDn;
+    return getPropertyValue(accountsDnProperty);
   }
 
-  @Override
+  /**
+   *
+   * @param val
+   */
   public void setAccountsAttr(final String val)  {
-    accountsAttr  = val;
+    setProperty(accountsAttrProperty, val);
   }
 
-  @Override
+  /**
+   * @return String
+   */
   public String getAccountsAttr()  {
-    return accountsAttr;
+    return getPropertyValue(accountsAttrProperty);
   }
 
-  @Override
+  /**
+   *
+   * @param val
+   */
   public void setGroupsOu(final String val)  {
-    groupsOu  = val;
+    setProperty(groupsOuProperty, val);
   }
 
-  @Override
+  /**
+   * @return String
+   */
   public String getGroupsOu()  {
-    return groupsOu;
+    return getPropertyValue(groupsOuProperty);
   }
 
-  @Override
+  /**
+   *
+   * @param val
+   */
   public void setGroupsDn(final String val)  {
-    groupsDn  = val;
+    setProperty(groupsDnProperty, val);
   }
 
-  @Override
+  /**
+   * @return String
+   */
   public String getGroupsDn()  {
-    return groupsDn;
+    return getPropertyValue(groupsDnProperty);
   }
 
-  @Override
+  /**
+   *
+   * @param val
+   */
   public void setGroupsAttr(final String val)  {
-    groupsAttr  = val;
+    setProperty(groupsAttrProperty, val);
   }
 
-  @Override
+  /**
+   * @return String
+   */
   public String getGroupsAttr()  {
-    return groupsAttr;
+    return getPropertyValue(groupsAttrProperty);
   }
 
-  @Override
+  /**
+   *
+   * @param val
+   */
   public void setAdminId(final String val)  {
-    adminId  = val;
+    setProperty(adminIdProperty, val);
   }
 
-  @Override
+  /**
+   * @return String
+   */
   public String getAdminId()  {
-    return adminId;
+    return getPropertyValue(adminIdProperty);
   }
 
-  @Override
+  /**
+   *
+   * @param val
+   */
   public void setAdminPw(final String val)  {
-    adminPw  = val;
+    setProperty(adminPwProperty, val);
   }
 
-  @Override
+  /**
+   * @return String
+   */
   public String getAdminPw()  {
-    return adminPw;
+    return getPropertyValue(adminPwProperty);
   }
 
-  @Override
+  /**
+   *
+   * @param val
+   */
   public void setMailProtocol(final String val)  {
-    mailProtocol  = val;
+    setProperty(mailProtocolProperty, val);
   }
 
-  @Override
+  /**
+   * @return String
+   */
   public String getMailProtocol()  {
-    return mailProtocol;
+    return getPropertyValue(mailProtocolProperty);
   }
 
-  @Override
+  /**
+   *
+   * @param val
+   */
   public void setMailProtocolClass(final String val)  {
-    mailProtocolClass  = val;
+    setProperty(mailProtocolClassProperty, val);
   }
 
-  @Override
+  /**
+   * @return String
+   */
   public String getMailProtocolClass()  {
-    return mailProtocolClass;
+    return getPropertyValue(mailProtocolClassProperty);
   }
 
-  @Override
+  /**
+   *
+   * @param val
+   */
   public void setMailServerIp(final String val)  {
-    mailServerIp  = val;
+    setProperty(mailServerIpProperty, val);
   }
 
-  @Override
+  /**
+   * @return String
+   */
   public String getMailServerIp()  {
-    return mailServerIp;
+    return getPropertyValue(mailServerIpProperty);
   }
 
-  @Override
+  /**
+   *
+   * @param val
+   */
   public void setMailServerPort(final String val)  {
-    mailServerPort  = val;
+    setProperty(mailServerPortProperty, val);
   }
 
-  @Override
+  /**
+   * @return String
+   */
   public String getMailServerPort()  {
-    return mailServerPort;
+    return getPropertyValue(mailServerPortProperty);
   }
 
-  @Override
+  /**
+   *
+   * @param val
+   */
   public void setMailFrom(final String val)  {
-    mailFrom  = val;
+    setProperty(mailFromProperty, val);
   }
 
-  @Override
+  /**
+   * @return String
+   */
   public String getMailFrom()  {
-    return mailFrom;
+    return getPropertyValue(mailFromProperty);
   }
 
-  @Override
+  /**
+   *
+   * @param val
+   */
   public void setMailSubject(final String val)  {
-    mailSubject = val;
+    setProperty(mailSubjectProperty, val);
   }
 
-  @Override
+  /**
+   * @return String
+   */
   public String getMailSubject()  {
-    return mailSubject;
+    return getPropertyValue(mailSubjectProperty);
   }
 
-  @Override
+  /**
+   *
+   * @param val
+   */
   public void setMailDisabled(final boolean val)  {
-    mailDisabled = val;
+    setBooleanProperty(mailDisabledProperty, val);
   }
 
-  @Override
+  /**
+   * @return boolean
+   */
   public boolean getMailDisabled()  {
-    return mailDisabled;
+    return getBooleanPropertyValue(mailDisabledProperty);
   }
 }

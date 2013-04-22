@@ -16,7 +16,6 @@
     <listener-class>edu.rpi.sss.util.jsp.SessionListener</listener-class>
   </listener>
 
-  <!-- Need this to flush a static table maintained by the servlet -->
   <listener>
     <listener-class>org.bedework.selfreg.web.SelfregServlet</listener-class>
   </listener>

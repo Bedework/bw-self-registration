@@ -15,15 +15,22 @@
     KIND, either express or implied. See the License for the
     specific language governing permissions and limitations
     under the License.
-*/
-package org.bedework.selfreg.common;
+ */
+package org.bedework.selfreg.service;
 
-/** Properties for self reg.
+import edu.rpi.cmt.jmx.ConfBaseMBean;
+import edu.rpi.cmt.jmx.MBeanInfo;
+
+
+/** Run the Bedework synch engine service
  *
  * @author douglm
- *
  */
-public interface SelfregConfigPropertiesI {
+public interface SelfregMBean extends ConfBaseMBean {
+  /* ========================================================================
+   * Attributes
+   * ======================================================================== */
+
   /**
    *
    * @param val
@@ -33,6 +40,7 @@ public interface SelfregConfigPropertiesI {
   /**
    * @return String
    */
+  @MBeanInfo("Url of ldap server")
   String getLdapUrl();
 
   /** baseDn
@@ -44,6 +52,7 @@ public interface SelfregConfigPropertiesI {
   /**
    * @return String
    */
+  @MBeanInfo("Base dn for searches")
   String getBaseDn();
 
   /**
@@ -55,6 +64,7 @@ public interface SelfregConfigPropertiesI {
   /**
    * @return String
    */
+  @MBeanInfo("Ldap accounts ou")
   String getAccountsOu();
 
   /**
@@ -66,6 +76,7 @@ public interface SelfregConfigPropertiesI {
   /**
    * @return String
    */
+  @MBeanInfo("Ldap accounts dn")
   String getAccountsDn();
 
   /**
@@ -77,6 +88,7 @@ public interface SelfregConfigPropertiesI {
   /**
    * @return String
    */
+  @MBeanInfo("Ldap accounts attribute")
   String getAccountsAttr();
 
   /**
@@ -88,6 +100,7 @@ public interface SelfregConfigPropertiesI {
   /**
    * @return String
    */
+  @MBeanInfo("Ldap groups ou")
   String getGroupsOu();
 
   /**
@@ -99,18 +112,8 @@ public interface SelfregConfigPropertiesI {
   /**
    * @return String
    */
+  @MBeanInfo("Ldap groups dn")
   String getGroupsDn();
-
-  /**
-   *
-   * @param val
-   */
-  void setGroupsAttr(final String val);
-
-  /**
-   * @return String
-   */
-  String getGroupsAttr();
 
   /**
    *
@@ -121,6 +124,7 @@ public interface SelfregConfigPropertiesI {
   /**
    * @return String
    */
+  @MBeanInfo("Ldap admin id")
   String getAdminId();
 
   /**
@@ -132,6 +136,7 @@ public interface SelfregConfigPropertiesI {
   /**
    * @return String
    */
+  @MBeanInfo("Ldap admin pw")
   String getAdminPw();
 
   /** valid protocol for which an implementation exists, e.g "imap", "smtp"
@@ -143,6 +148,7 @@ public interface SelfregConfigPropertiesI {
   /**
    * @return String
    */
+  @MBeanInfo("valid protocol for which an implementation exists, e.g \"imap\", \"smtp\"")
   String getMailProtocol();
 
   /** Implementation for the selected protocol
@@ -154,6 +160,7 @@ public interface SelfregConfigPropertiesI {
   /**
    * @return String
    */
+  @MBeanInfo("Implementation class for the selected protocol")
   String getMailProtocolClass();
 
   /** Where we send it.
@@ -165,6 +172,7 @@ public interface SelfregConfigPropertiesI {
   /**
    * @return String
    */
+  @MBeanInfo("Mail server ip")
   String getMailServerIp();
 
   /**
@@ -175,6 +183,7 @@ public interface SelfregConfigPropertiesI {
   /**
    * @return String
    */
+  @MBeanInfo("Mail server port")
   String getMailServerPort();
 
   /** Mailer:
@@ -184,9 +193,10 @@ public interface SelfregConfigPropertiesI {
   void setMailFrom(final String val);
 
   /** Mailer:
-  /**
+ /**
    * @return String
    */
+  @MBeanInfo("Mail 'from'")
   String getMailFrom();
 
   /** Mailer: Subject we use when none supplied
@@ -198,6 +208,7 @@ public interface SelfregConfigPropertiesI {
   /**
    * @return String
    */
+  @MBeanInfo("Mailer: Subject we use when none supplied")
   String getMailSubject();
 
   /** Allow mailer to be disabled
@@ -209,5 +220,79 @@ public interface SelfregConfigPropertiesI {
   /**
    * @return boolean
    */
+  @MBeanInfo("Allow mailer to be disabled")
   boolean getMailDisabled();
+
+  /* ========================================================================
+   * Operations
+   * ======================================================================== */
+
+  /** Add a user
+   *
+   * @param account
+   * @param first
+   * @param last
+   * @param email
+   * @param password
+   * @return status
+   */
+  @MBeanInfo("Add a user")
+  public String addUser(String account,
+                        String first,
+                        String last,
+                        String email,
+                        String password);
+
+  /** Display a user
+   *
+   * @param account
+   * @return status
+   */
+  @MBeanInfo("Display a user")
+  public String displayUser(String account);
+
+  /** Set a user password
+   *
+   * @param account
+   * @param password
+   * @return status
+   */
+  @MBeanInfo("Set a user password")
+  public String setUserPassword(String account,
+                                String password);
+
+  /** Remove a user
+   *
+   * @param account
+   * @return status
+   */
+  @MBeanInfo("Remove a user")
+  public String removeUser(String account);
+
+  /** Add a group
+   *
+   * @param group
+   * @param account
+   * @return status
+   */
+  @MBeanInfo("Add a group")
+  public String addGroup(String group,
+                         String account);
+
+  /** Add a group member
+   *
+   * @param group
+   * @param account
+   * @return status
+   */
+  @MBeanInfo("Add a group member")
+  public String addGroupMember(String group,
+                               String account);
+
+  /** (Re)load the configuration
+   *
+   * @return status
+   */
+  @MBeanInfo("(Re)load the configuration")
+  String loadConfig();
 }

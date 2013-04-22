@@ -22,8 +22,6 @@
 		<servlet-api.version>2.5</servlet-api.version>
 		<ical4j.version>head-20100601</ical4j.version>
 		<apache-http.version>4.2.2</apache-http.version>
-		<hibernate.version>3.6.9.Final</hibernate.version>
-		<hibernate-validator.version>3.1.0.GA</hibernate-validator.version>
 		<ehcache.version>1.6.2</ehcache.version>
 		<junit.version>4.8.2</junit.version>
 		<log4j.version>1.2.15</log4j.version>
@@ -57,9 +55,7 @@
 
 	<modules>
 		<module>bw-self-registration-common</module>
-		<module>bw-self-registration-service</module>
 		<module>bw-self-registration-war</module>
-		<module>bw-self-registration-ear-properties</module>
 		<module>bw-self-registration-ear</module>
 	</modules>
 
@@ -135,16 +131,6 @@
 				<version>${ehcache.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-core</artifactId>
-				<version>${hibernate.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-validator</artifactId>
-				<version>${hibernate-validator.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>servlet-api</artifactId>
 				<version>${servlet-api.version}</version>
@@ -199,31 +185,6 @@
 	</dependencyManagement>
 
 	<repositories>
-		<repository>
-			<id>jboss.repository</id>
-			<name>JBoss Public Repository Group</name>
-			<url>http://repository.jboss.org/nexus/content/groups/developer/</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<!-- Only needed for JBoss 5 dependencies. We should remove this when we 
-			move Bedework off of JBoss 5. -->
-		<repository>
-			<id>jboss-deprecated</id>
-			<name>JBoss Deprecated Repository</name>
-			<url>http://repository.jboss.org/nexus/content/repositories/deprecated</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
 		<repository>
 			<id>bedework.repository</id>
 			<name>Bedework Maven Repository</name>
