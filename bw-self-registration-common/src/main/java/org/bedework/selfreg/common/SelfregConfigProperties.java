@@ -29,7 +29,7 @@ import javax.xml.namespace.QName;
  */
 public class SelfregConfigProperties extends ConfigBase<SelfregConfigProperties> {
   /** */
-  public final static QName confElement = new QName(ns, "bwtz-confinfo");
+  public final static QName confElement = new QName(ns, "bwselfreg");
 
   private static final QName ldapUrlProperty = new QName(ns, "ldapUrl");
 

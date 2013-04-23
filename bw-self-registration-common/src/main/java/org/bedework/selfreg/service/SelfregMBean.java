@@ -22,7 +22,7 @@ import edu.rpi.cmt.jmx.ConfBaseMBean;
 import edu.rpi.cmt.jmx.MBeanInfo;
 
 
-/** Run the Bedework synch engine service
+/** Run the Bedework selfreg engine service
  *
  * @author douglm
  */

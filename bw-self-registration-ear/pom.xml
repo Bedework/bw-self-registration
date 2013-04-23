@@ -167,7 +167,7 @@
 						<webModule>
 							<groupId>${project.groupId}</groupId>
 							<artifactId>bw-self-registration-war</artifactId>
-							<contextRoot>/synch</contextRoot>
+							<contextRoot>/selfreg</contextRoot>
 						</webModule>
 						<jarModule>
 							<groupId>${project.groupId}</groupId>

@@ -72,7 +72,7 @@ public class Selfreg extends ConfBase<SelfregConfigProperties> implements Selfre
 
   @Override
   public String getBaseDn()  {
-    return getBaseDn();
+    return getCfg().getBaseDn();
   }
 
   @Override

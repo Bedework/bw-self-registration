@@ -18,12 +18,25 @@
 */
 package org.bedework.selfreg.web;
 
+import org.bedework.selfreg.service.Selfreg;
+import org.bedework.selfreg.web.MethodBase.MethodInfo;
+
+import edu.rpi.cmt.config.ConfigurationType;
+import edu.rpi.cmt.jmx.ConfBase;
+import edu.rpi.sss.util.servlets.io.CharArrayWrappedResponse;
+import edu.rpi.sss.util.xml.XmlEmit;
+import edu.rpi.sss.util.xml.tagdefs.WebdavTags;
+
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Enumeration;
 import java.util.HashMap;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,13 +46,6 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import javax.xml.namespace.QName;
 
-import org.apache.log4j.Logger;
-import org.bedework.selfreg.web.MethodBase.MethodInfo;
-
-import edu.rpi.sss.util.servlets.io.CharArrayWrappedResponse;
-import edu.rpi.sss.util.xml.XmlEmit;
-import edu.rpi.sss.util.xml.tagdefs.WebdavTags;
-
 /** WebDAV Servlet.
  * This abstract servlet handles the request/response nonsense and calls
  * abstract routines to interact with an underlying data source.
@@ -48,7 +54,7 @@ import edu.rpi.sss.util.xml.tagdefs.WebdavTags;
  * @version 1.0
  */
 public class SelfregServlet extends HttpServlet
-        implements HttpSessionListener {
+        implements HttpSessionListener, ServletContextListener {
   protected boolean debug;
 
   protected boolean dumpContent;
@@ -380,6 +386,57 @@ public class SelfregServlet extends HttpServlet
       }
     } catch (Throwable t) {
     }
+  }
+
+  /* -----------------------------------------------------------------------
+   *                         JMX support
+   */
+
+  class Configurator extends ConfBase {
+    Selfreg selfreg;
+
+    Configurator() {
+      super("org.bedework.selfreg:service=Selfreg");
+    }
+
+    @Override
+    public ConfigurationType getConfigObject() {
+      return selfreg.getConfigObject();
+    }
+
+    void start() {
+      try {
+        getManagementContext().start();
+
+        selfreg = new Selfreg();
+        register("selfreg", "selfreg", selfreg);
+        selfreg.loadConfig();
+//        selfreg.start();
+      } catch (Throwable t){
+        t.printStackTrace();
+      }
+    }
+
+    void stop() {
+      try {
+//        selfreg.stop();
+        getManagementContext().stop();
+      } catch (Throwable t){
+        t.printStackTrace();
+      }
+    }
+  }
+
+  private Configurator conf = new Configurator();
+
+  @Override
+  public void contextInitialized(final ServletContextEvent sce) {
+    conf.start();
+  }
+
+  @Override
+  public void contextDestroyed(final ServletContextEvent sce) {
+    conf.stop();
   }
 
   /**

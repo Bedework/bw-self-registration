@@ -4,47 +4,4 @@
   <loader-repository> 
     org.bedework:archive=selfreg-service 
   </loader-repository> 
-  
-  <mbean code="org.bedework.selfreg.service.Selfreg"
-         name="org.bedework:service=Selfreg"
-         xmbean-dd="resource:xmdesc/bw-selfreg-xmbean.xml">
-    <!-- attributes -->
-        
-    <attribute name="LdapUrl">ldap://localhost:10389</attribute>
-    
-    <attribute name="BaseDn">dc=bedework, dc=org</attribute>
-    
-    <attribute name="AccountsOu">accounts</attribute>
-    
-    <!-- "ou=" + accountsOu + ", " + baseDn -->
-    <attribute name="AccountsDn">ou=accounts, dc=bedework, dc=org</attribute>
-    
-    <attribute name="AccountsAttr">uid</attribute>
-    
-    <attribute name="GroupsOu">groups</attribute>
-    
-    <!-- "ou=" + groupsOu + ", " + baseDn -->
-    <attribute name="GroupsDn">ou=groups, dc=bedework, dc=org</attribute>
-    
-    <attribute name="AdminId">uid=admin,ou=system</attribute>
-    
-    <attribute name="AdminPw">secret</attribute>
-
-    <attribute name="MailProtocol">smtp</attribute>
-
-    <attribute name="MailProtocolClass">com.sun.mail.smtp.SMTPTransport</attribute>
-
-    <attribute name="MailServerIp">localhost</attribute>
-
-    <attribute name="MailServerPort"></attribute>
-
-    <attribute name="MailFrom">bedework@bedework.org</attribute>
-
-    <attribute name="MailSubject">Bedework self registration</attribute>
-
-    <attribute name="MailDisabled">false</attribute>
-  
-    <!-- We also need the database
-    <depends>jboss.jca:service=DataSourceBinding,name=SynchDS</depends> -->
-  </mbean>
 </server>

@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
 
 
-/** Forbidden exception thrown by synch classes
+/** Forbidden exception thrown by selfreg classes
  *
  *   @author Mike Douglass   douglm@rpi.edu
  */
