@@ -20,21 +20,14 @@ package org.bedework.selfreg.service;
 
 import org.bedework.selfreg.common.DirMaint;
 import org.bedework.selfreg.common.DirMaintImpl;
-import org.bedework.selfreg.common.SelfregConfigProperties;
-
-import edu.rpi.cmt.config.ConfigurationStore;
-import edu.rpi.cmt.config.ConfigurationType;
 import edu.rpi.cmt.jmx.ConfBase;
-
-import java.util.Collection;
 
 /**
  * @author douglm
  *
  */
-public class Selfreg extends ConfBase<SelfregConfigProperties> implements SelfregMBean {
-  private SelfregConfigProperties cfg;
-
+public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
+        implements SelfregMBean {
   /* Name of the property holding the location of the config data */
   private static final String datauriPname = "org.bedework.selfreg.datauri";
 
@@ -46,173 +39,178 @@ public class Selfreg extends ConfBase<SelfregConfigProperties> implements Selfre
     setConfigPname(datauriPname);
   }
 
-  @Override
-  public ConfigurationType getConfigObject() {
-    return getCfg().getConfig();
-  }
-
   /* ========================================================================
    * Attributes
    * ======================================================================== */
 
   @Override
   public void setLdapUrl(final String val)  {
-    getCfg().setLdapUrl(val);
+    getConfig().setLdapUrl(val);
   }
 
   @Override
   public String getLdapUrl()  {
-    return getCfg().getLdapUrl();
+    return getConfig().getLdapUrl();
   }
 
   @Override
   public void setBaseDn(final String val)  {
-    getCfg().setBaseDn(val);
+    getConfig().setBaseDn(val);
   }
 
   @Override
   public String getBaseDn()  {
-    return getCfg().getBaseDn();
+    return getConfig().getBaseDn();
   }
 
   @Override
   public void setAccountsOu(final String val)  {
-    getCfg().setAccountsOu(val);
+    getConfig().setAccountsOu(val);
   }
 
   @Override
   public String getAccountsOu()  {
-    return getCfg().getAccountsOu();
+    return getConfig().getAccountsOu();
   }
 
   @Override
   public void setAccountsDn(final String val)  {
-    getCfg().setAccountsDn(val);
+    getConfig().setAccountsDn(val);
   }
 
   @Override
   public String getAccountsDn()  {
-    return getCfg().getAccountsDn();
+    return getConfig().getAccountsDn();
   }
 
   @Override
   public void setAccountsAttr(final String val)  {
-    getCfg().setAccountsAttr(val);
+    getConfig().setAccountsAttr(val);
   }
 
   @Override
   public String getAccountsAttr()  {
-    return getCfg().getAccountsAttr();
+    return getConfig().getAccountsAttr();
   }
 
   @Override
   public void setGroupsOu(final String val)  {
-    getCfg().setGroupsOu(val);
+    getConfig().setGroupsOu(val);
   }
 
   @Override
   public String getGroupsOu()  {
-    return getCfg().getGroupsOu();
+    return getConfig().getGroupsOu();
   }
 
   @Override
   public void setGroupsDn(final String val)  {
-    getCfg().setGroupsDn(val);
+    getConfig().setGroupsDn(val);
   }
 
   @Override
   public String getGroupsDn()  {
-    return getCfg().getGroupsDn();
+    return getConfig().getGroupsDn();
+  }
+
+  @Override
+  public void setGroupsAttr(final String val)  {
+    getConfig().setGroupsAttr(val);
+  }
+
+  @Override
+  public String getGroupsAttr()  {
+    return getConfig().getGroupsAttr();
   }
 
   @Override
   public void setAdminId(final String val)  {
-    getCfg().setAdminId(val);
+    getConfig().setAdminId(val);
   }
 
   @Override
   public String getAdminId()  {
-    return getCfg().getAdminId();
+    return getConfig().getAdminId();
   }
 
   @Override
   public void setAdminPw(final String val)  {
-    getCfg().setAdminPw(val);
+    getConfig().setAdminPw(val);
   }
 
   @Override
   public String getAdminPw()  {
-    return getCfg().getAdminPw();
+    return getConfig().getAdminPw();
   }
 
   @Override
   public void setMailProtocol(final String val)  {
-    getCfg().setMailProtocol(val);
+    getConfig().setMailProtocol(val);
   }
 
   @Override
   public String getMailProtocol()  {
-    return getCfg().getMailProtocol();
+    return getConfig().getMailProtocol();
   }
 
   @Override
   public void setMailProtocolClass(final String val)  {
-    getCfg().setMailProtocolClass(val);
+    getConfig().setMailProtocolClass(val);
   }
 
   @Override
   public String getMailProtocolClass()  {
-    return getCfg().getMailProtocolClass();
+    return getConfig().getMailProtocolClass();
   }
 
   @Override
   public void setMailServerIp(final String val)  {
-    getCfg().setMailServerIp(val);
+    getConfig().setMailServerIp(val);
   }
 
   @Override
   public String getMailServerIp()  {
-    return getCfg().getMailServerIp();
+    return getConfig().getMailServerIp();
   }
 
   @Override
   public void setMailServerPort(final String val)  {
-    getCfg().setMailServerPort(val);
+    getConfig().setMailServerPort(val);
   }
 
   @Override
   public String getMailServerPort()  {
-    return getCfg().getMailServerPort();
+    return getConfig().getMailServerPort();
   }
 
   @Override
   public void setMailFrom(final String val)  {
-    getCfg().setMailFrom(val);
+    getConfig().setMailFrom(val);
   }
 
   @Override
   public String getMailFrom()  {
-    return getCfg().getMailFrom();
+    return getConfig().getMailFrom();
   }
 
   @Override
   public void setMailSubject(final String val)  {
-    getCfg().setMailSubject(val);
+    getConfig().setMailSubject(val);
   }
 
   @Override
   public String getMailSubject()  {
-    return getCfg().getMailSubject();
+    return getConfig().getMailSubject();
   }
 
   @Override
   public void setMailDisabled(final boolean val)  {
-    getCfg().setMailDisabled(val);
+    getConfig().setMailDisabled(val);
   }
 
   @Override
   public boolean getMailDisabled()  {
-    return getCfg().getMailDisabled();
+    return getConfig().getMailDisabled();
   }
 
   /* ========================================================================
@@ -302,50 +300,7 @@ public class Selfreg extends ConfBase<SelfregConfigProperties> implements Selfre
 
   @Override
   public String loadConfig() {
-    try {
-      /* Load up the config */
-
-      ConfigurationStore cs = getStore();
-
-      Collection<String> configNames = cs.getConfigs();
-
-      if (configNames.isEmpty()) {
-        return "No configuration";
-      }
-
-      if (configNames.size() != 1) {
-        return "1 and only 1 configuration allowed";
-      }
-
-      String configName = configNames.iterator().next();
-
-      cfg = getConfigInfo(configName, SelfregConfigProperties.class);
-
-      if (cfg == null) {
-        return "Unable to read configuration";
-      }
-
-      setConfigName(configName);
-
-      saveConfig(); // Just to ensure we have it for next time
-
-      return "OK";
-    } catch (Throwable t) {
-      error("Failed to start management context");
-      error(t);
-      return "failed";
-    }
-  }
-
-  /* ====================================================================
-   *                   Non-mbean methods
-   * ==================================================================== */
-
-  /**
-   * @return current state of config
-   */
-  public SelfregConfigProperties getCfg() {
-    return cfg;
+    return loadConfig(SelfregConfigPropertiesImpl.class);
   }
 
   /* ========================================================================
@@ -359,7 +314,7 @@ public class Selfreg extends ConfBase<SelfregConfigProperties> implements Selfre
   private DirMaint getDir() throws Throwable {
     DirMaint dir = new DirMaintImpl();
 
-    dir.init(getCfg());
+    dir.init(getConfig());
 
     return dir;
   }

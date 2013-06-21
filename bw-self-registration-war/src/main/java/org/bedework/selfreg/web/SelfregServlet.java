@@ -20,19 +20,11 @@ package org.bedework.selfreg.web;
 
 import org.bedework.selfreg.service.Selfreg;
 import org.bedework.selfreg.web.MethodBase.MethodInfo;
-
-import edu.rpi.cmt.config.ConfigurationType;
 import edu.rpi.cmt.jmx.ConfBase;
 import edu.rpi.sss.util.servlets.io.CharArrayWrappedResponse;
 import edu.rpi.sss.util.xml.XmlEmit;
 import edu.rpi.sss.util.xml.tagdefs.WebdavTags;
-
 import org.apache.log4j.Logger;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Enumeration;
-import java.util.HashMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContextEvent;
@@ -45,6 +37,10 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import javax.xml.namespace.QName;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Enumeration;
+import java.util.HashMap;
 
 /** WebDAV Servlet.
  * This abstract servlet handles the request/response nonsense and calls
@@ -87,7 +83,7 @@ public class SelfregServlet extends HttpServlet
   @Override
   protected void service(final HttpServletRequest req,
                          HttpServletResponse resp)
-      throws ServletException, IOException {
+          throws ServletException, IOException {
     boolean serverError = false;
 
     try {
@@ -138,7 +134,7 @@ public class SelfregServlet extends HttpServlet
       } catch (Throwable t) {}
 
       if (debug && dumpContent &&
-          (resp instanceof CharArrayWrappedResponse)) {
+              (resp instanceof CharArrayWrappedResponse)) {
         /* instanceof check because we might get a subsequent exception before
          * we wrap the response
          */
@@ -212,7 +208,7 @@ public class SelfregServlet extends HttpServlet
       xml.startEmit(wtr);
       xml.openTag(WebdavTags.error);
 
-  //    syncher.emitError(errorTag, extra, xml);
+      //    syncher.emitError(errorTag, extra, xml);
 
       xml.closeTag(WebdavTags.error);
       xml.flush();
@@ -258,7 +254,7 @@ public class SelfregServlet extends HttpServlet
     MethodInfo mi = methods.get(name.toUpperCase());
 
 //    if ((mi == null) || (getAnonymous() && mi.getRequiresAuth())) {
-  //    return null;
+    //    return null;
     //}
 
     try {
@@ -397,11 +393,6 @@ public class SelfregServlet extends HttpServlet
 
     Configurator() {
       super("org.bedework.selfreg:service=Selfreg");
-    }
-
-    @Override
-    public ConfigurationType getConfigObject() {
-      return selfreg.getConfigObject();
     }
 
     void start() {
