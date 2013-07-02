@@ -32,7 +32,7 @@ import java.io.Serializable;
 public interface SelfregConfigProperties extends Serializable {
   /**
    *
-   * @param val
+   * @param val the value
    */
   void setLdapUrl(final String val);
 
