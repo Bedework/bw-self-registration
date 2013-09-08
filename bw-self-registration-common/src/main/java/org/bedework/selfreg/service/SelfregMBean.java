@@ -19,8 +19,8 @@
 package org.bedework.selfreg.service;
 
 import org.bedework.selfreg.common.SelfregConfigProperties;
-import edu.rpi.cmt.jmx.ConfBaseMBean;
-import edu.rpi.cmt.jmx.MBeanInfo;
+import org.bedework.util.jmx.ConfBaseMBean;
+import org.bedework.util.jmx.MBeanInfo;
 
 
 /** Run the Bedework selfreg engine service

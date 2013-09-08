@@ -19,7 +19,7 @@
 package org.bedework.selfreg.service;
 
 import org.bedework.selfreg.common.SelfregConfigProperties;
-import edu.rpi.cmt.config.ConfigBase;
+import org.bedework.util.config.ConfigBase;
 
 /** Properties for mailers.
  *

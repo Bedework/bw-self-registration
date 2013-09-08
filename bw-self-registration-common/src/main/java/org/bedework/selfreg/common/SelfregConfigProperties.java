@@ -18,8 +18,8 @@
  */
 package org.bedework.selfreg.common;
 
-import edu.rpi.cmt.config.ConfInfo;
-import edu.rpi.cmt.jmx.MBeanInfo;
+import org.bedework.util.config.ConfInfo;
+import org.bedework.util.jmx.MBeanInfo;
 
 import java.io.Serializable;
 

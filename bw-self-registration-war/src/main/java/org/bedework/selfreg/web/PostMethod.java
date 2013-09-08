@@ -18,14 +18,13 @@
 */
 package org.bedework.selfreg.web;
 
+import org.bedework.selfreg.common.exception.SelfregException;
+import org.bedework.util.misc.Util;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.bedework.selfreg.common.exception.SelfregException;
-
-import edu.rpi.sss.util.Util;
 
 /** Handle POST for selfreg servlet.
  */

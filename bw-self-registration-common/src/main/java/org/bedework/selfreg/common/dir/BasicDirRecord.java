@@ -18,14 +18,13 @@
 */
 package org.bedework.selfreg.common.dir;
 
+import org.bedework.util.misc.ToString;
+
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttributes;
-
-import edu.rpi.sss.util.ToString;
-
 
 /** This class represents a directory record which may be built from a
     number of attributes represented as a BasicAttributes object.

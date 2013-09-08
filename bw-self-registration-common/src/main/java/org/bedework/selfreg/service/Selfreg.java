@@ -20,7 +20,7 @@ package org.bedework.selfreg.service;
 
 import org.bedework.selfreg.common.DirMaint;
 import org.bedework.selfreg.common.DirMaintImpl;
-import edu.rpi.cmt.jmx.ConfBase;
+import org.bedework.util.jmx.ConfBase;
 
 /**
  * @author douglm

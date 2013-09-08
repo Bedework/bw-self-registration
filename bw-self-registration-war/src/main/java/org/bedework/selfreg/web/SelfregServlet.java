@@ -20,11 +20,17 @@ package org.bedework.selfreg.web;
 
 import org.bedework.selfreg.service.Selfreg;
 import org.bedework.selfreg.web.MethodBase.MethodInfo;
-import edu.rpi.cmt.jmx.ConfBase;
-import edu.rpi.sss.util.servlets.io.CharArrayWrappedResponse;
-import edu.rpi.sss.util.xml.XmlEmit;
-import edu.rpi.sss.util.xml.tagdefs.WebdavTags;
+import org.bedework.util.jmx.ConfBase;
+import org.bedework.util.servlet.io.CharArrayWrappedResponse;
+import org.bedework.util.xml.XmlEmit;
+import org.bedework.util.xml.tagdefs.WebdavTags;
+
 import org.apache.log4j.Logger;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Enumeration;
+import java.util.HashMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContextEvent;
@@ -37,10 +43,6 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import javax.xml.namespace.QName;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Enumeration;
-import java.util.HashMap;
 
 /** WebDAV Servlet.
  * This abstract servlet handles the request/response nonsense and calls
