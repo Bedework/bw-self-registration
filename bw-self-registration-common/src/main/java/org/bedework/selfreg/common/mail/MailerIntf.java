@@ -26,7 +26,7 @@ import org.bedework.selfreg.common.SelfregConfigProperties;
 import org.bedework.selfreg.common.exception.SelfregException;
 
 /**
- * @author Mike Douglass douglm  rpi.edu
+ * @author Mike Douglass douglm  bedework.edu
  */
 public interface MailerIntf extends Serializable {
   /**

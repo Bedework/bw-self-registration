@@ -23,7 +23,7 @@ import javax.xml.namespace.QName;
 
 /** Base exception thrown by selfreg classes
  *
- *   @author Mike Douglass   douglm@rpi.edu
+ *   @author Mike Douglass   douglm@bedework.edu
  */
 public class SelfregException extends Throwable {
   /** > 0 if set

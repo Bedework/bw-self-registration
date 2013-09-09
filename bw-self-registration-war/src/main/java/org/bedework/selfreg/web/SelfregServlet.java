@@ -48,7 +48,7 @@ import javax.xml.namespace.QName;
  * This abstract servlet handles the request/response nonsense and calls
  * abstract routines to interact with an underlying data source.
  *
- * @author Mike Douglass   douglm@rpi.edu
+ * @author Mike Douglass   douglm@bedework.edu
  * @version 1.0
  */
 public class SelfregServlet extends HttpServlet

@@ -39,7 +39,7 @@ import org.bedework.selfreg.common.exception.SelfregException;
  * We do not consider many issues such as spam prevention, efficiency in
  * mailing to large lists, etc.
  *
- * @author  Mike Douglass douglm@rpi.edu
+ * @author  Mike Douglass douglm@bedework.edu
  */
 public class Mailer implements MailerIntf {
   private boolean debug;
