@@ -397,6 +397,11 @@ public class SelfregServlet extends HttpServlet
       super("org.bedework.selfreg:service=Selfreg");
     }
 
+    @Override
+    public String loadConfig() {
+      return null;
+    }
+
     void start() {
       try {
         getManagementContext().start();
