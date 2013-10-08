@@ -24,7 +24,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="bw-self-registration-common" scope="PROVIDED" />
-    <orderEntry type="module" module-name="bw-util-config" scope="PROVIDED" />
+    <orderEntry type="module" module-name="bw-util-config" />
     <orderEntry type="module" module-name="bw-util-misc" />
     <orderEntry type="module" module-name="bw-ws-tzsvr" />
     <orderEntry type="module" module-name="bw-ws-calws-soap" />
@@ -53,8 +53,8 @@
     <orderEntry type="library" name="Maven: oro:oro:2.0.8" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: log4j:log4j:1.2.15" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.mail:mail:1.4" level="project" />
-    <orderEntry type="module" module-name="bw-util-xml" scope="PROVIDED" />
-    <orderEntry type="module" module-name="bw-util-jmx" scope="PROVIDED" />
+    <orderEntry type="module" module-name="bw-util-xml" />
+    <orderEntry type="module" module-name="bw-util-jmx" />
     <orderEntry type="module" module-name="bw-util-servlet" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.servlet:servlet-api:2.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.8.2" level="project" />
