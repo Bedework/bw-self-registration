@@ -402,7 +402,8 @@ public class SelfregServlet extends HttpServlet
       return null;
     }
 
-    void start() {
+    @Override
+    public void start() {
       try {
         getManagementContext().start();
 
@@ -415,7 +416,8 @@ public class SelfregServlet extends HttpServlet
       }
     }
 
-    void stop() {
+    @Override
+    public void stop() {
       try {
 //        selfreg.stop();
         getManagementContext().stop();
