@@ -29,14 +29,25 @@ import org.bedework.util.jmx.ConfBase;
 public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
         implements SelfregMBean {
   /* Name of the property holding the location of the config data */
-  private static final String datauriPname = "org.bedework.selfreg.datauri";
+  private static final String datauriPname = "org.bedework.selfreg.confuri";
+
+  private final static String nm = "config";
 
   /**
    */
   public Selfreg() {
-    super("org.bedework.selfreg:service=Selfreg");
+    super(getServiceName(nm));
 
+    setConfigName(nm);
     setConfigPname(datauriPname);
+  }
+
+  /**
+   * @param name
+   * @return object name value for the mbean with this name
+   */
+  public static String getServiceName(final String name) {
+    return "org.bedework.selfreg:service=" + name;
   }
 
   /* ========================================================================

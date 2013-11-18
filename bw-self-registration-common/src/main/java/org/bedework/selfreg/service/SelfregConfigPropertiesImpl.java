@@ -26,6 +26,7 @@ import org.bedework.util.config.ConfigBase;
  * @author douglm
  *
  */
+@ConfInfo(elementName = "selfreg")
 public class SelfregConfigPropertiesImpl
         extends ConfigBase<SelfregConfigPropertiesImpl>
         implements SelfregConfigProperties {
