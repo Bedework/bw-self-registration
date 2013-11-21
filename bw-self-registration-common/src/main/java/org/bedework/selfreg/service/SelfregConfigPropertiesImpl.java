@@ -19,6 +19,7 @@
 package org.bedework.selfreg.service;
 
 import org.bedework.selfreg.common.SelfregConfigProperties;
+import org.bedework.util.config.ConfInfo;
 import org.bedework.util.config.ConfigBase;
 
 /** Properties for mailers.
