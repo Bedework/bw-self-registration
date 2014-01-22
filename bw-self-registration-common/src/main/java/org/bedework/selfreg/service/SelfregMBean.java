@@ -43,11 +43,11 @@ public interface SelfregMBean extends ConfBaseMBean,
    * @return status
    */
   @MBeanInfo("Add a user")
-  public String addUser(String account,
-                        String first,
-                        String last,
-                        String email,
-                        String password);
+  public String addUser(@MBeanInfo("Account")String account,
+                        @MBeanInfo("First name")String first,
+                        @MBeanInfo("Last name")String last,
+                        @MBeanInfo("Email")String email,
+                        @MBeanInfo("Password")String password);
 
   /** Display a user
    *
@@ -55,7 +55,7 @@ public interface SelfregMBean extends ConfBaseMBean,
    * @return status
    */
   @MBeanInfo("Display a user")
-  public String displayUser(String account);
+  public String displayUser(@MBeanInfo("Account")String account);
 
   /** Set a user password
    *
@@ -64,8 +64,8 @@ public interface SelfregMBean extends ConfBaseMBean,
    * @return status
    */
   @MBeanInfo("Set a user password")
-  public String setUserPassword(String account,
-                                String password);
+  public String setUserPassword(@MBeanInfo("Account")String account,
+                                @MBeanInfo("Password")String password);
 
   /** Remove a user
    *
@@ -73,7 +73,7 @@ public interface SelfregMBean extends ConfBaseMBean,
    * @return status
    */
   @MBeanInfo("Remove a user")
-  public String removeUser(String account);
+  public String removeUser(@MBeanInfo("Account")String account);
 
   /** Add a group
    *
@@ -82,8 +82,8 @@ public interface SelfregMBean extends ConfBaseMBean,
    * @return status
    */
   @MBeanInfo("Add a group")
-  public String addGroup(String group,
-                         String account);
+  public String addGroup(@MBeanInfo("Group")String group,
+                         @MBeanInfo("Account")String account);
 
   /** Add a group member
    *
@@ -92,8 +92,8 @@ public interface SelfregMBean extends ConfBaseMBean,
    * @return status
    */
   @MBeanInfo("Add a group member")
-  public String addGroupMember(String group,
-                               String account);
+  public String addGroupMember(@MBeanInfo("Group")String group,
+                               @MBeanInfo("Account")String account);
 
   /** (Re)load the configuration
    *
