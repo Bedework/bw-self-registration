@@ -30,11 +30,6 @@
     </dependency>
 		<!-- Third Party Libraries -->
 		<dependency>
-			<groupId>net.fortuna.ical4j</groupId>
-			<artifactId>ical4j</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
 			<scope>provided</scope>
