@@ -19,6 +19,8 @@
 
 package org.bedework.selfreg.common.mail;
 
+import org.bedework.util.misc.ToString;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -184,49 +186,18 @@ public class Message implements Serializable {
   }
 
   public String toString() {
-    StringBuffer sb = new StringBuffer();
+    final ToString ts = new ToString(this);
 
-    sb.append("Message[\n");
+    ts.append("from", getFrom());
+    ts.append("to", getMailTo());
+    ts.append("cc", getCcTo());
+    ts.append("bcc", getBccTo());
 
-    appStr(sb, "from", getFrom());
+    ts.append("subject", getSubject());
+    ts.append("content", getContent());
 
-    appStrs(sb, "to", getMailTo());
-    appStrs(sb, "cc", getCcTo());
-    appStrs(sb, "bcc", getBccTo());
+    ts.append("attachments", getAttachments());
 
-    appStr(sb, "subject", getSubject());
-    appStr(sb, "content", getContent());
-
-    for (Attachment att: getAttachments()) {
-      sb.append(att.toString());
-      sb.append("\n");
-    }
-
-    sb.append("]endMessage\n");
-
-
-    return sb.toString();
-  }
-
-  private void appStr(StringBuffer sb, String nm, String val) {
-    sb.append(nm);
-    sb.append(": ");
-    sb.append(val);
-    sb.append("\n");
-  }
-
-  private void appStrs(StringBuffer sb, String nm, String[] vals) {
-    sb.append(nm);
-    sb.append(": ");
-
-    if (vals != null) {
-      for (int i = 0; i < vals.length; i++) {
-        if (i != 0) {
-          sb.append(", ");
-        }
-        sb.append(vals[i]);
-      }
-    }
-    sb.append("\n");
+    return ts.toString();
   }
 }

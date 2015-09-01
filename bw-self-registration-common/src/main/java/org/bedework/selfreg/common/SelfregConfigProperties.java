@@ -178,13 +178,13 @@ public interface SelfregConfigProperties extends Serializable {
    *
    * @param val
    */
-  void setMailServerIp(final String val);
+  void setMailServerHost(final String val);
 
   /**
    * @return String
    */
   @MBeanInfo("Mail server ip")
-  String getMailServerIp();
+  String getMailServerHost();
 
   /**
    * @param val
@@ -196,6 +196,30 @@ public interface SelfregConfigProperties extends Serializable {
    */
   @MBeanInfo("Mail server port")
   String getMailServerPort();
+
+  /**
+   *
+   * @param val mail server account
+   */
+  void setMailServerAccount(final String val);
+
+  /**
+   * @return String
+   */
+  @MBeanInfo("mail server account")
+  String getMailServerAccount();
+
+  /**
+   *
+   * @param val mail server pw
+   */
+  void setMailServerPw(final String val);
+
+  /**
+   * @return String
+   */
+  @MBeanInfo("mail server password")
+  String getMailServerPw();
 
   /** Mailer:
    *
@@ -233,4 +257,28 @@ public interface SelfregConfigProperties extends Serializable {
    */
   @MBeanInfo("Allow mailer to be disabled")
   boolean getMailDisabled();
+
+  /**
+   *
+   * @param val subject
+   */
+  void setDbPath(String val);
+
+  /**
+   * @return String
+   */
+  @MBeanInfo("path to db data")
+  String getDbPath();
+
+  /**
+   *
+   * @param val the confirmation url
+   */
+  void setConfirmUrl(String val);
+
+  /**
+   * @return String
+   */
+  @MBeanInfo("The confirmation url")
+  String getConfirmUrl();
 }

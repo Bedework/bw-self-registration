@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /** Handle POST for selfreg servlet.
  */
-public class PostMethod extends MethodBase {
+public class GetMethod extends MethodBase {
   @Override
   public void init() throws SelfregException {
   }
@@ -47,8 +47,8 @@ public class PostMethod extends MethodBase {
 
       final String action = resourceUri.get(0);
 
-      if (action.equals("newid")) {
-        processNewid(resourceUri, req, resp);
+      if (action.equals("confirm")) {
+        processConfirm(resourceUri, req, resp);
       }
     } catch (final SelfregException se) {
       throw se;
@@ -57,27 +57,19 @@ public class PostMethod extends MethodBase {
     }
   }
 
-  private void processNewid(final List<String> resourceUri,
+  private void processConfirm(final List<String> resourceUri,
                             final HttpServletRequest req,
                             final HttpServletResponse resp) throws SelfregException {
     final ReqUtil rutil = new ReqUtil(req, resp);
 
-    final String account = rutil.getReqPar("account");
-    final String firstName = rutil.getReqPar("fname");
-    final String lastName = rutil.getReqPar("lname");
-    final String email = rutil.getReqPar("email");
-    final String pw = rutil.getReqPar("pw");
+    final String confid = rutil.getReqPar("config");
 
-    if ((account == null) ||
-            (firstName == null) ||
-            (lastName == null) ||
-            (email == null) ||
-            (pw == null)) {
+    if (confid == null) {
       resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       return;
     }
 
-    getDir().createAccount(account, firstName, lastName, email, pw);
+    getDir().confirm(confid);
     resp.setStatus(HttpServletResponse.SC_OK);
   }
 }

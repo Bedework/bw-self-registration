@@ -55,17 +55,17 @@ public class Mailer implements MailerIntf {
     debug = getLog().isDebugEnabled();
     this.config = config;
 
-    Properties props = new Properties();
+    final Properties props = new Properties();
 
     props.put("mail." + config.getMailProtocol() + ".class", config.getMailProtocolClass());
-    props.put("mail." + config.getMailProtocol() + ".host", config.getMailServerIp());
+    props.put("mail." + config.getMailProtocol() + ".host", config.getMailServerHost());
     if (config.getMailServerPort() != null) {
       props.put("mail." + config.getMailProtocol() + ".port",
                 config.getMailServerPort());
     }
 
     //  add handlers for main MIME types
-    MailcapCommandMap mc = (MailcapCommandMap)CommandMap.getDefaultCommandMap();
+    final MailcapCommandMap mc = (MailcapCommandMap)CommandMap.getDefaultCommandMap();
     mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
     mc.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
     mc.addMailcap("text/plain;; x-java-content-handler=com.sun.mail.handlers.text_plain");
@@ -81,7 +81,7 @@ public class Mailer implements MailerIntf {
   @Override
   public Collection<String> listLists() throws SelfregException {
     debugMsg("listLists called");
-    return new ArrayList<String>();
+    return new ArrayList<>();
   }
 
   @Override
@@ -96,14 +96,14 @@ public class Mailer implements MailerIntf {
     try {
       /* Create a message with the appropriate mime-type
        */
-      MimeMessage msg = new MimeMessage(sess);
+      final MimeMessage msg = new MimeMessage(sess);
 
       msg.setFrom(new InternetAddress(val.getFrom()));
 
-      InternetAddress[] tos = new InternetAddress[val.getMailTo().length];
+      final InternetAddress[] tos = new InternetAddress[val.getMailTo().length];
 
       int i = 0;
-      for (String recip: val.getMailTo()) {
+      for (final String recip: val.getMailTo()) {
         tos[i] = new InternetAddress(recip);
         i++;
       }
@@ -115,11 +115,11 @@ public class Mailer implements MailerIntf {
 
       msg.setContent(val.getContent(), "text/plain");
 
-      Transport tr = sess.getTransport(config.getMailProtocol());
+      final Transport tr = sess.getTransport(config.getMailProtocol());
 
       tr.connect();
       tr.sendMessage(msg, tos);
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       if (debug) {
         t.printStackTrace();
       }

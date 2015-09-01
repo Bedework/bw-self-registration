@@ -21,6 +21,7 @@ package org.bedework.selfreg.service;
 import org.bedework.selfreg.common.SelfregConfigProperties;
 import org.bedework.util.config.ConfInfo;
 import org.bedework.util.config.ConfigBase;
+import org.bedework.util.jmx.MBeanInfo;
 
 /** Properties for mailers.
  *
@@ -55,9 +56,13 @@ public class SelfregConfigPropertiesImpl
 
   private String mailProtocolClass;
 
-  private String mailServerIp;
+  private String mailServerHost;
 
   private String mailServerPort;
+
+  private String mailServerAccount;
+
+  private String mailServerPw;
 
   private String mailFrom;
 
@@ -65,259 +70,236 @@ public class SelfregConfigPropertiesImpl
 
   private boolean mailDisabled;
 
-  /**
-   *
-   * @param val
-   */
+  private String dbPath;
+
+  private String confirmUrl;
+
   @Override
   public void setLdapUrl(final String val)  {
     ldapUrl = val;
   }
 
-  /**
-   * @return String
-   */
+  @Override
+  @MBeanInfo("Ldap server url")
   public String getLdapUrl()  {
     return ldapUrl;
   }
 
-  /**
-  *
-  * @param val
-  */
+  @Override
   public void setBaseDn(final String val)  {
     baseDn = val;
   }
 
-  /**
-   * @return String
-   */
+  @Override
+  @MBeanInfo("Ldap server base dn")
   public String getBaseDn()  {
     return baseDn;
   }
 
-  /**
-   *
-   * @param val
-   */
+  @Override
   public void setAccountsOu(final String val)  {
     accountsOu = val;
   }
 
-  /**
-   * @return String
-   */
+  @Override
+  @MBeanInfo("Ldap server accounts ou")
   public String getAccountsOu()  {
     return accountsOu;
   }
 
-  /**
-   *
-   * @param val
-   */
+  @Override
   public void setAccountsDn(final String val)  {
     accountsDn = val;
   }
 
-  /**
-   * @return String
-   */
+  @Override
+  @MBeanInfo("Ldap server accounts dn")
   public String getAccountsDn()  {
     return accountsDn;
   }
 
-  /**
-   *
-   * @param val
-   */
+  @Override
   public void setAccountsAttr(final String val)  {
     accountsAttr = val;
   }
 
-  /**
-   * @return String
-   */
+  @Override
+  @MBeanInfo("Ldap server accounts attribute: e.g. uid")
   public String getAccountsAttr()  {
     return accountsAttr;
   }
 
-  /**
-   *
-   * @param val
-   */
+  @Override
   public void setGroupsOu(final String val)  {
     groupsOu = val;
   }
 
-  /**
-   * @return String
-   */
+  @Override
+  @MBeanInfo("Ldap server groups ou")
   public String getGroupsOu()  {
     return groupsOu;
   }
 
-  /**
-   *
-   * @param val
-   */
+  @Override
   public void setGroupsDn(final String val)  {
     groupsDn = val;
   }
 
-  /**
-   * @return String
-   */
+  @Override
+  @MBeanInfo("Ldap server groups dn")
   public String getGroupsDn()  {
     return groupsDn;
   }
 
-  /**
-   *
-   * @param val
-   */
+  @Override
   public void setGroupsAttr(final String val)  {
     groupsAttr = val;
   }
 
-  /**
-   * @return String
-   */
+  @Override
+  @MBeanInfo("Ldap server groups attribute: e.g. cn")
   public String getGroupsAttr()  {
     return groupsAttr;
   }
 
-  /**
-   *
-   * @param val
-   */
+  @Override
   public void setAdminId(final String val)  {
     adminId = val;
   }
 
-  /**
-   * @return String
-   */
+  @Override
+  @MBeanInfo("Ldap server admin id")
   public String getAdminId()  {
     return adminId;
   }
 
-  /**
-   *
-   * @param val
-   */
+  @Override
   public void setAdminPw(final String val)  {
     adminPw = val;
   }
 
-  /**
-   * @return String
-   */
+  @Override
+  @MBeanInfo("Ldap server admin pw")
   public String getAdminPw()  {
     return adminPw;
   }
 
-  /**
-   *
-   * @param val
-   */
+  @Override
   public void setMailProtocol(final String val)  {
     mailProtocol = val;
   }
 
-  /**
-   * @return String
-   */
+  @Override
+  @MBeanInfo("mail protocol for confirmation: e.g. smtp")
   public String getMailProtocol()  {
     return mailProtocol;
   }
 
-  /**
-   *
-   * @param val
-   */
+  @Override
   public void setMailProtocolClass(final String val)  {
     mailProtocolClass = val;
   }
 
-  /**
-   * @return String
-   */
+  @Override
   public String getMailProtocolClass()  {
     return mailProtocolClass;
   }
 
-  /**
-   *
-   * @param val
-   */
-  public void setMailServerIp(final String val)  {
-    mailServerIp = val;
+  @Override
+  public void setMailServerHost(final String val)  {
+    mailServerHost = val;
   }
 
-  /**
-   * @return String
-   */
-  public String getMailServerIp()  {
-    return mailServerIp;
+  @Override
+  @MBeanInfo("mail server host")
+  public String getMailServerHost()  {
+    return mailServerHost;
   }
 
-  /**
-   *
-   * @param val
-   */
+  @Override
   public void setMailServerPort(final String val)  {
     mailServerPort = val;
   }
 
-  /**
-   * @return String
-   */
+  @Override
+  @MBeanInfo("mail server port")
   public String getMailServerPort()  {
     return mailServerPort;
   }
 
-  /**
-   *
-   * @param val
-   */
+  @Override
+  public void setMailServerAccount(final String val)  {
+    mailServerAccount = val;
+  }
+
+  @Override
+  @MBeanInfo("mail server account")
+  public String getMailServerAccount()  {
+    return mailServerAccount;
+  }
+
+  @Override
+  public void setMailServerPw(final String val)  {
+    mailServerPw = val;
+  }
+
+  @Override
+  @MBeanInfo("mail server password")
+  public String getMailServerPw()  {
+    return mailServerPw;
+  }
+
+  @Override
   public void setMailFrom(final String val)  {
     mailFrom = val;
   }
 
-  /**
-   * @return String
-   */
+  @Override
+  @MBeanInfo("mail from")
   public String getMailFrom()  {
     return mailFrom;
   }
 
-  /**
-   *
-   * @param val
-   */
+  @Override
   public void setMailSubject(final String val)  {
     mailSubject = val;
   }
 
-  /**
-   * @return String
-   */
+  @Override
+  @MBeanInfo("mail subject")
   public String getMailSubject()  {
     return mailSubject;
   }
 
-  /**
-   *
-   * @param val
-   */
+  @Override
   public void setMailDisabled(final boolean val)  {
     mailDisabled = val;
   }
 
-  /**
-   * @return boolean
-   */
+  @Override
+  @MBeanInfo("mail disabled")
   public boolean getMailDisabled()  {
     return mailDisabled;
+  }
+
+  @Override
+  public void setDbPath(final String val)  {
+    dbPath = val;
+  }
+
+  @Override
+  @MBeanInfo("path to db data")
+  public String getDbPath()  {
+    return dbPath;
+  }
+
+  @Override
+  public void setConfirmUrl(final String val) {
+    confirmUrl = val;
+  }
+
+  @Override
+  public String getConfirmUrl() {
+    return confirmUrl;
   }
 }

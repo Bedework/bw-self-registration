@@ -116,7 +116,7 @@ public class SelfregServlet extends HttpServlet
         methodName = req.getMethod();
       }
 
-      MethodBase method = getMethod(methodName);
+      final MethodBase method = getMethod(methodName);
 
       if (method == null) {
         logIt("No method for '" + methodName + "'");
@@ -125,7 +125,6 @@ public class SelfregServlet extends HttpServlet
         //     Set the correct response
         // ================================================================
       } else {
-        method.init(dumpContent);
         method.doMethod(req, resp);
       }
     } catch (Throwable t) {
@@ -227,10 +226,10 @@ public class SelfregServlet extends HttpServlet
    */
   protected void addMethods() {
     methods.put("POST", new MethodInfo(PostMethod.class, true));
+    methods.put("GET", new MethodInfo(GetMethod.class, false));
     /*
     methods.put("ACL", new MethodInfo(AclMethod.class, false));
     methods.put("COPY", new MethodInfo(CopyMethod.class, false));
-    methods.put("GET", new MethodInfo(GetMethod.class, false));
     methods.put("HEAD", new MethodInfo(HeadMethod.class, false));
     methods.put("OPTIONS", new MethodInfo(OptionsMethod.class, false));
     methods.put("PROPFIND", new MethodInfo(PropFindMethod.class, false));
@@ -260,12 +259,13 @@ public class SelfregServlet extends HttpServlet
     //}
 
     try {
-      MethodBase mb = mi.getMethodClass().newInstance();
+      final MethodBase mb = mi.getMethodClass().newInstance();
 
-      mb.init(dumpContent);
+      mb.init(conf.selfreg.getConfig(),
+              dumpContent);
 
       return mb;
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       if (debug) {
         error(t);
       }
@@ -390,7 +390,7 @@ public class SelfregServlet extends HttpServlet
    *                         JMX support
    */
 
-  class Configurator extends ConfBase {
+  static class Configurator extends ConfBase {
     Selfreg selfreg;
 
     Configurator() {
@@ -427,7 +427,7 @@ public class SelfregServlet extends HttpServlet
     }
   }
 
-  private Configurator conf = new Configurator();
+  private static Configurator conf = new Configurator();
 
   @Override
   public void contextInitialized(final ServletContextEvent sce) {

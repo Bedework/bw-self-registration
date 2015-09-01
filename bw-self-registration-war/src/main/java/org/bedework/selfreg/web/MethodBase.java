@@ -18,6 +18,14 @@
 */
 package org.bedework.selfreg.web;
 
+import org.bedework.selfreg.common.DirMaint;
+import org.bedework.selfreg.common.DirMaintImpl;
+import org.bedework.selfreg.common.SelfregConfigProperties;
+import org.bedework.selfreg.common.exception.SelfregException;
+
+import org.apache.log4j.Logger;
+import org.w3c.dom.Document;
+
 import java.net.URLDecoder;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -29,10 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.log4j.Logger;
-import org.bedework.selfreg.common.exception.SelfregException;
-import org.w3c.dom.Document;
-
 /** Base class for all webdav servlet methods.
  */
 public abstract class MethodBase {
@@ -42,11 +46,34 @@ public abstract class MethodBase {
 
   protected transient Logger log;
 
+  protected SelfregConfigProperties config;
+
+  private DirMaint dm;
+
   /** Called at each request
    *
    * @throws SelfregException
    */
   public abstract void init() throws SelfregException;
+
+  /** Called at each request
+   *
+   * @param dumpContent
+   * @throws SelfregException
+   */
+  public void init(final SelfregConfigProperties config,
+                   final boolean dumpContent) throws SelfregException {
+    this.config = config;
+    this.dumpContent = dumpContent;
+
+    debug = getLogger().isDebugEnabled();
+//    xml = syncher.getXmlEmit();
+
+    // content = null;
+    //resourceUri = null;
+
+    init();
+  }
 
   private SimpleDateFormat httpDateFormatter =
       new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss ");
@@ -93,23 +120,6 @@ public abstract class MethodBase {
     public boolean getRequiresAuth() {
       return requiresAuth;
     }
-  }
-
-  /** Called at each request
-   *
-   * @param dumpContent
-   * @throws SelfregException
-   */
-  public void init(final boolean dumpContent) throws SelfregException {
-    this.dumpContent = dumpContent;
-
-    debug = getLogger().isDebugEnabled();
-//    xml = syncher.getXmlEmit();
-
-    // content = null;
-    //resourceUri = null;
-
-    init();
   }
 
   /** Get the decoded and fixed resource URI. This calls getServletPath() to
@@ -271,6 +281,18 @@ public abstract class MethodBase {
     synchronized (httpDateFormatter) {
       return httpDateFormatter.format(val) + "GMT";
     }
+  }
+
+  protected DirMaint getDir() throws SelfregException {
+    if (dm != null) {
+      return dm;
+    }
+
+    dm = new DirMaintImpl();
+
+    dm.init(config);
+
+    return dm;
   }
 
   /** ===================================================================

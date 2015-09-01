@@ -18,16 +18,6 @@
 */
 package org.bedework.selfreg.common;
 
-import java.security.MessageDigest;
-import java.util.Properties;
-
-import javax.naming.Context;
-import javax.naming.directory.BasicAttribute;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.ModificationItem;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
 import org.bedework.selfreg.common.dir.BasicDirRecord;
 import org.bedework.selfreg.common.dir.DirRecord;
 import org.bedework.selfreg.common.dir.Directory;
@@ -38,6 +28,18 @@ import org.bedework.selfreg.common.mail.Mailer;
 import org.bedework.selfreg.common.mail.MailerIntf;
 import org.bedework.selfreg.common.mail.Message;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
+
+import java.security.MessageDigest;
+import java.util.Properties;
+import java.util.UUID;
+
+import javax.naming.Context;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.ModificationItem;
+
 /** Handle accounts.
  *
  */
@@ -47,6 +49,12 @@ public class DirMaintImpl implements DirMaint {
   private transient Logger log;
 
   private SelfregConfigProperties config;
+
+  /* We'll use leveldb to store teh outstanding requests with the
+     confid as the key. The value will be a json object maintaining
+     all the values we got from the first page.
+   */
+  protected Persisted db;
 
   /*
   private String ldapUrl = "ldap://localhost:10389";   // <providerUrl>
@@ -73,6 +81,7 @@ public class DirMaintImpl implements DirMaint {
   @Override
   public void init(final SelfregConfigProperties config) {
     this.config = config;
+    db = new Persisted(config.getDbPath());
   }
 
   @Override
@@ -81,14 +90,84 @@ public class DirMaintImpl implements DirMaint {
                           final String lastName,
                           final String email,
                           final String pw) throws SelfregException {
-    // TODO Auto-generated method stub
-    return null;
+    final AccountInfo ainfo = new AccountInfo();
+
+    ainfo.setAccount(accountName);
+    ainfo.setFirstName(firstName);
+    ainfo.setLastName(lastName);
+    ainfo.setEmail(email);
+    ainfo.setPw(pw);
+
+    final String confid = UUID.randomUUID().toString();
+
+    try {
+      db.open();
+      db.putAccount(confid, ainfo);
+    } finally {
+      db.close();
+    }
+
+    final Message msg = new Message();
+
+    msg.setFrom(config.getMailFrom());
+
+    final String[] to = { email };
+    msg.setMailTo(to);
+    msg.setSubject(config.getMailSubject());
+
+    // Should be built from a template
+    msg.setContent("We have a request for a new account for this email address\n" +
+                           "\n" +
+                           "If you did not request an account, ignore this message\n" +
+                           "\n" +
+                           "Otherwise, click on, or copy and paste into your browser, " +
+                           "the confirmation link below.\n" +
+                           "\n" +
+                           config.getConfirmUrl() + "/confirm?confid=" + confid + "\n");
+
+    getMailer().post(msg);
+    return confid;
   }
 
   @Override
   public boolean confirm(final String confId) throws SelfregException {
-    // TODO Auto-generated method stub
-    return false;
+    try {
+      db.open();
+      final AccountInfo ainfo = db.getAccount(confId);
+
+      if (ainfo == null) {
+        return false;
+      }
+
+      final Message msg = new Message();
+
+      msg.setFrom(config.getMailFrom());
+
+      final String[] to = { ainfo.getEmail() };
+      msg.setMailTo(to);
+
+      if (!createAccount(ainfo.getAccount(),
+                         ainfo.getFirstName(),
+                         ainfo.getLastName(),
+                         ainfo.getEmail(),
+                         ainfo.getPw())) {
+        msg.setSubject(config.getMailSubject() + ": failed");
+        msg.setContent("Unable to create an account.");
+
+        getMailer().post(msg);
+        return false;
+      }
+
+      msg.setSubject(config.getMailSubject() + ": success");
+      msg.setContent("Your account " +
+                             ainfo.getAccount() +
+                             "has been created. ");
+
+      getMailer().post(msg);
+      return true;
+    } finally {
+      db.close();
+    }
   }
 
   @Override
@@ -129,9 +208,9 @@ public class DirMaintImpl implements DirMaint {
     try {
       /** Build a directory record and add the attributes
        */
-      DirRecord dirRec = new BasicDirRecord();
+      final DirRecord dirRec = new BasicDirRecord();
 
-      String userDn = accountDn(accountName);
+      final String userDn = accountDn(accountName);
       dirRec.setDn(userDn);
       dirRec.setAttr(config.getAccountsAttr(), accountName);
       dirRec.setAttr("objectclass", "top");
@@ -139,7 +218,7 @@ public class DirMaintImpl implements DirMaint {
       dirRec.setAttr("objectclass", "organizationalPerson");
       dirRec.setAttr("objectclass", "inetOrgPerson");
 
-      String cn = lastName + ", " + firstName;
+      final String cn = lastName + ", " + firstName;
       dirRec.setAttr("cn", cn);
       //dirRec.setAttr("gecos", cn);
       dirRec.setAttr("sn", lastName);
@@ -158,38 +237,36 @@ public class DirMaintImpl implements DirMaint {
       */
 
       return getLdir().create(dirRec);
-    } catch (SelfregException se) {
+    } catch (final SelfregException se) {
       throw se;
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       throw new SelfregException(t);
     }
   }
 
   /** See if account exists
    *
-   * @param account
+   * @param account the account
    * @return boolean
    * @throws SelfregException
    */
   @Override
   public String displayAccount(final String account) throws SelfregException {
-    StringBuilder sb = new StringBuilder();
+    final String search = "(&(" +
+            config.getAccountsAttr() +
+            "=" +
+            account +
+            "))(objectClass=inetOrgPerson)";
 
-    sb.append("(&(");
-    sb.append(config.getAccountsAttr());
-    sb.append("=");
-    sb.append(account);
-    sb.append("))(objectClass=inetOrgPerson)");
-
-    DirSearchResult dsr = getLdir().search(config.getAccountsDn(),
-                                           sb.toString(),
-                                           Directory.scopeOne);
+    final DirSearchResult dsr = getLdir().search(config.getAccountsDn(),
+                                                 search,
+                                                 Directory.scopeOne);
 
     if (dsr == null) {
       return "No entry found";
     }
 
-    DirRecord dr = dsr.nextRecord();
+    final DirRecord dr = dsr.nextRecord();
     if (dr == null) {
       return "No entry found";
     }
@@ -200,12 +277,12 @@ public class DirMaintImpl implements DirMaint {
   @Override
   public void setUserPassword(final String account,
                               final String password) throws SelfregException {
-    BasicAttribute attr = new BasicAttribute("userPassword",
+    final BasicAttribute attr = new BasicAttribute("userPassword",
                                              encodedPassword(password.toCharArray()));
-    ModificationItem mi = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
+    final ModificationItem mi = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
                                                attr);
 
-    ModificationItem[] mods = {mi};
+    final ModificationItem[] mods = {mi};
     getLdir().modify(accountDn(account), mods);
   }
 
@@ -213,7 +290,7 @@ public class DirMaintImpl implements DirMaint {
   public boolean createGroup(final String group,
                              final String account) throws SelfregException {
     try {
-      DirRecord dirRec = new BasicDirRecord();
+      final DirRecord dirRec = new BasicDirRecord();
 
       dirRec.setDn(groupDn(group));
       dirRec.setAttr("cn", group);
@@ -223,9 +300,9 @@ public class DirMaintImpl implements DirMaint {
       dirRec.setAttr("member", accountDn(account));
 
       return getLdir().create(dirRec);
-    } catch (SelfregException se) {
+    } catch (final SelfregException se) {
       throw se;
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       throw new SelfregException(t);
     }
   }
@@ -237,12 +314,12 @@ public class DirMaintImpl implements DirMaint {
     //  error("Account " + account + " does not exist");
     //}
 
-    BasicAttribute attr = new BasicAttribute("member",
+    final BasicAttribute attr = new BasicAttribute("member",
                                              accountDn(account));
-    ModificationItem mi = new ModificationItem(DirContext.ADD_ATTRIBUTE,
+    final ModificationItem mi = new ModificationItem(DirContext.ADD_ATTRIBUTE,
                                                attr);
 
-    ModificationItem[] mods = {mi};
+    final ModificationItem[] mods = {mi};
     getLdir().modify(groupDn(group), mods);
   }
 
@@ -265,7 +342,7 @@ public class DirMaintImpl implements DirMaint {
       return ldir;
     }
 
-    Properties pr = new Properties();
+    final Properties pr = new Properties();
 
     pr.put(Context.PROVIDER_URL, config.getLdapUrl());
 
@@ -276,14 +353,14 @@ public class DirMaintImpl implements DirMaint {
 
   private String encodedPassword(final char[] pw) throws SelfregException {
     try {
-      MessageDigest md = MessageDigest.getInstance(pwEncryption);
+      final MessageDigest md = MessageDigest.getInstance(pwEncryption);
 
       md.update(new String(pw).getBytes());
 
-      byte[] b64s = new Base64().encode(md.digest());
+      final byte[] b64s = new Base64().encode(md.digest());
 
       return "{" + pwEncryption + "}" + new String(b64s);
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       throw new SelfregException(t);
     }
   }
@@ -295,9 +372,9 @@ public class DirMaintImpl implements DirMaint {
       return false;
     }
 
-    Message emsg = new Message();
+    final Message emsg = new Message();
 
-    String[] to = new String[]{email};
+    final String[] to = new String[]{email};
     emsg.setMailTo(to);
 
     emsg.setFrom(config.getMailFrom());

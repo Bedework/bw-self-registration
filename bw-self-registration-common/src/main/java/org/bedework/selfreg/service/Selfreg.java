@@ -43,7 +43,7 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
   }
 
   /**
-   * @param name
+   * @param name of service
    * @return object name value for the mbean with this name
    */
   public static String getServiceName(final String name) {
@@ -175,13 +175,13 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
   }
 
   @Override
-  public void setMailServerIp(final String val)  {
-    getConfig().setMailServerIp(val);
+  public void setMailServerHost(final String val)  {
+    getConfig().setMailServerHost(val);
   }
 
   @Override
-  public String getMailServerIp()  {
-    return getConfig().getMailServerIp();
+  public String getMailServerHost()  {
+    return getConfig().getMailServerHost();
   }
 
   @Override
@@ -192,6 +192,26 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
   @Override
   public String getMailServerPort()  {
     return getConfig().getMailServerPort();
+  }
+
+  @Override
+  public void setMailServerAccount(final String val) {
+    getConfig().setMailServerAccount(val);
+  }
+
+  @Override
+  public String getMailServerAccount() {
+    return getConfig().getMailServerAccount();
+  }
+
+  @Override
+  public void setMailServerPw(final String val) {
+    getConfig().setMailServerPw(val);
+  }
+
+  @Override
+  public String getMailServerPw() {
+    return getConfig().getMailServerPw();
   }
 
   @Override
@@ -224,6 +244,26 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
     return getConfig().getMailDisabled();
   }
 
+  @Override
+  public void setDbPath(final String val) {
+    getConfig().setDbPath(val);
+  }
+
+  @Override
+  public String getDbPath() {
+    return getConfig().getDbPath();
+  }
+
+  @Override
+  public void setConfirmUrl(final String val) {
+    getConfig().setConfirmUrl(val);
+  }
+
+  @Override
+  public String getConfirmUrl() {
+    return getConfig().getConfirmUrl();
+  }
+
   /* ========================================================================
    * Operations
    * ======================================================================== */
@@ -240,7 +280,7 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
       }
 
       return "Created";
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       error(t);
       return t.getLocalizedMessage();
     }
@@ -250,7 +290,7 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
   public String displayUser(final String account) {
     try {
       return getDir().displayAccount(account);
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       error(t);
       return t.getLocalizedMessage();
     }
@@ -263,7 +303,7 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
       getDir().setUserPassword(account, password);
 
       return "Ok";
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       error(t);
       return t.getLocalizedMessage();
     }
@@ -274,7 +314,7 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
     try {
 
       return "Ok";
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       error(t);
       return t.getLocalizedMessage();
     }
@@ -290,7 +330,7 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
 
 
       return "Ok";
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       error(t);
       return t.getLocalizedMessage();
     }
@@ -303,7 +343,7 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
       getDir().addGroupMember(group, account);
 
       return "Ok";
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       error(t);
       return t.getLocalizedMessage();
     }
@@ -323,7 +363,7 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
    * ==================================================================== */
 
   private DirMaint getDir() throws Throwable {
-    DirMaint dir = new DirMaintImpl();
+    final DirMaint dir = new DirMaintImpl();
 
     dir.init(getConfig());
 
