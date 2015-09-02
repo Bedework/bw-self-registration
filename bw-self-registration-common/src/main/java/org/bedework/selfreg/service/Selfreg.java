@@ -18,6 +18,7 @@
 */
 package org.bedework.selfreg.service;
 
+import org.bedework.selfreg.common.AccountInfo;
 import org.bedework.selfreg.common.DirMaint;
 import org.bedework.selfreg.common.DirMaintImpl;
 import org.bedework.util.jmx.ConfBase;
@@ -267,6 +268,21 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
   /* ========================================================================
    * Operations
    * ======================================================================== */
+
+  @Override
+  public String displayRequest(final String confid) {
+    try {
+      final AccountInfo ainfo = getDir().getAccount(confid);
+
+      if (ainfo == null) {
+        return "No account";
+      }
+      return ainfo.toString();
+    } catch (final Throwable t) {
+      error(t);
+      return t.getLocalizedMessage();
+    }
+  }
 
   @Override
   public String addUser(final String account,

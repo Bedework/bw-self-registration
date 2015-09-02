@@ -50,6 +50,14 @@ public interface DirMaint {
 	                 String email,
 	                 String pw) throws SelfregException;
 
+  /** Return account info for the account represented by the confid.
+   *
+   * @param confId
+   * @return null if confId is bad
+   * @throws SelfregException
+   */
+  AccountInfo getAccount(String confId) throws SelfregException;
+
 	/** Create (or enable) the account represented by the confid.
 	 *
 	 * @param confId

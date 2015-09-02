@@ -49,7 +49,9 @@ public class PostMethod extends MethodBase {
 
       if (action.equals("newid")) {
         processNewid(resourceUri, req, resp);
+        return;
       }
+      resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     } catch (final SelfregException se) {
       throw se;
     } catch(final Throwable t) {
@@ -77,7 +79,7 @@ public class PostMethod extends MethodBase {
       return;
     }
 
-    getDir().createAccount(account, firstName, lastName, email, pw);
+    getDir().requestId(account, firstName, lastName, email, pw);
     resp.setStatus(HttpServletResponse.SC_OK);
   }
 }

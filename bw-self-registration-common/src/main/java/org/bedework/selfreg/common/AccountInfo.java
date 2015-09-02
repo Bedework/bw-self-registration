@@ -78,4 +78,18 @@ public class AccountInfo {
   public void setPw(final String val) {
     pw = val;
   }
+
+  public String toString() {
+    final ToString ts = new ToString(this);
+
+    ts.append("account", getAccount());
+
+    ts.append("dtstamp", getDtstamp());
+
+    ts.append("firstName", getFirstName());
+    ts.append("lastName", getLastName());
+    ts.append("email", getEmail());
+
+    return ts.toString();
+  }
 }

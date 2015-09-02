@@ -44,7 +44,7 @@ import javax.naming.directory.ModificationItem;
  *
  */
 public class DirMaintImpl implements DirMaint {
-  private boolean debug = true;
+  private final boolean debug = true;
 
   private transient Logger log;
 
@@ -127,6 +127,17 @@ public class DirMaintImpl implements DirMaint {
 
     getMailer().post(msg);
     return confid;
+  }
+
+  @Override
+  public AccountInfo getAccount(final String confId)
+          throws SelfregException {
+    try {
+      db.open();
+      return db.getAccount(confId);
+    } finally {
+      db.close();
+    }
   }
 
   @Override

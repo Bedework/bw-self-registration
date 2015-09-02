@@ -33,6 +33,14 @@ public interface SelfregMBean extends ConfBaseMBean,
    * Operations
    * ======================================================================== */
 
+  /** Display request status
+   *
+   * @param confid
+   * @return status
+   */
+  @MBeanInfo("Display request status")
+  String displayRequest(@MBeanInfo("Confid")String confid);
+
   /** Add a user
    *
    * @param account
@@ -43,11 +51,11 @@ public interface SelfregMBean extends ConfBaseMBean,
    * @return status
    */
   @MBeanInfo("Add a user")
-  public String addUser(@MBeanInfo("Account")String account,
-                        @MBeanInfo("First name")String first,
-                        @MBeanInfo("Last name")String last,
-                        @MBeanInfo("Email")String email,
-                        @MBeanInfo("Password")String password);
+  String addUser(@MBeanInfo("Account")String account,
+                 @MBeanInfo("First name")String first,
+                 @MBeanInfo("Last name")String last,
+                 @MBeanInfo("Email")String email,
+                 @MBeanInfo("Password")String password);
 
   /** Display a user
    *
@@ -55,7 +63,7 @@ public interface SelfregMBean extends ConfBaseMBean,
    * @return status
    */
   @MBeanInfo("Display a user")
-  public String displayUser(@MBeanInfo("Account")String account);
+  String displayUser(@MBeanInfo("Account")String account);
 
   /** Set a user password
    *
@@ -64,8 +72,8 @@ public interface SelfregMBean extends ConfBaseMBean,
    * @return status
    */
   @MBeanInfo("Set a user password")
-  public String setUserPassword(@MBeanInfo("Account")String account,
-                                @MBeanInfo("Password")String password);
+  String setUserPassword(@MBeanInfo("Account")String account,
+                         @MBeanInfo("Password")String password);
 
   /** Remove a user
    *
@@ -73,7 +81,7 @@ public interface SelfregMBean extends ConfBaseMBean,
    * @return status
    */
   @MBeanInfo("Remove a user")
-  public String removeUser(@MBeanInfo("Account")String account);
+  String removeUser(@MBeanInfo("Account")String account);
 
   /** Add a group
    *
@@ -82,8 +90,8 @@ public interface SelfregMBean extends ConfBaseMBean,
    * @return status
    */
   @MBeanInfo("Add a group")
-  public String addGroup(@MBeanInfo("Group")String group,
-                         @MBeanInfo("Account")String account);
+  String addGroup(@MBeanInfo("Group")String group,
+                  @MBeanInfo("Account")String account);
 
   /** Add a group member
    *
@@ -92,8 +100,8 @@ public interface SelfregMBean extends ConfBaseMBean,
    * @return status
    */
   @MBeanInfo("Add a group member")
-  public String addGroupMember(@MBeanInfo("Group")String group,
-                               @MBeanInfo("Account")String account);
+  String addGroupMember(@MBeanInfo("Group")String group,
+                        @MBeanInfo("Account")String account);
 
   /** (Re)load the configuration
    *

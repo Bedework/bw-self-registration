@@ -26,6 +26,8 @@ import java.util.Properties;
 
 import javax.activation.CommandMap;
 import javax.activation.MailcapCommandMap;
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -57,24 +59,46 @@ public class Mailer implements MailerIntf {
 
     final Properties props = new Properties();
 
+    /*
     props.put("mail." + config.getMailProtocol() + ".class", config.getMailProtocolClass());
+    */
+    props.put("mail.transport.protocol", config.getMailProtocol());
     props.put("mail." + config.getMailProtocol() + ".host", config.getMailServerHost());
     if (config.getMailServerPort() != null) {
       props.put("mail." + config.getMailProtocol() + ".port",
                 config.getMailServerPort());
     }
 
+    props.put("mail." + config.getMailProtocol() + ".starttls.enable",
+              "true");   // String.valueOf(config.getStarttls()));
+
     //  add handlers for main MIME types
     final MailcapCommandMap mc = (MailcapCommandMap)CommandMap.getDefaultCommandMap();
     mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
     mc.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
-    mc.addMailcap("text/plain;; x-java-content-handler=com.sun.mail.handlers.text_plain");
-    mc.addMailcap("text/calendar;; x-java-content-handler=com.sun.mail.handlers.text_html");
+    mc.addMailcap(
+            "text/plain;; x-java-content-handler=com.sun.mail.handlers.text_plain");
+    mc.addMailcap(
+            "text/calendar;; x-java-content-handler=com.sun.mail.handlers.text_html");
     mc.addMailcap("multipart/*;; x-java-content-handler=com.sun.mail.handlers.multipart_mixed");
     mc.addMailcap("message/rfc822;; x-java-content-handler=com.sun.mail.handlers.message_rfc822");
     CommandMap.setDefaultCommandMap(mc);
 
-    sess = Session.getInstance(props);
+    final String username;
+    final String pw;
+    username = config.getMailServerAccount();
+    pw = config.getMailServerPw();
+
+    if (username != null) {
+      // Authentication required.
+      final MailerAuthenticator authenticator =
+              new MailerAuthenticator(username, pw);
+      props.put("mail." + config.getMailProtocol() + ".auth", "true");
+      sess = Session.getInstance(props, authenticator);
+    } else {
+      sess = Session.getInstance(props);
+    }
+
     sess.setDebug(debug);
   }
 
@@ -125,6 +149,18 @@ public class Mailer implements MailerIntf {
       }
 
       throw new SelfregException(t);
+    }
+  }
+
+  private class MailerAuthenticator extends Authenticator {
+    private final PasswordAuthentication authentication;
+
+    MailerAuthenticator(final String user, final String password) {
+      authentication = new PasswordAuthentication(user, password);
+    }
+
+    protected PasswordAuthentication getPasswordAuthentication() {
+      return authentication;
     }
   }
 
