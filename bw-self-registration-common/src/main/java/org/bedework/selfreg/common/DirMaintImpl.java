@@ -27,9 +27,9 @@ import org.bedework.selfreg.common.exception.SelfregException;
 import org.bedework.selfreg.common.mail.Mailer;
 import org.bedework.selfreg.common.mail.MailerIntf;
 import org.bedework.selfreg.common.mail.Message;
+import org.bedework.util.misc.Logged;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
 
 import java.security.MessageDigest;
 import java.util.Properties;
@@ -43,10 +43,8 @@ import javax.naming.directory.ModificationItem;
 /** Handle accounts.
  *
  */
-public class DirMaintImpl implements DirMaint {
+public class DirMaintImpl extends Logged implements DirMaint {
   private final boolean debug = true;
-
-  private transient Logger log;
 
   private SelfregConfigProperties config;
 
@@ -247,7 +245,14 @@ public class DirMaintImpl implements DirMaint {
       dirRec.setAttr("gidNumber", "999");
       */
 
-      return getLdir().create(dirRec);
+      LdapDirectory dir = getLdir();
+
+      if (dir == null) {
+        // TODO need failure response
+        return false;
+      }
+
+      return dir.create(dirRec);
     } catch (final SelfregException se) {
       throw se;
     } catch (final Throwable t) {
@@ -349,17 +354,23 @@ public class DirMaintImpl implements DirMaint {
   }
 
   private LdapDirectory getLdir() throws SelfregException {
-    if (ldir != null) {
+    try {
+      if (ldir != null) {
+        return ldir;
+      }
+
+      final Properties pr = new Properties();
+
+      pr.put(Context.PROVIDER_URL, config.getLdapUrl());
+
+      ldir = new LdapDirectory(pr, config.getAdminId(),
+                               config.getAdminPw(), debug);
+
       return ldir;
+    } catch (final Throwable t) {
+      error(t);
+      return null;
     }
-
-    final Properties pr = new Properties();
-
-    pr.put(Context.PROVIDER_URL, config.getLdapUrl());
-
-    ldir = new LdapDirectory(pr, config.getAdminId(), config.getAdminPw(), debug);
-
-    return ldir;
   }
 
   private String encodedPassword(final char[] pw) throws SelfregException {

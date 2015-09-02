@@ -49,7 +49,10 @@ public class GetMethod extends MethodBase {
 
       if (action.equals("confirm")) {
         processConfirm(resourceUri, req, resp);
+        return;
       }
+
+      resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     } catch (final SelfregException se) {
       throw se;
     } catch(final Throwable t) {
@@ -62,7 +65,7 @@ public class GetMethod extends MethodBase {
                             final HttpServletResponse resp) throws SelfregException {
     final ReqUtil rutil = new ReqUtil(req, resp);
 
-    final String confid = rutil.getReqPar("config");
+    final String confid = rutil.getReqPar("confid");
 
     if (confid == null) {
       resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
