@@ -291,7 +291,12 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
                         final String email,
                         final String password) {
     try {
-      if (!getDir().createAccount(account, first, last, email, password)) {
+      if (!getDir().createAccount(account,
+                                  first,
+                                  last,
+                                  email,
+                                  password,
+                                  null)) {
         return "Account " + account + " exists already";
       }
 

@@ -116,7 +116,8 @@ public interface DirMaint {
                         String firstName,
                         String lastName,
                         String email,
-                        String pw) throws SelfregException;
+                        String pw,
+                        String encodedPw) throws SelfregException;
 
   /** Display an account
    *

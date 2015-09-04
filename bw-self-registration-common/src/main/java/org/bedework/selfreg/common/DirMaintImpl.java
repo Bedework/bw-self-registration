@@ -31,7 +31,8 @@ import org.bedework.util.misc.Logged;
 
 import org.apache.commons.codec.binary.Base64;
 
-import java.security.MessageDigest;
+import org.jasypt.util.password.rfc2307.RFC2307SSHAPasswordEncryptor;
+
 import java.util.Properties;
 import java.util.UUID;
 
@@ -94,7 +95,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
     ainfo.setFirstName(firstName);
     ainfo.setLastName(lastName);
     ainfo.setEmail(email);
-    ainfo.setPw(pw);
+    ainfo.setPw(encodedPassword(pw));
 
     final String confid = UUID.randomUUID().toString();
 
@@ -159,6 +160,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
                          ainfo.getFirstName(),
                          ainfo.getLastName(),
                          ainfo.getEmail(),
+                         null, // plaintext pw
                          ainfo.getPw())) {
         msg.setSubject(config.getMailSubject() + ": failed");
         msg.setContent("Unable to create an account.");
@@ -213,7 +215,8 @@ public class DirMaintImpl extends Logged implements DirMaint {
                                final String firstName,
                                final String lastName,
                                final String email,
-                               final String pw) throws SelfregException {
+                               final String pw,
+                               final String encodedPw) throws SelfregException {
     try {
       /** Build a directory record and add the attributes
        */
@@ -234,7 +237,9 @@ public class DirMaintImpl extends Logged implements DirMaint {
       dirRec.setAttr("mail", email);
 
       if (pw != null) {
-        dirRec.setAttr("userPassword", encodedPassword(pw.toCharArray()));
+        dirRec.setAttr("userPassword", encodedPassword(pw));
+      } else if (encodedPw != null) {
+        dirRec.setAttr("userPassword", encodedPw.toCharArray());
       }
 
       /* Posix account requires these but we just set them to dummy values
@@ -294,7 +299,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
   public void setUserPassword(final String account,
                               final String password) throws SelfregException {
     final BasicAttribute attr = new BasicAttribute("userPassword",
-                                             encodedPassword(password.toCharArray()));
+                                             encodedPassword(password));
     final ModificationItem mi = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
                                                attr);
 
@@ -373,15 +378,21 @@ public class DirMaintImpl extends Logged implements DirMaint {
     }
   }
 
-  private String encodedPassword(final char[] pw) throws SelfregException {
+  private String encodedPassword(final String pw) throws SelfregException {
     try {
+      /*
       final MessageDigest md = MessageDigest.getInstance(pwEncryption);
 
-      md.update(new String(pw).getBytes());
+      md.update(pw.getBytes());
 
       final byte[] b64s = new Base64().encode(md.digest());
 
       return "{" + pwEncryption + "}" + new String(b64s);
+      */
+      RFC2307SSHAPasswordEncryptor encryptor =
+              new RFC2307SSHAPasswordEncryptor();
+
+      return encryptor.encryptPassword(pw);
     } catch (final Throwable t) {
       throw new SelfregException(t);
     }

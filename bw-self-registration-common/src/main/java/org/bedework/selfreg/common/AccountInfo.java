@@ -18,6 +18,8 @@
 */
 package org.bedework.selfreg.common;
 
+import org.bedework.util.misc.ToString;
+
 /**
  * User: mike Date: 8/31/15 Time: 17:04
  */

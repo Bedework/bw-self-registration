@@ -26,6 +26,7 @@
 		<apache-http.version>4.2.2</apache-http.version>
 		<ehcache.version>1.6.2</ehcache.version>
     <jackson.version>2.3.1</jackson.version>
+    <jasypt.version>1.9.2</jasypt.version>
 		<junit.version>4.8.2</junit.version>
     <leveldb.version>0.7</leveldb.version>
 		<log4j.version>1.2.15</log4j.version>
@@ -198,6 +199,12 @@
         <groupId>org.iq80.leveldb</groupId>
         <artifactId>leveldb</artifactId>
         <version>${leveldb.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jasypt</groupId>
+        <artifactId>jasypt</artifactId>
+        <version>${jasypt.version}</version>
       </dependency>
 
       <dependency>
