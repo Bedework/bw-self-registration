@@ -20,7 +20,7 @@ package org.bedework.selfreg.service;
 
 import org.bedework.selfreg.common.SelfregConfigProperties;
 import org.bedework.util.config.ConfInfo;
-import org.bedework.util.config.ConfigBase;
+import org.bedework.util.config.HibernateConfigBase;
 import org.bedework.util.jmx.MBeanInfo;
 
 /** Properties for mailers.

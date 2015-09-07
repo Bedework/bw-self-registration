@@ -19,14 +19,13 @@
 package org.bedework.selfreg.common;
 
 import org.bedework.selfreg.common.exception.SelfregException;
-
-import edu.rpi.cmt.config.HibernateConfigI;
-import edu.rpi.cmt.db.hibernate.HibException;
-import edu.rpi.cmt.db.hibernate.HibSession;
-import edu.rpi.cmt.db.hibernate.HibSessionFactory;
-import edu.rpi.cmt.db.hibernate.HibSessionImpl;
-import edu.rpi.sss.util.Logged;
-import edu.rpi.sss.util.Util;
+import org.bedework.util.config.HibernateConfigI;
+import org.bedework.util.hibernate.HibException;
+import org.bedework.util.hibernate.HibSession;
+import org.bedework.util.hibernate.HibSessionFactory;
+import org.bedework.util.hibernate.HibSessionImpl;
+import org.bedework.util.misc.Logged;
+import org.bedework.util.misc.Util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

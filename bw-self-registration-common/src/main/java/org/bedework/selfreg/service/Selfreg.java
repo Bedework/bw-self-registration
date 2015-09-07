@@ -22,6 +22,8 @@ import org.bedework.selfreg.common.AccountInfo;
 import org.bedework.selfreg.common.DirMaint;
 import org.bedework.selfreg.common.DirMaintImpl;
 import org.bedework.util.jmx.ConfBase;
+import org.bedework.util.jmx.InfoLines;
+import org.bedework.util.jmx.MBeanInfo;
 
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
