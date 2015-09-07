@@ -29,10 +29,12 @@ import org.bedework.selfreg.common.mail.MailerIntf;
 import org.bedework.selfreg.common.mail.Message;
 import org.bedework.util.misc.Logged;
 
-import org.apache.commons.codec.binary.Base64;
-
+import org.jasypt.util.password.PasswordEncryptor;
+import org.jasypt.util.password.rfc2307.RFC2307MD5PasswordEncryptor;
+import org.jasypt.util.password.rfc2307.RFC2307SHAPasswordEncryptor;
 import org.jasypt.util.password.rfc2307.RFC2307SSHAPasswordEncryptor;
 
+import java.sql.Timestamp;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -80,30 +82,54 @@ public class DirMaintImpl extends Logged implements DirMaint {
   @Override
   public void init(final SelfregConfigProperties config) {
     this.config = config;
-    db = new Persisted(config.getDbPath());
+    db = new Persisted(config);
   }
 
   @Override
-  public String requestId(final String accountName,
-                          final String firstName,
+  public String requestId(final String firstName,
                           final String lastName,
                           final String email,
                           final String pw) throws SelfregException {
     final AccountInfo ainfo = new AccountInfo();
 
-    ainfo.setAccount(accountName);
-    ainfo.setFirstName(firstName);
-    ainfo.setLastName(lastName);
-    ainfo.setEmail(email);
-    ainfo.setPw(encodedPassword(pw));
-
-    final String confid = UUID.randomUUID().toString();
+    ainfo.setConfid(UUID.randomUUID().toString());
 
     try {
-      db.open();
-      db.putAccount(confid, ainfo);
+      db.startTransaction();
+
+      if (db.emailPresent(email)) {
+        return "Account with that email already exists";
+      }
+
+      String id = config.getAccountPrefix();
+      if (id == null) {
+        id = "";
+      }
+
+      if ((firstName == null) || (firstName.length() == 0)) {
+        return "Missing fields";
+      }
+
+      id += firstName.substring(0, 1).toLowerCase();
+
+      if ((lastName == null) || (lastName.length() == 0)) {
+        id += "x";
+      } else {
+        id += lastName.substring(0, 1).toLowerCase();
+      }
+
+      id += String.valueOf(db.numAccounts() + 1001);
+
+      ainfo.setAccount(id);
+      ainfo.setDtstamp(new Timestamp(System.currentTimeMillis()).toString());
+      ainfo.setFirstName(firstName);
+      ainfo.setLastName(lastName);
+      ainfo.setEmail(email);
+      ainfo.setPw(encodedPassword(pw));
+
+      db.addAccount(ainfo);
     } finally {
-      db.close();
+      db.endTransaction();
     }
 
     final Message msg = new Message();
@@ -122,27 +148,27 @@ public class DirMaintImpl extends Logged implements DirMaint {
                            "Otherwise, click on, or copy and paste into your browser, " +
                            "the confirmation link below.\n" +
                            "\n" +
-                           config.getConfirmUrl() + "/confirm?confid=" + confid + "\n");
+                           config.getConfirmUrl() + "/confirm?confid=" + ainfo.getConfid() + "\n");
 
     getMailer().post(msg);
-    return confid;
+    return null;
   }
 
   @Override
   public AccountInfo getAccount(final String confId)
           throws SelfregException {
     try {
-      db.open();
+      db.startTransaction();
       return db.getAccount(confId);
     } finally {
-      db.close();
+      db.endTransaction();
     }
   }
 
   @Override
   public boolean confirm(final String confId) throws SelfregException {
     try {
-      db.open();
+      db.startTransaction();
       final AccountInfo ainfo = db.getAccount(confId);
 
       if (ainfo == null) {
@@ -156,17 +182,31 @@ public class DirMaintImpl extends Logged implements DirMaint {
       final String[] to = { ainfo.getEmail() };
       msg.setMailTo(to);
 
-      if (!createAccount(ainfo.getAccount(),
-                         ainfo.getFirstName(),
-                         ainfo.getLastName(),
-                         ainfo.getEmail(),
-                         null, // plaintext pw
-                         ainfo.getPw())) {
-        msg.setSubject(config.getMailSubject() + ": failed");
-        msg.setContent("Unable to create an account.");
+      if (config.getUseLdap()) {
+        /* Create an account on ldap directory */
 
-        getMailer().post(msg);
-        return false;
+        if (!createLdapAccount(ainfo.getAccount(),
+                               ainfo.getFirstName(),
+                               ainfo.getLastName(),
+                               ainfo.getEmail(),
+                               null, // plaintext pw
+                               ainfo.getPw())) {
+          msg.setSubject(config.getMailSubject() + ": failed");
+          msg.setContent("Unable to create an account.");
+
+          getMailer().post(msg);
+          return false;
+        }
+      } else {
+        ainfo.setEnabled(true);
+        db.updateAccount(ainfo);
+
+        /* have to create one of these to satisfy jboss */
+        final RoleInfo ri = new RoleInfo();
+        ri.setAccount(ainfo.getAccount());
+        ri.setRole("user");
+
+        db.addRole(ri);
       }
 
       msg.setSubject(config.getMailSubject() + ": success");
@@ -177,7 +217,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
       getMailer().post(msg);
       return true;
     } finally {
-      db.close();
+      db.endTransaction();
     }
   }
 
@@ -210,6 +250,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
    * Service interface methods
    * ======================================================================== */
 
+
   @Override
   public boolean createAccount(final String accountName,
                                final String firstName,
@@ -217,6 +258,56 @@ public class DirMaintImpl extends Logged implements DirMaint {
                                final String email,
                                final String pw,
                                final String encodedPw) throws SelfregException {
+    if (config.getUseLdap()) {
+      return createLdapAccount(accountName,
+                               firstName,
+                               lastName,
+                               email,
+                               pw,
+                               encodedPw);
+    }
+
+    /* create an enabled db account */
+
+    final AccountInfo ainfo = new AccountInfo();
+
+    ainfo.setConfid(UUID.randomUUID().toString());
+    ainfo.setAccount(accountName);
+    ainfo.setFirstName(firstName);
+    ainfo.setLastName(lastName);
+    ainfo.setEmail(email);
+
+    if ((pw != null) && (encodedPw == null)) {
+      ainfo.setPw(encodedPassword(pw));
+    } else if (encodedPw == null) {
+      throw new SelfregException("No password supplied");
+    } else {
+      ainfo.setPw(encodedPw);
+    }
+
+    try {
+      db.startTransaction();
+      db.addAccount(ainfo);
+
+      /* have to create one of these to satisfy jboss */
+      final RoleInfo ri = new RoleInfo();
+      ri.setAccount(ainfo.getAccount());
+      ri.setRole("user");
+
+      db.addRole(ri);
+    } finally {
+      db.endTransaction();
+    }
+
+    return true;
+  }
+
+  private boolean createLdapAccount(final String accountName,
+                                    final String firstName,
+                                    final String lastName,
+                                    final String email,
+                                    final String pw,
+                                    final String encodedPw) throws SelfregException {
     try {
       /** Build a directory record and add the attributes
        */
@@ -389,10 +480,25 @@ public class DirMaintImpl extends Logged implements DirMaint {
 
       return "{" + pwEncryption + "}" + new String(b64s);
       */
-      RFC2307SSHAPasswordEncryptor encryptor =
-              new RFC2307SSHAPasswordEncryptor();
+      PasswordEncryptor encryptor;
+      if ("SSHA".equals(config.getMessageDigest())) {
+        encryptor = new RFC2307SSHAPasswordEncryptor();
+      } else if ("SHA".equals(config.getMessageDigest())) {
+        encryptor = new RFC2307SHAPasswordEncryptor();
+      } else if ("MD5".equals(config.getMessageDigest())) {
+        encryptor = new RFC2307MD5PasswordEncryptor();
+      } else {
+        throw new SelfregException("Unsupported message digest");
+      }
 
-      return encryptor.encryptPassword(pw);
+      final String encpw = encryptor.encryptPassword(pw);
+      final String prefix = "{" + config.getMessageDigest() + "}";
+
+      if (!encpw.startsWith(prefix)) {
+        throw new SelfregException("Doesn't start with " + prefix);
+      }
+
+      return encpw.substring(prefix.length());
     } catch (final Throwable t) {
       throw new SelfregException(t);
     }

@@ -42,7 +42,10 @@ public class PostMethod extends MethodBase {
       final List<String> resourceUri = getResourceUri(req);
 
       if (Util.isEmpty(resourceUri)) {
-        throw new SelfregException("Bad resource url - no path specified");
+        sendError(resp,
+                  HttpServletResponse.SC_BAD_REQUEST,
+                  "Bad resource url - no path specified");
+        return;
       }
 
       final String action = resourceUri.get(0);
@@ -64,23 +67,31 @@ public class PostMethod extends MethodBase {
                             final HttpServletResponse resp) throws SelfregException {
     final ReqUtil rutil = new ReqUtil(req, resp);
 
-    final String account = rutil.getReqPar("account");
     final String firstName = rutil.getReqPar("fname");
     final String lastName = rutil.getReqPar("lname");
     final String email = rutil.getReqPar("email");
     final String pw = rutil.getReqPar("pw");
 
-    if ((account == null) ||
-            (firstName == null) ||
+    if ((firstName == null) ||
             (lastName == null) ||
             (email == null) ||
             (pw == null)) {
-      resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      sendError(resp,
+                HttpServletResponse.SC_BAD_REQUEST,
+                "Missing fields");
       return;
     }
 
-    getDir().requestId(account, firstName, lastName, email, pw);
-    resp.setStatus(HttpServletResponse.SC_OK);
+    final String failMsg = getDir().requestId(firstName, lastName, email, pw);
+
+    if (failMsg == null) {
+      resp.setStatus(HttpServletResponse.SC_OK);
+      return;
+    }
+
+    sendError(resp,
+              HttpServletResponse.SC_BAD_REQUEST,
+              failMsg);
   }
 }
 

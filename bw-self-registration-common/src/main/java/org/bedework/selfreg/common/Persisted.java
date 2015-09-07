@@ -19,107 +19,303 @@
 package org.bedework.selfreg.common;
 
 import org.bedework.selfreg.common.exception.SelfregException;
-import org.bedework.util.misc.Logged;
+
+import edu.rpi.cmt.config.HibernateConfigI;
+import edu.rpi.cmt.db.hibernate.HibException;
+import edu.rpi.cmt.db.hibernate.HibSession;
+import edu.rpi.cmt.db.hibernate.HibSessionFactory;
+import edu.rpi.cmt.db.hibernate.HibSessionImpl;
+import edu.rpi.sss.util.Logged;
+import edu.rpi.sss.util.Util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.iq80.leveldb.DB;
-import org.iq80.leveldb.Options;
-import org.iq80.leveldb.impl.Iq80DBFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * User: mike Date: 8/31/15 Time: 17:04
  */
 public class Persisted extends Logged {
-  private DB db;
+  private final HibernateConfigI config;
 
-  private String dataPath;
+  /** */
+  protected boolean open;
+
+  /** Incremented we were created for debugging */
+  private final static AtomicLong globalSessionCt = new AtomicLong();
+
+  private long sessionCt;
+
+  /** Current hibernate session - exists only across one user interaction
+   */
+  protected HibSession sess;
 
   protected ObjectMapper mapper = new ObjectMapper(); // create once, reuse
 
-  public Persisted(final String dataPath) {
-    this.dataPath = dataPath;
+  public Persisted(final HibernateConfigI config) {
+    this.config = config;
   }
 
-  public void open() throws SelfregException {
-    getDb();
-  }
-
-  public void close() {
-    closeDb();
-  }
-
-  public AccountInfo getAccount(final String confid) throws SelfregException {
-    final byte[] bytes = db.get(Iq80DBFactory.bytes(confid));
-
-    if (bytes == null) {
-      return null;
+  public boolean startTransaction() throws SelfregException {
+    if (isOpen()) {
+      return false;
     }
 
-    return getJson(bytes, AccountInfo.class);
+    openSession();
+    open = true;
+    return true;
   }
 
-  public void putAccount(final String confid,
-                         final AccountInfo val) throws SelfregException {
+  public boolean isOpen() {
+    return open;
+  }
+
+  public void endTransaction() throws SelfregException {
+    try {
+      checkOpen();
+
+      if (debug) {
+        debug("End transaction for " + sessionCt);
+      }
+
+      try {
+        if (!sess.rolledback()) {
+          sess.commit();
+        }
+      } catch (final HibException he) {
+        throw new SelfregException(he);
+      }
+    } catch (final SelfregException ne) {
+      try {
+        rollbackTransaction();
+      } catch (final SelfregException ignored) {}
+      throw ne;
+    } finally {
+      try {
+        closeSession();
+      } catch (final SelfregException ignored) {}
+      open = false;
+    }
+  }
+
+  private static final String findByConfidQuery =
+          "from " + AccountInfo.class.getName() +
+                  " a where a.confid=:confid";
+
+  public AccountInfo getAccount(final String confid) throws SelfregException {
+    try {
+      sess.createQuery(findByConfidQuery);
+      sess.setString("confid", confid);
+
+      return (AccountInfo)sess.getUnique();
+    } catch (final HibException he) {
+      throw new SelfregException(he);
+    }
+  }
+
+  private static final String findByEmailQuery =
+          "from " + AccountInfo.class.getName() +
+                  " a where a.email=:email";
+
+  public boolean emailPresent(final String val) throws SelfregException {
+    try {
+      sess.createQuery(findByEmailQuery);
+      sess.setString("email", val);
+
+      List l = sess.getList();
+
+      return !Util.isEmpty(l);
+    } catch (final HibException he) {
+      throw new SelfregException(he);
+    }
+  }
+
+  public void addAccount(final AccountInfo val) throws SelfregException {
+    validate(val);
+
+    try {
+      sess.save(val);
+    } catch (final HibException he) {
+      throw new SelfregException(he);
+    }
+  }
+
+  private static final String countQuery =
+          "select count(*) from " + AccountInfo.class.getName();
+
+  public long numAccounts() throws SelfregException {
+    try {
+      sess.createQuery(countQuery);
+      @SuppressWarnings("unchecked")
+      final Collection<Long> counts = sess.getList();
+
+      long total = 0;
+
+      if (debug) {
+        debug(" ----------- count = " + counts.size());
+        if (counts.size() > 0) {
+          debug(" ---------- first el class is " + counts.iterator()
+                                                         .next()
+                                                         .getClass()
+                                                         .getName());
+        }
+      }
+
+      for (final Long l: counts) {
+        total += l;
+      }
+
+      return total;
+    } catch (final HibException he) {
+      throw new SelfregException(he);
+    }
+  }
+
+  public void addRole(final RoleInfo val) throws SelfregException {
+    try {
+      sess.save(val);
+    } catch (final HibException he) {
+      throw new SelfregException(he);
+    }
+  }
+
+  public void updateAccount(final AccountInfo val) throws SelfregException {
+    validate(val);
+
+    try {
+      sess.update(val);
+    } catch (final HibException he) {
+      throw new SelfregException(he);
+    }
+  }
+
+  private void validate(final AccountInfo val) throws SelfregException {
     if (val.getEmail() == null) {
       throw new SelfregException("No email");
     }
 
-    byte[] accountBytes = bytesJson(val);
-
-    db.put(Iq80DBFactory.bytes(confid), accountBytes);
-    db.put(Iq80DBFactory.bytes(val.getEmail()), accountBytes);
-  }
-
-  public void removeAccount(final String confid) throws SelfregException {
-    db.delete(Iq80DBFactory.bytes(confid));
-  }
-
-  private DB getDb() throws SelfregException {
-    if (db != null) {
-      return db;
+    if (val.getConfid() == null) {
+      throw new SelfregException("No confid");
     }
 
+    if (val.getAccount() == null) {
+      throw new SelfregException("No account");
+    }
+  }
+
+  public void removeAccount(final AccountInfo val) throws SelfregException {
     try {
-      if (debug) {
-        debug("Try to open leveldb at " + dataPath);
-      }
-
-      final File f = new File(dataPath);
-
-      if (!f.isAbsolute()) {
-        throw new SelfregException("levelDbPath must be absolute - found " +
-                                      dataPath);
-      }
-
-      final Options options = new Options();
-      options.createIfMissing(true);
-      db = Iq80DBFactory.factory.open(new File(dataPath), options);
-    } catch (final Throwable t) {
-      // Always bad.
-      error(t);
-      throw new SelfregException(t);
+      sess.delete(val);
+    } catch (final HibException he) {
+      throw new SelfregException(he);
     }
-
-    return db;
   }
 
-  private void closeDb() {
-    if (db == null) {
+  /* ====================================================================
+   *                   Session methods
+   * ==================================================================== */
+
+  protected void checkOpen() throws SelfregException {
+    if (!isOpen()) {
+      throw new SelfregException("Session call when closed");
+    }
+  }
+
+  protected synchronized void openSession() throws SelfregException {
+    if (isOpen()) {
+      throw new SelfregException("Already open");
+    }
+
+    open = true;
+
+    if (sess != null) {
+      warn("Session is not null. Will close");
+      try {
+        endTransaction();
+      } catch (final Throwable ignored) {
+      }
+    }
+
+    sessionCt = globalSessionCt.incrementAndGet();
+
+    if (sess == null) {
+      if (debug) {
+        debug("New hibernate session for " + sessionCt);
+      }
+      sess = new HibSessionImpl();
+      try {
+        sess.init(HibSessionFactory.getSessionFactory(
+                config.getHibernateProperties()), getLogger());
+      } catch (final HibException he) {
+        throw new SelfregException(he);
+      }
+      debug("Open session for " + sessionCt);
+    }
+
+    beginTransaction();
+  }
+
+  protected synchronized void closeSession() throws SelfregException {
+    if (!isOpen()) {
+      if (debug) {
+        debug("Close for " + sessionCt + " closed session");
+      }
       return;
     }
 
+    if (debug) {
+      debug("Close for " + sessionCt);
+    }
+
     try {
-      db.close();
-      db = null;
+      if (sess != null) {
+        if (sess.rolledback()) {
+          sess = null;
+          return;
+        }
+
+        if (sess.transactionStarted()) {
+          sess.rollback();
+        }
+//        sess.disconnect();
+        sess.close();
+        sess = null;
+      }
     } catch (final Throwable t) {
-      warn("Error closing db: " + t.getMessage());
-      error(t);
+      try {
+        sess.close();
+      } catch (final Throwable ignored) {}
+      sess = null; // Discard on error
+    } finally {
+      open = false;
+    }
+  }
+
+  private void beginTransaction() throws SelfregException {
+    checkOpen();
+
+    if (debug) {
+      debug("Begin transaction for " + sessionCt);
+    }
+    try {
+      sess.beginTransaction();
+    } catch (final HibException he) {
+      throw new SelfregException(he);
+    }
+  }
+
+  protected void rollbackTransaction() throws SelfregException {
+    try {
+      checkOpen();
+      sess.rollback();
+    } catch (final HibException he) {
+      throw new SelfregException(he);
     }
   }
 

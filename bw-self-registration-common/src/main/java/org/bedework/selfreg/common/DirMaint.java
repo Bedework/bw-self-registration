@@ -36,23 +36,21 @@ public interface DirMaint {
 	 * which identifies this request. It should be provided as a parameter to
 	 * confirm which will create the account or reject the UUID
 	 *
-   * @param accountName - supplied by user
-	 * @param firstName
-	 * @param lastName
-	 * @param email
-	 * @param pw
-	 * @return confirmation id
+	 * @param firstName users first
+	 * @param lastName users last
+	 * @param email their email
+	 * @param pw pw they want
+	 * @return null for OK or error message
 	 * @throws SelfregException
 	 */
-	String requestId(String accountName,
-	                 String firstName,
+	String requestId(String firstName,
                    String lastName,
 	                 String email,
 	                 String pw) throws SelfregException;
 
   /** Return account info for the account represented by the confid.
    *
-   * @param confId
+   * @param confId supplied by system
    * @return null if confId is bad
    * @throws SelfregException
    */
@@ -60,7 +58,7 @@ public interface DirMaint {
 
 	/** Create (or enable) the account represented by the confid.
 	 *
-	 * @param confId
+   * @param confId supplied by system
 	 * @return true for OK - false if confId is bad
 	 * @throws SelfregException
 	 */
@@ -68,7 +66,7 @@ public interface DirMaint {
 
 	/** Called to send a message providing the recipient with their id
 	 *
-	 * @param email
+   * @param email of recipient
 	 * @return true if email known - false otherwise
 	 * @throws SelfregException
 	 */

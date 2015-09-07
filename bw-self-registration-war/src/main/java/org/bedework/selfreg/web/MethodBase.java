@@ -283,6 +283,20 @@ public abstract class MethodBase {
     }
   }
 
+  protected void sendError(final HttpServletResponse resp,
+                           final int code,
+                           final String msg) {
+    try {
+      resp.setStatus(code);
+      resp.setContentType("application/json; charset=UTF-8");
+
+      final String json = "{\"msg\": \"" + msg + "\"}";
+      resp.sendError(code, json);
+    } catch (final Throwable ignored) {
+      // Pretty much screwed if we get here
+    }
+  }
+
   protected DirMaint getDir() throws SelfregException {
     if (dm != null) {
       return dm;

@@ -18,10 +18,9 @@
  */
 package org.bedework.selfreg.common;
 
-import org.bedework.util.config.ConfInfo;
-import org.bedework.util.jmx.MBeanInfo;
-
-import java.io.Serializable;
+import edu.rpi.cmt.config.ConfInfo;
+import edu.rpi.cmt.config.HibernateConfigI;
+import edu.rpi.cmt.jmx.MBeanInfo;
 
 /** Properties for mailers.
  *
@@ -29,7 +28,19 @@ import java.io.Serializable;
  *
  */
 @ConfInfo(elementName = "selfreg")
-public interface SelfregConfigProperties extends Serializable {
+public interface SelfregConfigProperties extends HibernateConfigI {
+  /** True if accounts should be copied to ldap
+   *
+   * @param val
+   */
+  void setUseLdap(final boolean val);
+
+  /**
+   * @return boolean True if accounts should be copied to ldap
+   */
+  @MBeanInfo(" True if accounts should be copied to ldap")
+  boolean getUseLdap();
+
   /**
    *
    * @param val the value
@@ -260,18 +271,6 @@ public interface SelfregConfigProperties extends Serializable {
 
   /**
    *
-   * @param val subject
-   */
-  void setDbPath(String val);
-
-  /**
-   * @return String
-   */
-  @MBeanInfo("path to db data")
-  String getDbPath();
-
-  /**
-   *
    * @param val the confirmation url
    */
   void setConfirmUrl(String val);
@@ -281,4 +280,44 @@ public interface SelfregConfigProperties extends Serializable {
    */
   @MBeanInfo("The confirmation url")
   String getConfirmUrl();
+
+  /**
+   *
+   * @param val the message digest (SHA, MD5 etc)
+   */
+  void setMessageDigest(String val);
+
+  /**
+   * @return String
+   */
+  @MBeanInfo("The MessageDigest")
+  String getMessageDigest();
+
+  /**
+   *
+   * @param val new account prefix
+   */
+  void setAccountPrefix(String val);
+
+  /**
+   * @return String
+   */
+  @MBeanInfo("The account prefix")
+  String getAccountPrefix();
+
+  /* ========================================================================
+   * Schema
+   * ======================================================================== */
+
+  /** Output file name - full path
+   *
+   * @param val path
+   */
+  void setSchemaOutFile(String val);
+
+  /**
+   * @return Output file name - full path
+   */
+  @MBeanInfo("Full path of schema output file")
+  String getSchemaOutFile();
 }

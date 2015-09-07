@@ -30,8 +30,10 @@ import org.bedework.util.jmx.MBeanInfo;
  */
 @ConfInfo(elementName = "selfreg")
 public class SelfregConfigPropertiesImpl
-        extends ConfigBase<SelfregConfigPropertiesImpl>
+        extends HibernateConfigBase<SelfregConfigPropertiesImpl>
         implements SelfregConfigProperties {
+  private boolean useLdap;
+
   private String ldapUrl;
 
   private String baseDn;
@@ -70,9 +72,23 @@ public class SelfregConfigPropertiesImpl
 
   private boolean mailDisabled;
 
-  private String dbPath;
-
   private String confirmUrl;
+
+  private String schemaOutFile;
+
+  private String messageDigest;
+
+  private String accountPrefix;
+
+  @Override
+  public void setUseLdap(final boolean val) {
+    useLdap = val;
+  }
+
+  @Override
+  public boolean getUseLdap() {
+    return useLdap;
+  }
 
   @Override
   public void setLdapUrl(final String val)  {
@@ -283,17 +299,6 @@ public class SelfregConfigPropertiesImpl
   }
 
   @Override
-  public void setDbPath(final String val)  {
-    dbPath = val;
-  }
-
-  @Override
-  @MBeanInfo("path to db data")
-  public String getDbPath()  {
-    return dbPath;
-  }
-
-  @Override
   public void setConfirmUrl(final String val) {
     confirmUrl = val;
   }
@@ -301,5 +306,35 @@ public class SelfregConfigPropertiesImpl
   @Override
   public String getConfirmUrl() {
     return confirmUrl;
+  }
+
+  @Override
+  public void setMessageDigest(final String val) {
+    messageDigest = val;
+  }
+
+  @Override
+  public String getMessageDigest() {
+    return messageDigest;
+  }
+
+  @Override
+  public void setAccountPrefix(final String val) {
+    accountPrefix = val;
+  }
+
+  @Override
+  public String getAccountPrefix() {
+    return accountPrefix;
+  }
+
+  @Override
+  public void setSchemaOutFile(final String val) {
+    schemaOutFile = val;
+  }
+
+  @Override
+  public String getSchemaOutFile() {
+    return schemaOutFile;
   }
 }

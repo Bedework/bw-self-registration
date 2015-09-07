@@ -22,6 +22,7 @@ import org.bedework.selfreg.common.SelfregConfigProperties;
 import org.bedework.util.jmx.ConfBaseMBean;
 import org.bedework.util.jmx.MBeanInfo;
 
+import java.util.List;
 
 /** Run the Bedework selfreg engine service
  *
@@ -29,9 +30,40 @@ import org.bedework.util.jmx.MBeanInfo;
  */
 public interface SelfregMBean extends ConfBaseMBean,
         SelfregConfigProperties {
+  /** Export schema to database?
+   *
+   * @param val
+   */
+  public void setExport(boolean val);
+
+  /**
+   * @return true for export schema
+   */
+  @MBeanInfo("Export (write) schema to database?")
+  public boolean getExport();
+
   /* ========================================================================
    * Operations
    * ======================================================================== */
+
+  /** Create or dump new schema. If export and drop set will try to drop tables.
+   * Export and create will create a schema in the db and export, drop, create
+   * will drop tables, and try to create  anew schema.
+   *
+   * The export, create and drop flags will all be reset to false after this,
+   * whatever the result. This avoids accidental damage to the db.
+   *
+   * @return Completion message
+   */
+  @MBeanInfo("Start build of the database schema. Set export flag to write to db.")
+  String schema();
+
+  /** Returns status of the schema build.
+   *
+   * @return Completion messages
+   */
+  @MBeanInfo("Status of the database schema build.")
+  List<String> schemaStatus();
 
   /** Display request status
    *

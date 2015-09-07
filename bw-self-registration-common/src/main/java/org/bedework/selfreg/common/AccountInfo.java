@@ -24,7 +24,15 @@ import org.bedework.util.misc.ToString;
  * User: mike Date: 8/31/15 Time: 17:04
  */
 public class AccountInfo {
+  private Long id;
+
+  private int seq;
+
+  private String confid;
+
   private String account;
+
+  private boolean enabled;
 
   private String dtstamp;
 
@@ -33,12 +41,46 @@ public class AccountInfo {
   private String email;
   private String pw;
 
+  private String properties;
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(final Long val) {
+    id = val;
+  }
+
+  public int getSeq() {
+    return seq;
+  }
+
+  public void setSeq(final int val) {
+    seq = val;
+  }
+
+  public String getConfid() {
+    return confid;
+  }
+
+  public void setConfid(final String val) {
+    confid = val;
+  }
+
   public String getAccount() {
     return account;
   }
 
   public void setAccount(final String val) {
     account = val;
+  }
+
+  public boolean getEnabled() {
+    return enabled;
+  }
+
+  public void setEnabled(final boolean val) {
+    enabled = val;
   }
 
   public String getDtstamp() {
@@ -81,16 +123,31 @@ public class AccountInfo {
     pw = val;
   }
 
+  public String getProperties() {
+    return properties;
+  }
+
+  public void setProperties(final String val) {
+    properties = val;
+  }
+
   public String toString() {
     final ToString ts = new ToString(this);
 
+    ts.append("id", getId());
+    ts.append("seq", getSeq());
+
+    ts.append("confid", getConfid());
     ts.append("account", getAccount());
+    ts.append("enabled", getEnabled());
 
     ts.append("dtstamp", getDtstamp());
 
     ts.append("firstName", getFirstName());
     ts.append("lastName", getLastName());
     ts.append("email", getEmail());
+    ts.append("pw", getPw());
+    ts.append("properties", getProperties());
 
     return ts.toString();
   }
