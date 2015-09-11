@@ -292,9 +292,20 @@ public abstract class MethodBase {
       resp.setContentType("application/json; charset=UTF-8");
 
       final String json = "{\"msg\": \"" + msg + "\"}";
-      resp.sendError(code, json);
+
+      resp.setContentType("application/json; charset=UTF-8");
+
+      final OutputStream os = resp.getOutputStream();
+
+      final byte[] bytes = json.getBytes();
+
+      resp.setContentLength(bytes.length);
+      os.write(bytes);
     } catch (final Throwable ignored) {
       // Pretty much screwed if we get here
+      if (debug) {
+        debugMsg("Unable to send error: " + msg);
+      }
     }
   }
 
