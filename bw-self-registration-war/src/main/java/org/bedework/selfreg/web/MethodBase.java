@@ -306,7 +306,10 @@ public abstract class MethodBase {
 
       final OutputStream os = resp.getOutputStream();
 
-      os.write(data.getBytes());
+      final byte[] bytes = data.getBytes();
+
+      resp.setContentLength(bytes.length);
+      os.write(bytes);
     } catch (final Throwable ignored) {
       // Pretty much screwed if we get here
     }
