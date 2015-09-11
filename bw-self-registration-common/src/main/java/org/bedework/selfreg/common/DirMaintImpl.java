@@ -29,6 +29,7 @@ import org.bedework.selfreg.common.mail.MailerIntf;
 import org.bedework.selfreg.common.mail.Message;
 import org.bedework.util.misc.Logged;
 
+import org.apache.http.client.utils.URIBuilder;
 import org.jasypt.util.password.PasswordEncryptor;
 import org.jasypt.util.password.rfc2307.RFC2307MD5PasswordEncryptor;
 import org.jasypt.util.password.rfc2307.RFC2307SHAPasswordEncryptor;
@@ -140,15 +141,25 @@ public class DirMaintImpl extends Logged implements DirMaint {
     msg.setMailTo(to);
     msg.setSubject(config.getMailSubject());
 
-    // Should be built from a template
-    msg.setContent("We have a request for a new account for this email address\n" +
-                           "\n" +
-                           "If you did not request an account, ignore this message\n" +
-                           "\n" +
-                           "Otherwise, click on, or copy and paste into your browser, " +
-                           "the confirmation link below.\n" +
-                           "\n" +
-                           config.getConfirmUrl() + "/confirm?confid=" + ainfo.getConfid() + "\n");
+    try {
+      final URIBuilder builder = new URIBuilder(config.getConfirmUrl());
+
+      builder.addParameter("confid", ainfo.getConfid());
+
+      // Should be built from a template
+      msg.setContent(
+              "We have a request for a new account for this email address\n" +
+                      "\n" +
+                      "If you did not request an account, ignore this message\n" +
+                      "\n" +
+                      "Otherwise, click on, or copy and paste into your browser, " +
+                      "the confirmation link below.\n" +
+                      "\n" +
+                      builder.toString() + "\n");
+    } catch (final Throwable t) {
+      error(t);
+      return t.getLocalizedMessage();
+    }
 
     getMailer().post(msg);
     return null;
