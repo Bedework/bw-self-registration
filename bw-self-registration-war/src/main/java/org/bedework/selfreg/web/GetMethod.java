@@ -72,8 +72,14 @@ public class GetMethod extends MethodBase {
       return;
     }
 
-    getDir().confirm(confid);
-    resp.setStatus(HttpServletResponse.SC_OK);
+    final String account = getDir().confirm(confid);
+
+    if (account == null) {
+      sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "failed");
+    }
+
+    final String json = "{\"account\": \"" + account + "\"}";
+    sendOkJsonData(resp, json);
   }
 }
 

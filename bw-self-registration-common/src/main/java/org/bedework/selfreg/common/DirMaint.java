@@ -59,10 +59,10 @@ public interface DirMaint {
 	/** Create (or enable) the account represented by the confid.
 	 *
    * @param confId supplied by system
-	 * @return true for OK - false if confId is bad
+	 * @return account for OK - null if confId is bad
 	 * @throws SelfregException
 	 */
-	boolean confirm(String confId) throws SelfregException;
+	String confirm(String confId) throws SelfregException;
 
 	/** Called to send a message providing the recipient with their id
 	 *

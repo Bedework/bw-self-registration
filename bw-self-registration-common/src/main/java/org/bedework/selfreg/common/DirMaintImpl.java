@@ -177,13 +177,13 @@ public class DirMaintImpl extends Logged implements DirMaint {
   }
 
   @Override
-  public boolean confirm(final String confId) throws SelfregException {
+  public String confirm(final String confId) throws SelfregException {
     try {
       db.startTransaction();
       final AccountInfo ainfo = db.getAccount(confId);
 
       if (ainfo == null) {
-        return false;
+        return null;
       }
 
       final Message msg = new Message();
@@ -206,7 +206,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
           msg.setContent("Unable to create an account.");
 
           getMailer().post(msg);
-          return false;
+          return null;
         }
       } else {
         ainfo.setEnabled(true);
@@ -223,10 +223,10 @@ public class DirMaintImpl extends Logged implements DirMaint {
       msg.setSubject(config.getMailSubject() + ": success");
       msg.setContent("Your account " +
                              ainfo.getAccount() +
-                             "has been created. ");
+                             " has been created. ");
 
       getMailer().post(msg);
-      return true;
+      return ainfo.getAccount();
     } finally {
       db.endTransaction();
     }

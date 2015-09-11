@@ -26,6 +26,7 @@ import org.bedework.selfreg.common.exception.SelfregException;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
+import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -292,6 +293,20 @@ public abstract class MethodBase {
 
       final String json = "{\"msg\": \"" + msg + "\"}";
       resp.sendError(code, json);
+    } catch (final Throwable ignored) {
+      // Pretty much screwed if we get here
+    }
+  }
+
+  protected void sendOkJsonData(final HttpServletResponse resp,
+                            final String data) {
+    try {
+      resp.setStatus(HttpServletResponse.SC_OK);
+      resp.setContentType("application/json; charset=UTF-8");
+
+      final OutputStream os = resp.getOutputStream();
+
+      os.write(data.getBytes());
     } catch (final Throwable ignored) {
       // Pretty much screwed if we get here
     }
