@@ -54,6 +54,11 @@ public class PostMethod extends MethodBase {
         processNewid(resourceUri, req, resp);
         return;
       }
+
+      if (debug) {
+        debugMsg("Illegal action " + action);
+      }
+
       resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     } catch (final SelfregException se) {
       throw se;
@@ -65,6 +70,10 @@ public class PostMethod extends MethodBase {
   private void processNewid(final List<String> resourceUri,
                             final HttpServletRequest req,
                             final HttpServletResponse resp) throws SelfregException {
+    if (debug) {
+      debugMsg("Process new id request");
+    }
+
     final ReqUtil rutil = new ReqUtil(req, resp);
 
     final String firstName = rutil.getReqPar("fname");
@@ -76,6 +85,10 @@ public class PostMethod extends MethodBase {
             (lastName == null) ||
             (email == null) ||
             (pw == null)) {
+      if (debug) {
+        debugMsg("Failed to create new id: missing fields");
+      }
+
       sendError(resp,
                 HttpServletResponse.SC_BAD_REQUEST,
                 "Missing fields");
@@ -87,6 +100,10 @@ public class PostMethod extends MethodBase {
     if (failMsg == null) {
       resp.setStatus(HttpServletResponse.SC_OK);
       return;
+    }
+
+    if (debug) {
+      debugMsg("Failed to create new id with reason " + failMsg);
     }
 
     sendError(resp,
