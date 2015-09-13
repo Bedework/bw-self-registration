@@ -177,6 +177,35 @@ public class DirMaintImpl extends Logged implements DirMaint {
   }
 
   @Override
+  public AccountInfo getAccountByEmail(final String email) throws SelfregException {
+    try {
+      db.startTransaction();
+      return db.getAccountByEmail(email);
+    } finally {
+      db.endTransaction();
+    }
+  }
+
+  @Override
+  public boolean deleteAccount(final String confId)
+          throws SelfregException {
+    try {
+      db.startTransaction();
+      AccountInfo ainfo = db.getAccount(confId);
+
+      if (ainfo == null) {
+        return false;
+      }
+
+      db.removeAccount(ainfo);
+
+      return true;
+    } finally {
+      db.endTransaction();
+    }
+  }
+
+  @Override
   public String confirm(final String confId) throws SelfregException {
     try {
       db.startTransaction();

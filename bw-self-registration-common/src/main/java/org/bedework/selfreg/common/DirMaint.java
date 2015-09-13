@@ -56,6 +56,22 @@ public interface DirMaint {
    */
   AccountInfo getAccount(String confId) throws SelfregException;
 
+  /** Return account info for the account represented by the email.
+   *
+   * @param email for user
+   * @return null if confId is bad
+   * @throws SelfregException
+   */
+  AccountInfo getAccountByEmail(String email) throws SelfregException;
+
+  /** Delete the account given a confirmation id
+   *
+   * @param confId
+   * @return
+   * @throws SelfregException
+   */
+  boolean deleteAccount(final String confId) throws SelfregException;
+
 	/** Create (or enable) the account represented by the confid.
 	 *
    * @param confId supplied by system

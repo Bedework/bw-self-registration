@@ -122,17 +122,29 @@ public class Persisted extends Logged {
           "from " + AccountInfo.class.getName() +
                   " a where a.email=:email";
 
-  public boolean emailPresent(final String val) throws SelfregException {
+  public AccountInfo getAccountByEmail(final String email) throws SelfregException {
     try {
-      sess.createQuery(findByEmailQuery);
-      sess.setString("email", val);
+      sess.createQuery(findByConfidQuery);
+      sess.setString("email", email);
 
-      List l = sess.getList();
+      final List l = sess.getList();
 
-      return !Util.isEmpty(l);
+      if (l.size() == 0) {
+        return null;
+      }
+
+      if (l.size() > 1) {
+        error("Bad data email has multiple occurences: " + email);
+      }
+
+      return (AccountInfo)l.get(0);
     } catch (final HibException he) {
       throw new SelfregException(he);
     }
+  }
+
+  public boolean emailPresent(final String val) throws SelfregException {
+    return getAccountByEmail(val) == null;
   }
 
   public void addAccount(final AccountInfo val) throws SelfregException {

@@ -521,8 +521,20 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
   }
 
   @Override
-  public String removeUser(final String account) {
+  public String removeUser(final String val) {
     try {
+      AccountInfo ainfo = null;
+      if (val.contains("@")) {
+        ainfo = getDir().getAccountByEmail(val);
+      }
+
+      if (ainfo == null) {
+        return "Not found";
+      }
+
+      if (!getDir().deleteAccount(ainfo.getConfid())) {
+        return "Unable to delete";
+      }
 
       return "Ok";
     } catch (final Throwable t) {
