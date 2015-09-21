@@ -29,7 +29,7 @@ import java.util.Collection;
  * restatement of the javax.mail.Message class. Serializability is
  * important if we want to queue the message..
  *
- * @author Mike Douglass douglm@bedework.edu
+ * @author Mike Douglass douglm@rpi.edu
  */
 public class Message implements Serializable {
   /** Who is it from

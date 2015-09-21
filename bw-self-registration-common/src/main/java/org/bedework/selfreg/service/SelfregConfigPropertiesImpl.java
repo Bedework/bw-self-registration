@@ -18,7 +18,7 @@
  */
 package org.bedework.selfreg.service;
 
-import org.bedework.selfreg.common.SelfregConfigProperties;
+import org.bedework.selfreg.shared.SelfregConfigProperties;
 import org.bedework.util.config.ConfInfo;
 import org.bedework.util.config.HibernateConfigBase;
 import org.bedework.util.jmx.MBeanInfo;
@@ -73,6 +73,12 @@ public class SelfregConfigPropertiesImpl
   private boolean mailDisabled;
 
   private String confirmUrl;
+
+  private String newpwUrl;
+
+  private String confirmForward;
+
+  private String newpwForward;
 
   private String schemaOutFile;
 
@@ -306,6 +312,36 @@ public class SelfregConfigPropertiesImpl
   @Override
   public String getConfirmUrl() {
     return confirmUrl;
+  }
+
+  @Override
+  public void setNewpwUrl(final String val) {
+    newpwUrl = val;
+  }
+
+  @Override
+  public String getNewpwUrl() {
+    return newpwUrl;
+  }
+
+  @Override
+  public void setConfirmForward(final String val) {
+    confirmForward = val;
+  }
+
+  @Override
+  public String getConfirmForward() {
+    return confirmForward;
+  }
+
+  @Override
+  public void setNewpwForward(final String val) {
+    newpwForward = val;
+  }
+
+  @Override
+  public String getNewpwForward() {
+    return newpwForward;
   }
 
   @Override

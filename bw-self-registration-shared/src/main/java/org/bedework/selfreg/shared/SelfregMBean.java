@@ -16,9 +16,8 @@
     specific language governing permissions and limitations
     under the License.
  */
-package org.bedework.selfreg.service;
+package org.bedework.selfreg.shared;
 
-import org.bedework.selfreg.common.SelfregConfigProperties;
 import org.bedework.util.jmx.ConfBaseMBean;
 import org.bedework.util.jmx.MBeanInfo;
 
@@ -141,4 +140,7 @@ public interface SelfregMBean extends ConfBaseMBean,
    */
   @MBeanInfo("(Re)load the configuration")
   String loadConfig();
+
+  @MBeanInfo("Get an account entry given the user account")
+  AccountInfo getAccount(String account);
 }

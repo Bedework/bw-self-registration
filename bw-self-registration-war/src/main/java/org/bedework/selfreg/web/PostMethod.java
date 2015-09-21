@@ -43,7 +43,6 @@ public class PostMethod extends MethodBase {
 
       if (Util.isEmpty(resourceUri)) {
         sendError(resp,
-                  HttpServletResponse.SC_BAD_REQUEST,
                   "Bad resource url - no path specified");
         return;
       }
@@ -52,6 +51,21 @@ public class PostMethod extends MethodBase {
 
       if (action.equals("newid")) {
         processNewid(resourceUri, req, resp);
+        return;
+      }
+
+      if (action.equals("fid")) {
+        processForgotid(resourceUri, req, resp);
+        return;
+      }
+
+      if (action.equals("fpw")) {
+        processForgotpw(resourceUri, req, resp);
+        return;
+      }
+
+      if (action.equals("setpw")) {
+        processSetpw(resourceUri, req, resp);
         return;
       }
 
@@ -90,7 +104,6 @@ public class PostMethod extends MethodBase {
       }
 
       sendError(resp,
-                HttpServletResponse.SC_BAD_REQUEST,
                 "Missing fields");
       return;
     }
@@ -107,8 +120,67 @@ public class PostMethod extends MethodBase {
     }
 
     sendError(resp,
-              HttpServletResponse.SC_BAD_REQUEST,
               failMsg);
+  }
+
+  private void processForgotid(final List<String> resourceUri,
+                               final HttpServletRequest req,
+                               final HttpServletResponse resp) throws SelfregException {
+    if (debug) {
+      debugMsg("Process forgot id request");
+    }
+
+    final ReqUtil rutil = new ReqUtil(req, resp);
+
+    final String email = rutil.getReqPar("email");
+
+    getDir().sendAccount(email);
+
+    resp.setStatus(HttpServletResponse.SC_OK);
+  }
+
+  private void processForgotpw(final List<String> resourceUri,
+                               final HttpServletRequest req,
+                               final HttpServletResponse resp) throws SelfregException {
+    if (debug) {
+      debugMsg("Process forgot pw request");
+    }
+
+    final ReqUtil rutil = new ReqUtil(req, resp);
+
+    final String account = rutil.getReqPar("account");
+
+    getDir().sendForgotpw(account);
+
+    resp.setStatus(HttpServletResponse.SC_OK);
+  }
+
+  private void processSetpw(final List<String> resourceUri,
+                            final HttpServletRequest req,
+                            final HttpServletResponse resp) throws SelfregException {
+    if (debug) {
+      debugMsg("Process set pw request");
+    }
+
+    final ReqUtil rutil = new ReqUtil(req, resp);
+
+    final String pw = rutil.getReqPar("pw");
+    final String confid = rutil.getReqPar("confid");
+
+    if ((confid == null) ||
+            (pw == null)) {
+      if (debug) {
+        debugMsg("Failed to set pw: missing fields");
+      }
+
+      sendError(resp,
+                "Missing fields");
+      return;
+    }
+
+    getDir().setpw(confid, pw);
+
+    resp.setStatus(HttpServletResponse.SC_OK);
   }
 }
 

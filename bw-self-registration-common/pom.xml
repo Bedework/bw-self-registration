@@ -11,6 +11,11 @@
 	<name>bw-self-registration-common</name>
 
 	<dependencies>
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-self-registration-shared</artifactId>
+      <version>4.0.0-SNAPSHOT</version>
+    </dependency>
 		<!-- Bedework: Util -->
     <dependency>
       <groupId>org.bedework</groupId>
@@ -29,6 +34,10 @@
       <artifactId>bw-util-misc</artifactId>
     </dependency>
 		<!-- Third Party Libraries -->
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+    </dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>

@@ -19,6 +19,7 @@
 package org.bedework.selfreg.common;
 
 import org.bedework.selfreg.common.exception.SelfregException;
+import org.bedework.selfreg.shared.AccountInfo;
 import org.bedework.util.config.HibernateConfigI;
 import org.bedework.util.hibernate.HibException;
 import org.bedework.util.hibernate.HibSession;
@@ -103,11 +104,26 @@ public class Persisted extends Logged {
     }
   }
 
+  private static final String findByAccountQuery =
+          "from " + AccountInfo.class.getName() +
+                  " a where a.account=:account";
+
+  public AccountInfo getAccount(final String account) throws SelfregException {
+    try {
+      sess.createQuery(findByAccountQuery);
+      sess.setString("account", account);
+
+      return (AccountInfo)sess.getUnique();
+    } catch (final HibException he) {
+      throw new SelfregException(he);
+    }
+  }
+
   private static final String findByConfidQuery =
           "from " + AccountInfo.class.getName() +
                   " a where a.confid=:confid";
 
-  public AccountInfo getAccount(final String confid) throws SelfregException {
+  public AccountInfo getAccountByConfid(final String confid) throws SelfregException {
     try {
       sess.createQuery(findByConfidQuery);
       sess.setString("confid", confid);
@@ -124,7 +140,7 @@ public class Persisted extends Logged {
 
   public AccountInfo getAccountByEmail(final String email) throws SelfregException {
     try {
-      sess.createQuery(findByConfidQuery);
+      sess.createQuery(findByEmailQuery);
       sess.setString("email", email);
 
       final List l = sess.getList();

@@ -32,6 +32,7 @@ import java.io.Writer;
 import java.util.Enumeration;
 import java.util.HashMap;
 
+import javax.management.ObjectName;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -48,7 +49,7 @@ import javax.xml.namespace.QName;
  * This abstract servlet handles the request/response nonsense and calls
  * abstract routines to interact with an underlying data source.
  *
- * @author Mike Douglass   douglm@bedework.edu
+ * @author Mike Douglass   douglm@rpi.edu
  * @version 1.0
  */
 public class SelfregServlet extends HttpServlet
@@ -408,7 +409,9 @@ public class SelfregServlet extends HttpServlet
         getManagementContext().start();
 
         selfreg = new Selfreg();
-        register("selfreg", "selfreg", selfreg);
+        register(new ObjectName(selfreg.getServiceName()),
+                 selfreg);
+
         selfreg.loadConfig();
 //        selfreg.start();
       } catch (Throwable t){

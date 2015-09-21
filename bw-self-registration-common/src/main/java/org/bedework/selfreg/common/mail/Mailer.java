@@ -19,6 +19,9 @@
 
 package org.bedework.selfreg.common.mail;
 
+import org.bedework.selfreg.shared.SelfregConfigProperties;
+import org.bedework.selfreg.common.exception.SelfregException;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -34,14 +37,12 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.log4j.Logger;
-import org.bedework.selfreg.common.SelfregConfigProperties;
-import org.bedework.selfreg.common.exception.SelfregException;
 
 /** A mailer which provides some minimal functionality for testing.
  * We do not consider many issues such as spam prevention, efficiency in
  * mailing to large lists, etc.
  *
- * @author  Mike Douglass douglm@bedework.edu
+ * @author  Mike Douglass douglm@rpi.edu
  */
 public class Mailer implements MailerIntf {
   private boolean debug;

@@ -19,6 +19,8 @@
 package org.bedework.selfreg.common;
 
 import org.bedework.selfreg.common.exception.SelfregException;
+import org.bedework.selfreg.shared.AccountInfo;
+import org.bedework.selfreg.shared.SelfregConfigProperties;
 
 /** Define methods for directory maintenance. Most methods here corrspond to
  * web or service actions.
@@ -48,13 +50,46 @@ public interface DirMaint {
 	                 String email,
 	                 String pw) throws SelfregException;
 
+  /** Send the user their account.
+   *
+   * @param email
+   * @return null for OK, otherwise error message
+   * @throws SelfregException
+   */
+  String sendAccount(String email)  throws SelfregException;
+
+  /** Send the user a message to allow pw reset.
+   *
+   * @param account -
+   * @return null for OK, otherwise error message
+   * @throws SelfregException
+   */
+  String sendForgotpw(String account)  throws SelfregException;
+
+  /** Set pw.
+   *
+   * @param confid -
+   * @param pw -
+   * @return null for OK, otherwise error message
+   * @throws SelfregException
+   */
+  String setpw(String confid, String pw)  throws SelfregException;
+
+  /** Return account info for the account
+   *
+   * @param account of user
+   * @return null if confId is bad
+   * @throws SelfregException
+   */
+  AccountInfo getAccount(String account) throws SelfregException;
+
   /** Return account info for the account represented by the confid.
    *
    * @param confId supplied by system
    * @return null if confId is bad
    * @throws SelfregException
    */
-  AccountInfo getAccount(String confId) throws SelfregException;
+  AccountInfo getAccountByConfid(String confId) throws SelfregException;
 
   /** Return account info for the account represented by the email.
    *

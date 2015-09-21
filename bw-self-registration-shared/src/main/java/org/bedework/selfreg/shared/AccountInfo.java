@@ -16,14 +16,16 @@
     specific language governing permissions and limitations
     under the License.
 */
-package org.bedework.selfreg.common;
+package org.bedework.selfreg.shared;
 
 import org.bedework.util.misc.ToString;
+
+import java.io.Serializable;
 
 /**
  * User: mike Date: 8/31/15 Time: 17:04
  */
-public class AccountInfo {
+public class AccountInfo implements Serializable {
   private Long id;
 
   private int seq;

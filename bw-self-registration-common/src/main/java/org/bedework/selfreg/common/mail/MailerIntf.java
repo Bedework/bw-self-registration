@@ -22,11 +22,11 @@ package org.bedework.selfreg.common.mail;
 import java.io.Serializable;
 import java.util.Collection;
 
-import org.bedework.selfreg.common.SelfregConfigProperties;
+import org.bedework.selfreg.shared.SelfregConfigProperties;
 import org.bedework.selfreg.common.exception.SelfregException;
 
 /**
- * @author Mike Douglass douglm  bedework.edu
+ * @author Mike Douglass douglm  rpi.edu
  */
 public interface MailerIntf extends Serializable {
   /**

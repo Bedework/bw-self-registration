@@ -61,6 +61,7 @@
 
 	<modules>
 		<module>bw-self-registration-common</module>
+    <module>bw-self-registration-shared</module>
 		<module>bw-self-registration-war</module>
 		<module>bw-self-registration-ear</module>
 	</modules>
@@ -141,6 +142,11 @@
 				<artifactId>ical4j</artifactId>
 				<version>${ical4j.version}</version>
 			</dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>${apache-http.version}</version>
+      </dependency>
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpcore</artifactId>

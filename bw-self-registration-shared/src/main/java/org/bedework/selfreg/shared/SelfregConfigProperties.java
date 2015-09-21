@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
  */
-package org.bedework.selfreg.common;
+package org.bedework.selfreg.shared;
 
 import org.bedework.util.config.ConfInfo;
 import org.bedework.util.config.HibernateConfigI;
@@ -278,8 +278,44 @@ public interface SelfregConfigProperties extends HibernateConfigI {
   /**
    * @return String
    */
-  @MBeanInfo("The confirmation url")
+  @MBeanInfo("The url of the web service entry point for confirmations")
   String getConfirmUrl();
+
+  /**
+   *
+   * @param val the newpw url
+   */
+  void setNewpwUrl(String val);
+
+  /**
+   * @return String
+   */
+  @MBeanInfo("The url of the web service entry point for new pw changes")
+  String getNewpwUrl();
+
+  /**
+   *
+   * @param val the confirmation url
+   */
+  void setConfirmForward(String val);
+
+  /**
+   * @return String
+   */
+  @MBeanInfo("The url we redirect to after confirmations")
+  String getConfirmForward();
+
+  /**
+   *
+   * @param val the newpw url
+   */
+  void setNewpwForward(String val);
+
+  /**
+   * @return String
+   */
+  @MBeanInfo("The url we redirect to after new pw changes")
+  String getNewpwForward();
 
   /**
    *

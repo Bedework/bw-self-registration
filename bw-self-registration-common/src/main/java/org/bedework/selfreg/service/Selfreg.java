@@ -18,7 +18,8 @@
 */
 package org.bedework.selfreg.service;
 
-import org.bedework.selfreg.common.AccountInfo;
+import org.bedework.selfreg.shared.AccountInfo;
+import org.bedework.selfreg.shared.SelfregMBean;
 import org.bedework.selfreg.common.DirMaint;
 import org.bedework.selfreg.common.DirMaintImpl;
 import org.bedework.util.jmx.ConfBase;
@@ -336,6 +337,36 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
   }
 
   @Override
+  public void setNewpwUrl(final String val) {
+    getConfig().setNewpwUrl(val);
+  }
+
+  @Override
+  public String getNewpwUrl() {
+    return getConfig().getNewpwUrl();
+  }
+
+  @Override
+  public void setConfirmForward(final String val) {
+    getConfig().setConfirmForward(val);
+  }
+
+  @Override
+  public String getConfirmForward() {
+    return getConfig().getConfirmForward();
+  }
+
+  @Override
+  public void setNewpwForward(final String val) {
+    getConfig().setNewpwForward(val);
+  }
+
+  @Override
+  public String getNewpwForward() {
+    return getConfig().getNewpwForward();
+  }
+
+  @Override
   public void setMessageDigest(final String val) {
     getConfig().setMessageDigest(val);
   }
@@ -462,7 +493,7 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
   @Override
   public String displayRequest(final String confid) {
     try {
-      final AccountInfo ainfo = getDir().getAccount(confid);
+      final AccountInfo ainfo = getDir().getAccountByConfid(confid);
 
       if (ainfo == null) {
         return "No account";
@@ -575,6 +606,15 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
   @Override
   public String loadConfig() {
     return loadConfig(SelfregConfigPropertiesImpl.class);
+  }
+
+  public AccountInfo getAccount(final String account) {
+    try {
+      return getDir().getAccount(account);
+    } catch (final Throwable t) {
+      error(t);
+      return null;
+    }
   }
 
   /* ========================================================================

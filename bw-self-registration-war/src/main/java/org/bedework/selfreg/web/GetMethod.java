@@ -22,6 +22,8 @@ import org.bedework.selfreg.common.exception.SelfregException;
 import org.bedework.util.misc.Util;
 import org.bedework.util.servlet.ReqUtil;
 
+import org.apache.http.client.utils.URIBuilder;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -75,10 +77,27 @@ public class GetMethod extends MethodBase {
     final String account = getDir().confirm(confid);
 
     if (account == null) {
-      sendError(resp, HttpServletResponse.SC_BAD_REQUEST, "failed");
+      sendError(resp, "failed");
+      return;
     }
 
-    final String json = "{\"account\": \"" + account + "\"}";
+    final String confirmRedirect = config.getConfirmForward();
+
+    if (confirmRedirect != null) {
+      try {
+        final URIBuilder bldr = new URIBuilder(confirmRedirect);
+
+        bldr.addParameter("status", "ok");
+        bldr.addParameter("account", account);
+        resp.setHeader("Location", bldr.toString());
+        resp.setStatus(HttpServletResponse.SC_SEE_OTHER);
+      } catch (final Throwable t) {
+        error(t);
+      }
+    }
+
+    // Fall back or no redirect
+    final String json = "{\"status\": \"ok\", \"account\": \"" + account + "\"}";
     sendOkJsonData(resp, json);
   }
 }

@@ -27,6 +27,8 @@ import org.bedework.selfreg.common.exception.SelfregException;
 import org.bedework.selfreg.common.mail.Mailer;
 import org.bedework.selfreg.common.mail.MailerIntf;
 import org.bedework.selfreg.common.mail.Message;
+import org.bedework.selfreg.shared.AccountInfo;
+import org.bedework.selfreg.shared.SelfregConfigProperties;
 import org.bedework.util.misc.Logged;
 
 import org.apache.http.client.utils.URIBuilder;
@@ -166,11 +168,144 @@ public class DirMaintImpl extends Logged implements DirMaint {
   }
 
   @Override
-  public AccountInfo getAccount(final String confId)
+  public String sendAccount(final String email) throws SelfregException {
+    final AccountInfo ainfo = getAccountByEmail(email);
+
+    if (ainfo == null) {
+      // Ignore it
+      return null;
+    }
+
+    final Message msg = new Message();
+
+    msg.setFrom(config.getMailFrom());
+
+    final String[] to = { email };
+    msg.setMailTo(to);
+    msg.setSubject(config.getMailSubject());
+
+    try {
+      // Should be built from a template
+      msg.setContent(
+              "We have a request to deliver your account for this email address\n" +
+                      "\n" +
+                      "If you did not make this request, please ignore this message\n" +
+                      "\n");
+    } catch (final Throwable t) {
+      error(t);
+      return t.getLocalizedMessage();
+    }
+
+    getMailer().post(msg);
+    return null;
+  }
+
+  @Override
+  public String sendForgotpw(final String account) throws SelfregException {
+    try {
+      db.startTransaction();
+
+      final AccountInfo ainfo = getAccount(account);
+
+      if (ainfo == null) {
+        // Ignore it
+        return null;
+      }
+
+      ainfo.setConfid(UUID.randomUUID().toString());
+
+      db.updateAccount(ainfo);
+
+      final Message msg = new Message();
+
+      msg.setFrom(config.getMailFrom());
+
+      final String[] to = { ainfo.getEmail() };
+      msg.setMailTo(to);
+      msg.setSubject(config.getMailSubject());
+
+      try {
+        final URIBuilder builder = new URIBuilder(config.getNewpwUrl());
+
+        builder.addParameter("confid", ainfo.getConfid());
+
+        // Should be built from a template
+        msg.setContent(
+                "We have a request to change your password for this email address\n" +
+                        "\n" +
+                        "If you did not make this request, please ignore this message\n" +
+                        "\n" +
+                        "Otherwise, click on, or copy and paste into your browser, " +
+                        "the confirmation link below.\n" +
+                        "\n" +
+                        builder.toString() + "\n");
+      } catch (final Throwable t) {
+        error(t);
+        return t.getLocalizedMessage();
+      }
+
+      getMailer().post(msg);
+      return null;
+    } finally {
+      db.endTransaction();
+    }
+  }
+
+  @Override
+  public String setpw(final String confid,
+                      final String pw)  throws SelfregException {
+    try {
+      db.startTransaction();
+
+      final AccountInfo ainfo = getAccountByConfid(confid);
+
+      if (ainfo == null) {
+        // Ignore it
+        return null;
+      }
+
+      // Prevent reuse
+      ainfo.setConfid(UUID.randomUUID().toString());
+      ainfo.setPw(encodedPassword(pw));
+
+      db.updateAccount(ainfo);
+
+      final Message msg = new Message();
+
+      msg.setFrom(config.getMailFrom());
+
+      final String[] to = { ainfo.getEmail() };
+      msg.setMailTo(to);
+
+      msg.setSubject(config.getMailSubject() + ": password changed");
+      msg.setContent("Your password for account " +
+                             ainfo.getAccount() +
+                             " has been updated. ");
+
+      getMailer().post(msg);
+      return null;
+    } finally {
+      db.endTransaction();
+    }
+  }
+
+  @Override
+  public AccountInfo getAccount(final String account)
           throws SelfregException {
     try {
       db.startTransaction();
-      return db.getAccount(confId);
+      return db.getAccount(account);
+    } finally {
+      db.endTransaction();
+    }
+  }
+
+  @Override
+  public AccountInfo getAccountByConfid(final String confId)
+          throws SelfregException {
+    try {
+      db.startTransaction();
+      return db.getAccountByConfid(confId);
     } finally {
       db.endTransaction();
     }
@@ -191,7 +326,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
           throws SelfregException {
     try {
       db.startTransaction();
-      AccountInfo ainfo = db.getAccount(confId);
+      AccountInfo ainfo = db.getAccountByConfid(confId);
 
       if (ainfo == null) {
         return false;
@@ -209,7 +344,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
   public String confirm(final String confId) throws SelfregException {
     try {
       db.startTransaction();
-      final AccountInfo ainfo = db.getAccount(confId);
+      final AccountInfo ainfo = db.getAccountByConfid(confId);
 
       if (ainfo == null) {
         return null;

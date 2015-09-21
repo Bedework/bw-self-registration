@@ -20,7 +20,7 @@ package org.bedework.selfreg.web;
 
 import org.bedework.selfreg.common.DirMaint;
 import org.bedework.selfreg.common.DirMaintImpl;
-import org.bedework.selfreg.common.SelfregConfigProperties;
+import org.bedework.selfreg.shared.SelfregConfigProperties;
 import org.bedework.selfreg.common.exception.SelfregException;
 
 import org.apache.log4j.Logger;
@@ -285,13 +285,12 @@ public abstract class MethodBase {
   }
 
   protected void sendError(final HttpServletResponse resp,
-                           final int code,
                            final String msg) {
     try {
-      resp.setStatus(code);
+      resp.setStatus(HttpServletResponse.SC_OK);
       resp.setContentType("application/json; charset=UTF-8");
 
-      final String json = "{\"msg\": \"" + msg + "\"}";
+      final String json = "{\"status\": \"failed\", \"msg\": \"" + msg + "\"}";
 
       resp.setContentType("application/json; charset=UTF-8");
 
