@@ -19,21 +19,21 @@
 		<bw-util.version>4.0.1-SNAPSHOT</bw-util.version>
 		<bw-access.version>4.0.1-SNAPSHOT</bw-access.version>
 		<!-- Third Party Library Versions -->
-		<spring.version>3.0.5.RELEASE</spring.version>
+    <apache-http.version>4.2.2</apache-http.version>
+    <asm.version>3.2</asm.version>
+    <asm-attrs.version>2.2.3</asm-attrs.version>
+    <cglib.version>2.1_3</cglib.version>
 		<commons-codec.version>1.5</commons-codec.version>
-		<servlet-api.version>2.5</servlet-api.version>
-		<ical4j.version>1.1-BW-SNAPSHOT</ical4j.version>
-		<apache-http.version>4.2.2</apache-http.version>
 		<ehcache.version>1.6.2</ehcache.version>
     <hibernate.version>3.6.9.Final</hibernate.version>
     <hibernate-validator.version>3.1.0.GA</hibernate-validator.version>
+    <ical4j.version>1.1-BW-SNAPSHOT</ical4j.version>
     <jackson.version>2.3.1</jackson.version>
     <jasypt.version>1.9.2</jasypt.version>
 		<junit.version>4.8.2</junit.version>
 		<log4j.version>1.2.15</log4j.version>
-		<asm.version>3.2</asm.version>
-		<asm-attrs.version>2.2.3</asm-attrs.version>
-		<cglib.version>2.1_3</cglib.version>
+    <servlet-api.version>2.5</servlet-api.version>
+    <spring.version>3.0.5.RELEASE</spring.version>
 	</properties>
 
 	<organization>
@@ -61,7 +61,6 @@
 
 	<modules>
 		<module>bw-self-registration-common</module>
-    <module>bw-self-registration-shared</module>
 		<module>bw-self-registration-war</module>
 		<module>bw-self-registration-ear</module>
 	</modules>
@@ -83,6 +82,11 @@
       <dependency>
         <groupId>org.bedework</groupId>
         <artifactId>bw-util-hibernate</artifactId>
+        <version>${bw-util.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bedework</groupId>
+        <artifactId>bw-util-http</artifactId>
         <version>${bw-util.version}</version>
       </dependency>
       <dependency>

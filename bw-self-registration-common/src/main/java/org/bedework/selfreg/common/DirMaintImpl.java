@@ -27,8 +27,7 @@ import org.bedework.selfreg.common.exception.SelfregException;
 import org.bedework.selfreg.common.mail.Mailer;
 import org.bedework.selfreg.common.mail.MailerIntf;
 import org.bedework.selfreg.common.mail.Message;
-import org.bedework.selfreg.shared.AccountInfo;
-import org.bedework.selfreg.shared.SelfregConfigProperties;
+import org.bedework.selfreg.service.SelfregConfigProperties;
 import org.bedework.util.misc.Logged;
 
 import org.apache.http.client.utils.URIBuilder;
@@ -463,13 +462,6 @@ public class DirMaintImpl extends Logged implements DirMaint {
     try {
       db.startTransaction();
       db.addAccount(ainfo);
-
-      /* have to create one of these to satisfy jboss */
-      final RoleInfo ri = new RoleInfo();
-      ri.setAccount(ainfo.getAccount());
-      ri.setRole("user");
-
-      db.addRole(ri);
     } finally {
       db.endTransaction();
     }

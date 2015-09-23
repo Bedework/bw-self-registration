@@ -94,6 +94,7 @@ public class GetMethod extends MethodBase {
       } catch (final Throwable t) {
         error(t);
       }
+      return;
     }
 
     // Fall back or no redirect

@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
  */
-package org.bedework.selfreg.shared;
+package org.bedework.selfreg.service;
 
 import org.bedework.util.config.ConfInfo;
 import org.bedework.util.config.HibernateConfigI;
@@ -278,7 +278,7 @@ public interface SelfregConfigProperties extends HibernateConfigI {
   /**
    * @return String
    */
-  @MBeanInfo("The url of the web service entry point for confirmations")
+  @MBeanInfo("The url of the web service entry point for confirmations embedded in email")
   String getConfirmUrl();
 
   /**
@@ -290,7 +290,7 @@ public interface SelfregConfigProperties extends HibernateConfigI {
   /**
    * @return String
    */
-  @MBeanInfo("The url of the web service entry point for new pw changes")
+  @MBeanInfo("The url of the web service entry point for new pw changes embedded in email")
   String getNewpwUrl();
 
   /**
@@ -302,7 +302,7 @@ public interface SelfregConfigProperties extends HibernateConfigI {
   /**
    * @return String
    */
-  @MBeanInfo("The url we redirect to after confirmations")
+  @MBeanInfo("The url we redirect to after new id confirmation")
   String getConfirmForward();
 
   /**
@@ -340,6 +340,30 @@ public interface SelfregConfigProperties extends HibernateConfigI {
    */
   @MBeanInfo("The account prefix")
   String getAccountPrefix();
+
+  /**
+   *
+   * @param val public key
+   */
+  void setCaptchaPublicKey(String val);
+
+  /**
+   * @return String
+   */
+  @MBeanInfo("The captcha public key - obtained from captcha")
+  String getCaptchaPublicKey();
+
+  /**
+   *
+   * @param val private key
+   */
+  void setCaptchaPrivateKey(String val);
+
+  /**
+   * @return String
+   */
+  @MBeanInfo("The captcha private key - obtained from captcha")
+  String getCaptchaPrivateKey();
 
   /* ========================================================================
    * Schema

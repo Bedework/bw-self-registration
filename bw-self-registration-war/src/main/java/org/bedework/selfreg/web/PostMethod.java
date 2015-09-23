@@ -50,22 +50,22 @@ public class PostMethod extends MethodBase {
       final String action = resourceUri.get(0);
 
       if (action.equals("newid")) {
-        processNewid(resourceUri, req, resp);
+        processNewid(req, resp);
         return;
       }
 
       if (action.equals("fid")) {
-        processForgotid(resourceUri, req, resp);
+        processForgotid(req, resp);
         return;
       }
 
       if (action.equals("fpw")) {
-        processForgotpw(resourceUri, req, resp);
+        processForgotpw(req, resp);
         return;
       }
 
       if (action.equals("setpw")) {
-        processSetpw(resourceUri, req, resp);
+        processSetpw(req, resp);
         return;
       }
 
@@ -81,11 +81,17 @@ public class PostMethod extends MethodBase {
     }
   }
 
-  private void processNewid(final List<String> resourceUri,
-                            final HttpServletRequest req,
+  private void processNewid(final HttpServletRequest req,
                             final HttpServletResponse resp) throws SelfregException {
     if (debug) {
       debugMsg("Process new id request");
+    }
+
+    if (!verifyCaptcha(req)) {
+      debugMsg("failed captcha");
+      sendError(resp,
+                "Incorrect captcha response");
+      return;
     }
 
     final ReqUtil rutil = new ReqUtil(req, resp);
@@ -111,7 +117,7 @@ public class PostMethod extends MethodBase {
     final String failMsg = getDir().requestId(firstName, lastName, email, pw);
 
     if (failMsg == null) {
-      resp.setStatus(HttpServletResponse.SC_OK);
+      sendOkJsonData(resp);
       return;
     }
 
@@ -123,11 +129,17 @@ public class PostMethod extends MethodBase {
               failMsg);
   }
 
-  private void processForgotid(final List<String> resourceUri,
-                               final HttpServletRequest req,
+  private void processForgotid(final HttpServletRequest req,
                                final HttpServletResponse resp) throws SelfregException {
     if (debug) {
       debugMsg("Process forgot id request");
+    }
+
+    if (!verifyCaptcha(req)) {
+      debugMsg("failed captcha");
+      sendError(resp,
+                "Incorrect captcha response");
+      return;
     }
 
     final ReqUtil rutil = new ReqUtil(req, resp);
@@ -136,14 +148,20 @@ public class PostMethod extends MethodBase {
 
     getDir().sendAccount(email);
 
-    resp.setStatus(HttpServletResponse.SC_OK);
+    sendOkJsonData(resp);
   }
 
-  private void processForgotpw(final List<String> resourceUri,
-                               final HttpServletRequest req,
+  private void processForgotpw(final HttpServletRequest req,
                                final HttpServletResponse resp) throws SelfregException {
     if (debug) {
       debugMsg("Process forgot pw request");
+    }
+
+    if (!verifyCaptcha(req)) {
+      debugMsg("failed captcha");
+      sendError(resp,
+                "Incorrect captcha response");
+      return;
     }
 
     final ReqUtil rutil = new ReqUtil(req, resp);
@@ -152,11 +170,10 @@ public class PostMethod extends MethodBase {
 
     getDir().sendForgotpw(account);
 
-    resp.setStatus(HttpServletResponse.SC_OK);
+    sendOkJsonData(resp);
   }
 
-  private void processSetpw(final List<String> resourceUri,
-                            final HttpServletRequest req,
+  private void processSetpw(final HttpServletRequest req,
                             final HttpServletResponse resp) throws SelfregException {
     if (debug) {
       debugMsg("Process set pw request");

@@ -16,8 +16,9 @@
     specific language governing permissions and limitations
     under the License.
  */
-package org.bedework.selfreg.shared;
+package org.bedework.selfreg.service;
 
+import org.bedework.selfreg.common.AccountInfo;
 import org.bedework.util.jmx.ConfBaseMBean;
 import org.bedework.util.jmx.MBeanInfo;
 

@@ -22,7 +22,7 @@ package org.bedework.selfreg.common.mail;
 import java.io.Serializable;
 import java.util.Collection;
 
-import org.bedework.selfreg.shared.SelfregConfigProperties;
+import org.bedework.selfreg.service.SelfregConfigProperties;
 import org.bedework.selfreg.common.exception.SelfregException;
 
 /**

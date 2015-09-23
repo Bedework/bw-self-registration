@@ -19,7 +19,7 @@
 
 package org.bedework.selfreg.common.mail;
 
-import org.bedework.selfreg.shared.SelfregConfigProperties;
+import org.bedework.selfreg.service.SelfregConfigProperties;
 import org.bedework.selfreg.common.exception.SelfregException;
 
 import java.util.ArrayList;
@@ -118,6 +118,8 @@ public class Mailer implements MailerIntf {
       return;
     }
 
+    Transport tr = null;
+
     try {
       /* Create a message with the appropriate mime-type
        */
@@ -140,7 +142,7 @@ public class Mailer implements MailerIntf {
 
       msg.setContent(val.getContent(), "text/plain");
 
-      final Transport tr = sess.getTransport(config.getMailProtocol());
+      tr = sess.getTransport(config.getMailProtocol());
 
       tr.connect();
       tr.sendMessage(msg, tos);
@@ -150,6 +152,12 @@ public class Mailer implements MailerIntf {
       }
 
       throw new SelfregException(t);
+    } finally {
+      if (tr != null) {
+        try {
+          tr.close();
+        } catch (final Throwable ignored) {}
+      }
     }
   }
 

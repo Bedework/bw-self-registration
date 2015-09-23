@@ -11,11 +11,6 @@
 	<name>bw-self-registration-common</name>
 
 	<dependencies>
-    <dependency>
-      <groupId>org.bedework</groupId>
-      <artifactId>bw-self-registration-shared</artifactId>
-      <version>4.0.0-SNAPSHOT</version>
-    </dependency>
 		<!-- Bedework: Util -->
     <dependency>
       <groupId>org.bedework</groupId>

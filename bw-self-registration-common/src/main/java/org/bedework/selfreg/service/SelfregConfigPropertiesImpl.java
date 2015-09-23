@@ -18,7 +18,6 @@
  */
 package org.bedework.selfreg.service;
 
-import org.bedework.selfreg.shared.SelfregConfigProperties;
 import org.bedework.util.config.ConfInfo;
 import org.bedework.util.config.HibernateConfigBase;
 import org.bedework.util.jmx.MBeanInfo;
@@ -85,6 +84,10 @@ public class SelfregConfigPropertiesImpl
   private String messageDigest;
 
   private String accountPrefix;
+
+  private String captchaPublicKey;
+
+  private String captchaPrivateKey;
 
   @Override
   public void setUseLdap(final boolean val) {
@@ -362,6 +365,26 @@ public class SelfregConfigPropertiesImpl
   @Override
   public String getAccountPrefix() {
     return accountPrefix;
+  }
+
+  @Override
+  public void setCaptchaPublicKey(final String val) {
+    captchaPublicKey = val;
+  }
+
+  @Override
+  public String getCaptchaPublicKey() {
+    return captchaPublicKey;
+  }
+
+  @Override
+  public void setCaptchaPrivateKey(final String val) {
+    captchaPrivateKey = val;
+  }
+
+  @Override
+  public String getCaptchaPrivateKey() {
+    return captchaPrivateKey;
   }
 
   @Override

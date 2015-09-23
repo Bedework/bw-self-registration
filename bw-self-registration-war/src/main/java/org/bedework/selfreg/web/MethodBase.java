@@ -20,18 +20,28 @@ package org.bedework.selfreg.web;
 
 import org.bedework.selfreg.common.DirMaint;
 import org.bedework.selfreg.common.DirMaintImpl;
-import org.bedework.selfreg.shared.SelfregConfigProperties;
 import org.bedework.selfreg.common.exception.SelfregException;
+import org.bedework.selfreg.service.SelfregConfigProperties;
+import org.bedework.util.http.BasicHttpClient;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.Consts;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.net.URLDecoder;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,6 +60,8 @@ public abstract class MethodBase {
   protected SelfregConfigProperties config;
 
   private DirMaint dm;
+
+  private ObjectMapper om = new ObjectMapper();
 
   /** Called at each request
    *
@@ -74,6 +86,52 @@ public abstract class MethodBase {
     //resourceUri = null;
 
     init();
+  }
+
+  protected boolean verifyCaptcha(final HttpServletRequest req)
+    throws SelfregException {
+    BasicHttpClient cl = null;
+    try {
+      cl = new BasicHttpClient(15 * 1000,
+                               false);
+      cl.setBaseURI(
+              new URI("https://www.google.com/recaptcha/api/siteverify"));
+
+
+      final List <NameValuePair> nvps = new ArrayList<>();
+      nvps.add(new BasicNameValuePair("secret",
+                                      config.getCaptchaPrivateKey()));
+      nvps.add(new BasicNameValuePair("response",
+                                      req.getParameter(
+                                              "g-recaptcha-response")));
+
+      final StringEntity content =
+              new UrlEncodedFormEntity(nvps, Consts.UTF_8);
+
+      final InputStream is = cl.post("https://www.google.com/recaptcha/api/siteverify",
+                                     null,
+                                     content);
+
+      final Map vals = (Map)om.readValue(is,
+                              Object.class);
+
+      final Object o = vals.get("success");
+
+      if (o == null) {
+        return false;
+      }
+
+      if (!(o instanceof Boolean)) {
+        return false;
+      }
+
+      return (Boolean)o;
+    } catch (final Throwable t) {
+      throw new SelfregException(t);
+    } finally {
+      cl.close();
+    }
+
   }
 
   private SimpleDateFormat httpDateFormatter =
@@ -300,12 +358,19 @@ public abstract class MethodBase {
 
       resp.setContentLength(bytes.length);
       os.write(bytes);
+      os.close();
     } catch (final Throwable ignored) {
       // Pretty much screwed if we get here
       if (debug) {
         debugMsg("Unable to send error: " + msg);
       }
     }
+  }
+
+  protected void sendOkJsonData(final HttpServletResponse resp) {
+    final String json = "{\"status\": \"ok\"}";
+
+    sendOkJsonData(resp, json);
   }
 
   protected void sendOkJsonData(final HttpServletResponse resp,
@@ -320,6 +385,7 @@ public abstract class MethodBase {
 
       resp.setContentLength(bytes.length);
       os.write(bytes);
+      os.close();
     } catch (final Throwable ignored) {
       // Pretty much screwed if we get here
     }

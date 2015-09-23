@@ -19,14 +19,12 @@
 package org.bedework.selfreg.common;
 
 import org.bedework.selfreg.common.exception.SelfregException;
-import org.bedework.selfreg.shared.AccountInfo;
 import org.bedework.util.config.HibernateConfigI;
 import org.bedework.util.hibernate.HibException;
 import org.bedework.util.hibernate.HibSession;
 import org.bedework.util.hibernate.HibSessionFactory;
 import org.bedework.util.hibernate.HibSessionImpl;
 import org.bedework.util.misc.Logged;
-import org.bedework.util.misc.Util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -160,7 +158,7 @@ public class Persisted extends Logged {
   }
 
   public boolean emailPresent(final String val) throws SelfregException {
-    return getAccountByEmail(val) == null;
+    return getAccountByEmail(val) != null;
   }
 
   public void addAccount(final AccountInfo val) throws SelfregException {
@@ -236,9 +234,22 @@ public class Persisted extends Logged {
     }
   }
 
+  private static final String findRoleByAccountQuery =
+          "from " + RoleInfo.class.getName() +
+                  " r where r.account=:account";
+
   public void removeAccount(final AccountInfo val) throws SelfregException {
     try {
+      sess.createQuery(findRoleByAccountQuery);
+      sess.setString("account", val.getAccount());
+
+      final RoleInfo ri = (RoleInfo)sess.getUnique();
+
       sess.delete(val);
+
+      if (ri != null) {
+        sess.delete(ri);
+      }
     } catch (final HibException he) {
       throw new SelfregException(he);
     }

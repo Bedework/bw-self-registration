@@ -16,7 +16,7 @@
     specific language governing permissions and limitations
     under the License.
 */
-package org.bedework.selfreg.shared;
+package org.bedework.selfreg.common;
 
 import org.bedework.util.misc.ToString;
 

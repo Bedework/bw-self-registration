@@ -18,8 +18,7 @@
 */
 package org.bedework.selfreg.service;
 
-import org.bedework.selfreg.shared.AccountInfo;
-import org.bedework.selfreg.shared.SelfregMBean;
+import org.bedework.selfreg.common.AccountInfo;
 import org.bedework.selfreg.common.DirMaint;
 import org.bedework.selfreg.common.DirMaintImpl;
 import org.bedework.util.jmx.ConfBase;
@@ -384,6 +383,26 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
   @Override
   public String getAccountPrefix() {
     return getConfig().getAccountPrefix();
+  }
+
+  @Override
+  public void setCaptchaPublicKey(final String val) {
+    getConfig().setCaptchaPublicKey(val);
+  }
+
+  @Override
+  public String getCaptchaPublicKey() {
+    return getConfig().getCaptchaPublicKey();
+  }
+
+  @Override
+  public void setCaptchaPrivateKey(final String val) {
+    getConfig().setCaptchaPrivateKey(val);
+  }
+
+  @Override
+  public String getCaptchaPrivateKey() {
+    return getConfig().getCaptchaPrivateKey();
   }
 
   @Override

@@ -19,8 +19,7 @@
 package org.bedework.selfreg.common;
 
 import org.bedework.selfreg.common.exception.SelfregException;
-import org.bedework.selfreg.shared.AccountInfo;
-import org.bedework.selfreg.shared.SelfregConfigProperties;
+import org.bedework.selfreg.service.SelfregConfigProperties;
 
 /** Define methods for directory maintenance. Most methods here corrspond to
  * web or service actions.
