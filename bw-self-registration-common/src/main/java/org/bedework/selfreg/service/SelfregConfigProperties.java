@@ -103,7 +103,7 @@ public interface SelfregConfigProperties extends HibernateConfigI {
 
   /**
    *
-   * @param val
+   * @param val an ou
    */
   void setGroupsOu(final String val);
 
@@ -115,7 +115,7 @@ public interface SelfregConfigProperties extends HibernateConfigI {
 
   /**
    *
-   * @param val
+   * @param val dn
    */
   void setGroupsDn(final String val);
 
@@ -127,7 +127,7 @@ public interface SelfregConfigProperties extends HibernateConfigI {
 
   /**
    *
-   * @param val
+   * @param val ldap attr 
    */
   void setGroupsAttr(final String val);
 
@@ -139,7 +139,7 @@ public interface SelfregConfigProperties extends HibernateConfigI {
 
   /**
    *
-   * @param val
+   * @param val an id
    */
   void setAdminId(final String val);
 
@@ -151,7 +151,7 @@ public interface SelfregConfigProperties extends HibernateConfigI {
 
   /**
    *
-   * @param val
+   * @param val a password
    */
   void setAdminPw(final String val);
 
@@ -161,21 +161,21 @@ public interface SelfregConfigProperties extends HibernateConfigI {
   @MBeanInfo("Ldap admin pw")
   String getAdminPw();
 
-  /** valid protocol for which an implementation exists, e.g "imap", "smtp"
+  /**
    *
-   * @param val
+   * @param val valid protocol for which an implementation exists, e.g "imap", "smtp"
    */
   void setMailProtocol(final String val);
 
   /**
-   * @return String
+   * @return String valid protocol for which an implementation exists, e.g "imap", "smtp"
    */
   @MBeanInfo("valid protocol for which an implementation exists, e.g \"imap\", \"smtp\"")
   String getMailProtocol();
 
-  /** Implementation for the selected protocol
+  /**
    *
-   * @param val
+   * @param val Implementation for the selected protocol
    */
   void setMailProtocolClass(final String val);
 
@@ -341,6 +341,45 @@ public interface SelfregConfigProperties extends HibernateConfigI {
   @MBeanInfo("The account prefix")
   String getAccountPrefix();
 
+  /**
+   *
+   * @param val true if unauthenticated users can start the process
+   */
+  void setUnauthCanRegister(boolean val);
+
+  /**
+   *
+   * @return true if unauthenticated users can start the process
+   */
+  @MBeanInfo("True if unauthenticated users can start the process")
+  boolean getUnauthCanRegister();
+
+  /**
+   * 
+   * @param val true if can specify account
+   */
+  void setCanSpecifyAccount(boolean val);
+
+  /**
+   * 
+   * @return true if can specify account
+   */
+  @MBeanInfo("True if can specify account")
+  boolean getCanSpecifyAccount();
+
+  /**
+   *
+   * @param val true if account derived from email
+   */
+  void setAccountFromEmail(boolean val);
+
+  /**
+   *
+   * @return true if account derived from email
+   */
+  @MBeanInfo("True if account derived from email")
+  boolean getAccountFromEmail();
+  
   /**
    *
    * @param val public key

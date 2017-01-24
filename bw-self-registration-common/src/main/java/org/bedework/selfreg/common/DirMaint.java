@@ -40,6 +40,7 @@ public interface DirMaint {
 	 * @param firstName users first
 	 * @param lastName users last
 	 * @param email their email
+   * @param account non-null if allowed to specify
 	 * @param pw pw they want
 	 * @return null for OK or error message
 	 * @throws SelfregException
@@ -47,6 +48,7 @@ public interface DirMaint {
 	String requestId(String firstName,
                    String lastName,
 	                 String email,
+                   String account,
 	                 String pw) throws SelfregException;
 
   /** Send the user their account.

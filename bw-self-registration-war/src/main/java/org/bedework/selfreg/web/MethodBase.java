@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -62,6 +63,8 @@ public abstract class MethodBase {
   private DirMaint dm;
 
   private ObjectMapper om = new ObjectMapper();
+  
+  private ServletContext context;
 
   /** Called at each request
    *
@@ -75,9 +78,11 @@ public abstract class MethodBase {
    * @throws SelfregException
    */
   public void init(final SelfregConfigProperties config,
+                   final ServletContext context,
                    final boolean dumpContent) throws SelfregException {
     this.config = config;
     this.dumpContent = dumpContent;
+    this.context = context;
 
     debug = getLogger().isDebugEnabled();
 //    xml = syncher.getXmlEmit();
@@ -86,6 +91,10 @@ public abstract class MethodBase {
     //resourceUri = null;
 
     init();
+  }
+  
+  protected ServletContext getContext() {
+    return context;
   }
 
   protected boolean verifyCaptcha(final HttpServletRequest req)

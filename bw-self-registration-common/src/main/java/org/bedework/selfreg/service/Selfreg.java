@@ -21,14 +21,14 @@ package org.bedework.selfreg.service;
 import org.bedework.selfreg.common.AccountInfo;
 import org.bedework.selfreg.common.DirMaint;
 import org.bedework.selfreg.common.DirMaintImpl;
+import org.bedework.util.hibernate.HibConfig;
+import org.bedework.util.hibernate.SchemaThread;
 import org.bedework.util.jmx.ConfBase;
 import org.bedework.util.jmx.InfoLines;
 import org.bedework.util.jmx.MBeanInfo;
 
 import org.hibernate.cfg.Configuration;
-import org.hibernate.tool.hbm2ddl.SchemaExport;
 
-import java.io.StringReader;
 import java.util.List;
 import java.util.Properties;
 
@@ -52,57 +52,22 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
 
   private Configuration hibCfg;
 
-  private class SchemaThread extends Thread {
-    InfoLines infoLines = new InfoLines();
+  private class SchemaBuilder extends SchemaThread {
 
-    SchemaThread() {
-      super("BuildSchema");
+    SchemaBuilder(final String outFile,
+                  final boolean export,
+                  final Properties hibConfig) {
+      super(outFile, export, hibConfig);
     }
 
     @Override
-    public void run() {
-      try {
-        infoLines.addLn("Started export of schema");
-
-        final long startTime = System.currentTimeMillis();
-
-        final SchemaExport se = new SchemaExport(getHibConfiguration());
-
-//      if (getDelimiter() != null) {
-//        se.setDelimiter(getDelimiter());
-//      }
-
-        se.setFormat(true);       // getFormat());
-        se.setHaltOnError(false); // getHaltOnError());
-        se.setOutputFile(getSchemaOutFile());
-        /* There appears to be a bug in the hibernate code. Everybody initialises
-        this to /import.sql. Set to null causes an NPE
-        Make sure it refers to a non-existant file */
-        //se.setImportFile("not-a-file.sql");
-
-        se.execute(false, // script - causes write to System.out if true
-                   getExport(),
-                   false,   // drop
-                   true);   //   getCreate());
-
-        final long millis = System.currentTimeMillis() - startTime;
-        long seconds = millis / 1000;
-        final long minutes = seconds / 60;
-        seconds -= (minutes * 60);
-
-        infoLines.addLn("Elapsed time: " + minutes + ":" +
-                                twoDigits(seconds));
-      } catch (final Throwable t) {
-        error(t);
-        infoLines.exceptionMsg(t);
-      } finally {
-        infoLines.addLn("Schema build completed");
-        setExport(false);
-      }
+    public void completed(final String status) {
+      setExport(false);
+      info("Schema build completed with status " + status);
     }
   }
 
-  private final SchemaThread buildSchema = new SchemaThread();
+  private SchemaBuilder buildSchema;
 
   /**
    */
@@ -386,6 +351,36 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
   }
 
   @Override
+  public void setUnauthCanRegister(final boolean val) {
+    getConfig().setUnauthCanRegister(val);
+  }
+
+  @Override
+  public boolean getUnauthCanRegister() {
+    return getConfig().getUnauthCanRegister();
+  }
+
+  @Override
+  public void setCanSpecifyAccount(final boolean val) {
+    getConfig().setCanSpecifyAccount(val);
+  }
+
+  @Override
+  public boolean getCanSpecifyAccount() {
+    return getConfig().getCanSpecifyAccount();
+  }
+
+  @Override
+  public void setAccountFromEmail(final boolean val) {
+    getConfig().setAccountFromEmail(val);
+  }
+
+  @Override
+  public boolean getAccountFromEmail() {
+    return getConfig().getAccountFromEmail();
+  }
+
+  @Override
   public void setCaptchaPublicKey(final String val) {
     getConfig().setCaptchaPublicKey(val);
   }
@@ -480,11 +475,14 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
    * Operations
    * ======================================================================== */
 
-  @SuppressWarnings("deprecation")
   @Override
   public String schema() {
     try {
-//      buildSchema = new SchemaThread();
+      final HibConfig hc = new HibConfig(getConfig());
+
+      buildSchema = new SchemaBuilder(getSchemaOutFile(),
+                                      getExport(),
+                                      hc.getHibConfiguration().getProperties());
 
       buildSchema.start();
 
@@ -650,44 +648,5 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
     dir.init(getConfig());
 
     return dir;
-  }
-
-  /**
-   * @param val number
-   * @return 2 digit val
-   */
-  private static String twoDigits(final long val) {
-    if (val < 10) {
-      return "0" + val;
-    }
-
-    return String.valueOf(val);
-  }
-
-  private synchronized Configuration getHibConfiguration() {
-    if (hibCfg == null) {
-      try {
-        hibCfg = new Configuration();
-
-        final StringBuilder sb = new StringBuilder();
-
-        final List<String> ps = getConfig().getHibernateProperties();
-
-        for (final String p: ps) {
-          sb.append(p);
-          sb.append("\n");
-        }
-
-        final Properties hprops = new Properties();
-        hprops.load(new StringReader(sb.toString()));
-
-        hibCfg.addProperties(hprops).configure();
-      } catch (final Throwable t) {
-        // Always bad.
-        error(t);
-      }
-    }
-
-    return hibCfg;
   }
 }

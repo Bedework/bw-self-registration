@@ -25,7 +25,10 @@ import org.bedework.util.servlet.ReqUtil;
 import org.apache.http.client.utils.URIBuilder;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -35,6 +38,15 @@ public class GetMethod extends MethodBase {
   @Override
   public void init() throws SelfregException {
   }
+  
+  private final static Set<String> validActions = new TreeSet<>();
+  
+  static {
+    validActions.add("fid");
+    validActions.add("fpw");
+    validActions.add("setpw");
+    validActions.add("confirmed");
+  }
 
   @SuppressWarnings({"unchecked"})
   @Override
@@ -43,14 +55,44 @@ public class GetMethod extends MethodBase {
     try {
       final List<String> resourceUri = getResourceUri(req);
 
+      final String action;
       if (Util.isEmpty(resourceUri)) {
-        throw new SelfregException("Bad resource url - no path specified");
+        action = null;
+      } else {
+        action = resourceUri.get(0);
       }
 
-      final String action = resourceUri.get(0);
+      if ((config.getUnauthCanRegister() && (action == null)) ||
+              "authinit".equals(action)) {
+        // Initial action
+        req.setAttribute("sitekey", config.getCaptchaPublicKey());
+        req.setAttribute("canSpecifyAccount", config.getCanSpecifyAccount());
+        final RequestDispatcher dispatcher = getContext()
+                .getRequestDispatcher("/docs/index.jsp");
+        dispatcher.forward(req, resp);
+        return;
+      }
 
+      if (action == null) {
+        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        return;
+      }
+      
       if (action.equals("confirm")) {
-        processConfirm(resourceUri, req, resp);
+        processConfirm(req, resp);
+        return;
+      }
+      
+      /* Actions fid, fpw, setpw all require the addiotn of attributes
+         to the request then forwarding to the jsp which is at 
+         "/docs/" + action " +".jsp"
+       */
+      
+      if (validActions.contains(action)) {
+        req.setAttribute("sitekey", config.getCaptchaPublicKey());
+        final RequestDispatcher dispatcher = getContext()
+                .getRequestDispatcher("/docs/" + action + ".jsp");
+        dispatcher.forward(req, resp);
         return;
       }
 
@@ -62,9 +104,8 @@ public class GetMethod extends MethodBase {
     }
   }
 
-  private void processConfirm(final List<String> resourceUri,
-                            final HttpServletRequest req,
-                            final HttpServletResponse resp) throws SelfregException {
+  private void processConfirm(final HttpServletRequest req,
+                              final HttpServletResponse resp) throws SelfregException {
     final ReqUtil rutil = new ReqUtil(req, resp);
 
     final String confid = rutil.getReqPar("confid");

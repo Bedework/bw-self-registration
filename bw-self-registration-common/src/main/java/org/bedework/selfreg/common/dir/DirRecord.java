@@ -18,13 +18,13 @@
 */
 package org.bedework.selfreg.common.dir;
 
+import java.io.Serializable;
+
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.ModificationItem;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-
-import java.io.Serializable;
 
 /** This class represents a directory record which may be built from a
     number of attributes, retrieved as a search result or read from some input

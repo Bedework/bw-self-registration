@@ -91,6 +91,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
   public String requestId(final String firstName,
                           final String lastName,
                           final String email,
+                          final String account,
                           final String pw) throws SelfregException {
     final AccountInfo ainfo = new AccountInfo();
 
@@ -103,24 +104,38 @@ public class DirMaintImpl extends Logged implements DirMaint {
         return "Account with that email already exists";
       }
 
-      String id = config.getAccountPrefix();
-      if (id == null) {
-        id = "";
-      }
-
-      if ((firstName == null) || (firstName.length() == 0)) {
-        return "Missing fields";
-      }
-
-      id += firstName.substring(0, 1).toLowerCase();
-
-      if ((lastName == null) || (lastName.length() == 0)) {
-        id += "x";
+      String id;
+      
+      if (account != null) {
+        id = account;
+      } else if (config.getAccountFromEmail()) {
+        final int pos = email.indexOf("@");
+        
+        if (pos < 0) {
+          return "Invalid email";
+        }
+        
+        id = email.substring(0, pos);
       } else {
-        id += lastName.substring(0, 1).toLowerCase();
-      }
+        id = config.getAccountPrefix();
+        if (id == null) {
+          id = "";
+        }
 
-      id += String.valueOf(db.numAccounts() + 1001);
+        if ((firstName == null) || (firstName.length() == 0)) {
+          return "Missing fields";
+        }
+
+        id += firstName.substring(0, 1).toLowerCase();
+
+        if ((lastName == null) || (lastName.length() == 0)) {
+          id += "x";
+        } else {
+          id += lastName.substring(0, 1).toLowerCase();
+        }
+
+        id += String.valueOf(db.numAccounts() + 1001);
+      }
 
       ainfo.setAccount(id);
       ainfo.setDtstamp(new Timestamp(System.currentTimeMillis()).toString());
@@ -186,7 +201,9 @@ public class DirMaintImpl extends Logged implements DirMaint {
     try {
       // Should be built from a template
       msg.setContent(
-              "We have a request to deliver your account for this email address\n" +
+              "You requested your account for this email address\n" +
+                      "\n" +
+                      "Your account is " + ainfo.getAccount() + "\n" +
                       "\n" +
                       "If you did not make this request, please ignore this message\n" +
                       "\n");
@@ -204,7 +221,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
     try {
       db.startTransaction();
 
-      final AccountInfo ainfo = getAccount(account);
+      final AccountInfo ainfo = db.getAccount(account);
 
       if (ainfo == null) {
         // Ignore it
@@ -256,11 +273,11 @@ public class DirMaintImpl extends Logged implements DirMaint {
     try {
       db.startTransaction();
 
-      final AccountInfo ainfo = getAccountByConfid(confid);
+      final AccountInfo ainfo = db.getAccountByConfid(confid);
 
       if (ainfo == null) {
         // Ignore it
-        return null;
+        return "The confirmation id is invalid";
       }
 
       // Prevent reuse
@@ -325,7 +342,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
           throws SelfregException {
     try {
       db.startTransaction();
-      AccountInfo ainfo = db.getAccountByConfid(confId);
+      final AccountInfo ainfo = db.getAccountByConfid(confId);
 
       if (ainfo == null) {
         return false;
@@ -631,8 +648,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
 
       return ldir;
     } catch (final Throwable t) {
-      error(t);
-      return null;
+      throw new SelfregException(t);
     }
   }
 
@@ -647,7 +663,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
 
       return "{" + pwEncryption + "}" + new String(b64s);
       */
-      PasswordEncryptor encryptor;
+      final PasswordEncryptor encryptor;
       if ("SSHA".equals(config.getMessageDigest())) {
         encryptor = new RFC2307SSHAPasswordEncryptor();
       } else if ("SHA".equals(config.getMessageDigest())) {

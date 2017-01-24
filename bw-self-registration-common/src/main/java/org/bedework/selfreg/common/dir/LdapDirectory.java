@@ -18,6 +18,8 @@
 */
 package org.bedework.selfreg.common.dir;
 
+import org.bedework.selfreg.common.exception.SelfregException;
+
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -33,8 +35,6 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
-
-import org.bedework.selfreg.common.exception.SelfregException;
 
 /** **********************************************************************
  Provide access to ldap directory services.

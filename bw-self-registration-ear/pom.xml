@@ -2,12 +2,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.bedework</groupId>
-		<artifactId>bw-self-registration</artifactId>
+		<groupId>org.bedework.selfreg</groupId>
+		<artifactId>bw-selfreg</artifactId>
 		<version>4.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>bw-self-registration-ear</artifactId>
+	<artifactId>bw-selfreg-ear</artifactId>
 	<packaging>ear</packaging>
 	<name>bw-self-registration-ear</name>
 
@@ -15,7 +15,7 @@
 		<!-- Project Dependencies -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>bw-self-registration-common</artifactId>
+			<artifactId>bw-selfreg-common</artifactId>
 			<version>${project.version}</version>
 			<exclusions>
 				<exclusion>
@@ -45,10 +45,6 @@
 				<exclusion>
 					<groupId>jtidy</groupId>
 					<artifactId>jtidy</artifactId>
-				</exclusion>
-				<exclusion>
-					<artifactId>cglib-nodep</artifactId>
-					<groupId>cglib</groupId>
 				</exclusion>
 				<exclusion>
 					<artifactId>jackson-annotations</artifactId>
@@ -101,8 +97,8 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>org.bedework</groupId>
-			<artifactId>bw-self-registration-war</artifactId>
+			<groupId>org.bedework.selfreg</groupId>
+			<artifactId>bw-selfreg-war</artifactId>
 			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
@@ -112,20 +108,8 @@
 			<artifactId>httpcore</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>asm</groupId>
-			<artifactId>asm</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>asm</groupId>
-			<artifactId>asm-attrs</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.mail</groupId>
@@ -157,6 +141,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-ear-plugin</artifactId>
+        <version>2.10</version>
 				<configuration>
 					<!-- Exclude eclipse generated application.xml during mvn package -->
 					<earSourceExcludes>**/application.xml</earSourceExcludes>
@@ -168,12 +153,12 @@
 					<modules>
 						<webModule>
 							<groupId>${project.groupId}</groupId>
-							<artifactId>bw-self-registration-war</artifactId>
+							<artifactId>bw-selfreg-war</artifactId>
 							<contextRoot>/selfreg</contextRoot>
 						</webModule>
 						<jarModule>
 							<groupId>${project.groupId}</groupId>
-							<artifactId>bw-self-registration-common</artifactId>
+							<artifactId>bw-selfreg-common</artifactId>
 						</jarModule>
 					</modules>
 				</configuration>

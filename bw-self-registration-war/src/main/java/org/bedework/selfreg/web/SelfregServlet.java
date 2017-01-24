@@ -128,7 +128,7 @@ public class SelfregServlet extends HttpServlet
       } else {
         method.doMethod(req, resp);
       }
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       serverError = handleException(t, resp, serverError);
     } finally {
       try {
@@ -262,7 +262,8 @@ public class SelfregServlet extends HttpServlet
     try {
       final MethodBase mb = mi.getMethodClass().newInstance();
 
-      mb.init(conf.selfreg.getConfig(),
+      mb.init(conf.selfreg,
+              getServletContext(),
               dumpContent);
 
       return mb;

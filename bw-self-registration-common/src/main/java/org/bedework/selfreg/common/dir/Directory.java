@@ -18,14 +18,15 @@
 */
 package org.bedework.selfreg.common.dir;
 
+import org.bedework.selfreg.common.exception.SelfregException;
+
+import org.apache.log4j.Logger;
+
 import java.util.Properties;
 
 import javax.naming.NamingException;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
-
-import org.apache.log4j.Logger;
-import org.bedework.selfreg.common.exception.SelfregException;
 
 /** **********************************************************************
  Provide access to directory services.

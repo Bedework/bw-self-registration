@@ -19,8 +19,10 @@
 
 package org.bedework.selfreg.common.mail;
 
-import org.bedework.selfreg.service.SelfregConfigProperties;
 import org.bedework.selfreg.common.exception.SelfregException;
+import org.bedework.selfreg.service.SelfregConfigProperties;
+
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,8 +37,6 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
-import org.apache.log4j.Logger;
 
 /** A mailer which provides some minimal functionality for testing.
  * We do not consider many issues such as spam prevention, efficiency in

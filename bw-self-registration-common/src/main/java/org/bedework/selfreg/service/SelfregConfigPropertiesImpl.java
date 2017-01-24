@@ -84,6 +84,12 @@ public class SelfregConfigPropertiesImpl
   private String messageDigest;
 
   private String accountPrefix;
+  
+  private boolean unauthCanRegister;
+
+  private boolean canSpecifyAccount;
+
+  private boolean accountFromEmail;
 
   private String captchaPublicKey;
 
@@ -365,6 +371,36 @@ public class SelfregConfigPropertiesImpl
   @Override
   public String getAccountPrefix() {
     return accountPrefix;
+  }
+
+  @Override
+  public void setUnauthCanRegister(final boolean val) {
+    unauthCanRegister = val;
+  }
+
+  @Override
+  public boolean getUnauthCanRegister() {
+    return unauthCanRegister;
+  }
+
+  @Override
+  public void setCanSpecifyAccount(final boolean val) {
+    canSpecifyAccount = val;
+  }
+
+  @Override
+  public boolean getCanSpecifyAccount() {
+    return canSpecifyAccount;
+  }
+
+  @Override
+  public void setAccountFromEmail(final boolean val) {
+    accountFromEmail = val;
+  }
+
+  @Override
+  public boolean getAccountFromEmail() {
+    return accountFromEmail;
   }
 
   @Override

@@ -19,11 +19,11 @@
 
 package org.bedework.selfreg.common.mail;
 
+import org.bedework.selfreg.common.exception.SelfregException;
+import org.bedework.selfreg.service.SelfregConfigProperties;
+
 import java.io.Serializable;
 import java.util.Collection;
-
-import org.bedework.selfreg.service.SelfregConfigProperties;
-import org.bedework.selfreg.common.exception.SelfregException;
 
 /**
  * @author Mike Douglass douglm  rpi.edu

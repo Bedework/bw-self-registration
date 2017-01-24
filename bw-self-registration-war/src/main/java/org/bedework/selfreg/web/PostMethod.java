@@ -114,7 +114,10 @@ public class PostMethod extends MethodBase {
       return;
     }
 
-    final String failMsg = getDir().requestId(firstName, lastName, email, pw);
+    final String failMsg = getDir().requestId(firstName, lastName, 
+                                              email, 
+                                              rutil.getReqPar("account"),
+                                              pw);
 
     if (failMsg == null) {
       sendOkJsonData(resp);
@@ -195,9 +198,13 @@ public class PostMethod extends MethodBase {
       return;
     }
 
-    getDir().setpw(confid, pw);
+    final String response = getDir().setpw(confid, pw);
 
-    resp.setStatus(HttpServletResponse.SC_OK);
+    if (response == null) {
+      sendOkJsonData(resp);
+    }
+
+    sendError(resp, response);
   }
 }
 
