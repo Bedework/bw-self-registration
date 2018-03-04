@@ -20,6 +20,8 @@
     <orderEntry type="module" module-name="bw-self-registration-common" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-config:4.0.11-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-xml:4.0.11-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.bedework:bw-ws-tzsvr:4.0.3" level="project" />
+    <orderEntry type="library" name="Maven: org.bedework:bw-ws-calws-soap:4.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-jmx:4.0.11-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-hibernate:4.0.11-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-misc:4.0.11-SNAPSHOT" level="project" />

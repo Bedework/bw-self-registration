@@ -76,23 +76,15 @@
 				</exclusion>
 				<exclusion>
 					<groupId>org.bedework</groupId>
-					<artifactId>bw-ws-calws-soap</artifactId>
+					<artifactId>bw-xml-calws-soap</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>org.bedework</groupId>
-					<artifactId>bw-ws-exchangews</artifactId>
+					<artifactId>bw-xml-icalendar</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>org.bedework</groupId>
-					<artifactId>bw-ws-icalendar</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.bedework</groupId>
-					<artifactId>bw-ws-synchws</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.bedework</groupId>
-					<artifactId>bw-ws-tzsvr</artifactId>
+					<artifactId>bw-xml-tzsvr</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
