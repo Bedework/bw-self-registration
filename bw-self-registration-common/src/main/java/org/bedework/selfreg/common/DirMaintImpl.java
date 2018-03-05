@@ -52,7 +52,7 @@ import javax.naming.directory.ModificationItem;
 public class DirMaintImpl extends Logged implements DirMaint {
   private SelfregConfigProperties config;
 
-  /* We'll use leveldb to store teh outstanding requests with the
+  /* We'll store the outstanding requests with the
      confid as the key. The value will be a json object maintaining
      all the values we got from the first page.
    */

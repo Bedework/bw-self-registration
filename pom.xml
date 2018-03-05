@@ -16,7 +16,7 @@
 		<bedework.releases.repo.url>scp://dev.bedework.org/data/repository/maven/maven2</bedework.releases.repo.url>
 		<bedework.snapshots.repo.url>scp://dev.bedework.org/data/repository/maven/maven2</bedework.snapshots.repo.url>
 		<bw-xml.version>4.0.4</bw-xml.version>
-		<bw-util.version>4.0.16</bw-util.version>
+		<bw-util.version>4.0.17-SNAPSHOT</bw-util.version>
 		<bw-access.version>4.0.1-SNAPSHOT</bw-access.version>
 		<!-- Third Party Library Versions -->
     <apache-http.version>4.2.2</apache-http.version>
@@ -59,7 +59,8 @@
 		<module>bw-self-registration-common</module>
 		<module>bw-self-registration-war</module>
 		<module>bw-self-registration-ear</module>
-	</modules>
+    <module>bw-selfregistration-web</module>
+  </modules>
 
   <developers>
     <developer>
@@ -121,6 +122,11 @@
       <dependency>
         <groupId>org.bedework</groupId>
         <artifactId>bw-util-misc</artifactId>
+        <version>${bw-util.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bedework</groupId>
+        <artifactId>bw-util-security</artifactId>
         <version>${bw-util.version}</version>
       </dependency>
       <dependency>
@@ -291,11 +297,6 @@
           <version>${maven.compiler.plugin.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>${maven.jar.plugin.version}</version>
-        </plugin>
-        <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
           <version>${maven.buildHelper.plugin.version}</version>
@@ -326,6 +327,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.plugin.version}</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>

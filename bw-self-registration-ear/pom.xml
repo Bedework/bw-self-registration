@@ -24,21 +24,82 @@
         </exclusion>
       </exclusions>
 		</dependency>
-		<dependency>
-			<groupId>org.bedework.selfreg</groupId>
-			<artifactId>bw-selfreg-war</artifactId>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>bw-self-registration-web</artifactId>
+      <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+			<artifactId>bw-self-registration-war</artifactId>
 			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
+
 		<!-- Third Party Dependencies (needed by the above) -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcore</artifactId>
-		</dependency>
+
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-config</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-http</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-jmx</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-misc</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bedework</groupId>
+      <artifactId>bw-util-servlet</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache</artifactId>
 		</dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-ehcache</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!--
 		<dependency>
 			<groupId>com.sun.mail</groupId>
 			<artifactId>mailapi</artifactId>
@@ -61,6 +122,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		-->
 	</dependencies>
 
 	<build>
@@ -81,12 +143,12 @@
 					<modules>
 						<webModule>
 							<groupId>${project.groupId}</groupId>
-							<artifactId>bw-selfreg-war</artifactId>
+							<artifactId>bw-self-registration-war</artifactId>
 							<contextRoot>/selfreg</contextRoot>
 						</webModule>
 						<jarModule>
 							<groupId>${project.groupId}</groupId>
-							<artifactId>bw-selfreg-common</artifactId>
+							<artifactId>bw-self-registration-common</artifactId>
 						</jarModule>
 					</modules>
 				</configuration>
@@ -98,7 +160,7 @@
         <version>${bw-util.version}</version>
         <executions>
           <execution>
-            <phase>deploy</phase>
+            <phase>install</phase>
             <goals>
               <goal>bw-deploy</goal>
             </goals>

@@ -7,60 +7,9 @@
 		<version>4.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-  
+
 	<artifactId>bw-self-registration-war</artifactId>
 	<packaging>war</packaging>
 	<name>bw-self-registration-war</name>
-
-	<dependencies>
-		<!-- Internal Project Dependencies -->
-		<dependency>
-			<groupId>org.bedework.selfreg</groupId>
-			<artifactId>bw-self-registration-common</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-    <dependency>
-      <groupId>org.bedework</groupId>
-      <artifactId>bw-util-http</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.bedework</groupId>
-      <artifactId>bw-util-misc</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.bedework</groupId>
-      <artifactId>bw-util-servlet</artifactId>
-    </dependency>
-		<!-- Third Party Libraries -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcore</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>activation</artifactId>
-					<groupId>javax.activation</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<!-- Test Dependencies -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
 
 </project>
