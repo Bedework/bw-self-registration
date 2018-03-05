@@ -289,7 +289,7 @@ public class Persisted extends Logged {
       sess = new HibSessionImpl();
       try {
         sess.init(HibSessionFactory.getSessionFactory(
-                config.getHibernateProperties()), getLogger());
+                config.getHibernateProperties()));
       } catch (final HibException he) {
         throw new SelfregException(he);
       }

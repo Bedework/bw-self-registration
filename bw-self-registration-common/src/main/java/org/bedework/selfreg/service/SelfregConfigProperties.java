@@ -379,7 +379,20 @@ public interface SelfregConfigProperties extends HibernateConfigI {
    */
   @MBeanInfo("True if account derived from email")
   boolean getAccountFromEmail();
-  
+
+  /**
+   *
+   * @param val true if pw is token we provide
+   */
+  void setPwIsToken(boolean val);
+
+  /**
+   *
+   * @return true if pw is token we provide
+   */
+  @MBeanInfo("True if account derived from email")
+  boolean getPwIsToken();
+
   /**
    *
    * @param val public key

@@ -91,6 +91,8 @@ public class SelfregConfigPropertiesImpl
 
   private boolean accountFromEmail;
 
+  private boolean pwIsToken;
+
   private String captchaPublicKey;
 
   private String captchaPrivateKey;
@@ -401,6 +403,16 @@ public class SelfregConfigPropertiesImpl
   @Override
   public boolean getAccountFromEmail() {
     return accountFromEmail;
+  }
+
+  @Override
+  public void setPwIsToken(final boolean val) {
+    pwIsToken = val;
+  }
+
+  @Override
+  public boolean getPwIsToken() {
+    return pwIsToken;
   }
 
   @Override

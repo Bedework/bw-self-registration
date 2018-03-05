@@ -381,6 +381,16 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
   }
 
   @Override
+  public void setPwIsToken(final boolean val) {
+    getConfig().setPwIsToken(val);
+  }
+
+  @Override
+  public boolean getPwIsToken() {
+    return getConfig().getPwIsToken();
+  }
+
+  @Override
   public void setCaptchaPublicKey(final String val) {
     getConfig().setCaptchaPublicKey(val);
   }

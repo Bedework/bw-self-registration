@@ -29,6 +29,7 @@ import org.bedework.selfreg.common.mail.MailerIntf;
 import org.bedework.selfreg.common.mail.Message;
 import org.bedework.selfreg.service.SelfregConfigProperties;
 import org.bedework.util.misc.Logged;
+import org.bedework.util.security.PasswordGenerator;
 
 import org.apache.http.client.utils.URIBuilder;
 import org.jasypt.util.password.PasswordEncryptor;
@@ -49,8 +50,6 @@ import javax.naming.directory.ModificationItem;
  *
  */
 public class DirMaintImpl extends Logged implements DirMaint {
-  private final boolean debug = true;
-
   private SelfregConfigProperties config;
 
   /* We'll use leveldb to store teh outstanding requests with the
@@ -95,7 +94,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
                           final String pw) throws SelfregException {
     final AccountInfo ainfo = new AccountInfo();
 
-    ainfo.setConfid(UUID.randomUUID().toString());
+    setConfid(ainfo);
 
     try {
       db.startTransaction();
@@ -142,7 +141,15 @@ public class DirMaintImpl extends Logged implements DirMaint {
       ainfo.setFirstName(firstName);
       ainfo.setLastName(lastName);
       ainfo.setEmail(email);
-      ainfo.setPw(encodedPassword(pw));
+
+      final String thePw;
+      if (config.getPwIsToken()) {
+        thePw = ainfo.getConfid();
+      } else {
+        thePw = pw;
+      }
+
+      ainfo.setPw(encodedPassword(thePw));
 
       db.addAccount(ainfo);
     } finally {
@@ -228,7 +235,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
         return null;
       }
 
-      ainfo.setConfid(UUID.randomUUID().toString());
+      setConfid(ainfo);
 
       db.updateAccount(ainfo);
 
@@ -281,8 +288,17 @@ public class DirMaintImpl extends Logged implements DirMaint {
       }
 
       // Prevent reuse
-      ainfo.setConfid(UUID.randomUUID().toString());
-      ainfo.setPw(encodedPassword(pw));
+      setConfid(ainfo);
+
+      final String thePw;
+
+      if (config.getPwIsToken()) {
+        thePw = ainfo.getConfid();
+      } else {
+        thePw = pw;
+      }
+
+      ainfo.setPw(encodedPassword(thePw));
 
       db.updateAccount(ainfo);
 
@@ -293,10 +309,18 @@ public class DirMaintImpl extends Logged implements DirMaint {
       final String[] to = { ainfo.getEmail() };
       msg.setMailTo(to);
 
+      String content = "Your password for account " +
+              ainfo.getAccount() +
+              " has been ";
+
+      if (config.getPwIsToken()) {
+        content += "set to " + ainfo.getConfid();
+      } else {
+        content += "updated.";
+      }
+
       msg.setSubject(config.getMailSubject() + ": password changed");
-      msg.setContent("Your password for account " +
-                             ainfo.getAccount() +
-                             " has been updated. ");
+      msg.setContent(content);
 
       getMailer().post(msg);
       return null;
@@ -400,10 +424,17 @@ public class DirMaintImpl extends Logged implements DirMaint {
         db.addRole(ri);
       }
 
+      String content = "Your account " +
+              ainfo.getAccount();
+
+      if (config.getPwIsToken()) {
+        content += " with password " + ainfo.getConfid();
+      }
+
+      content += " has been created.";
+
       msg.setSubject(config.getMailSubject() + ": success");
-      msg.setContent("Your account " +
-                             ainfo.getAccount() +
-                             " has been created. ");
+      msg.setContent(content);
 
       getMailer().post(msg);
       return ainfo.getAccount();
@@ -462,7 +493,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
 
     final AccountInfo ainfo = new AccountInfo();
 
-    ainfo.setConfid(UUID.randomUUID().toString());
+    setConfid(ainfo);
     ainfo.setAccount(accountName);
     ainfo.setFirstName(firstName);
     ainfo.setLastName(lastName);
@@ -484,6 +515,14 @@ public class DirMaintImpl extends Logged implements DirMaint {
     }
 
     return true;
+  }
+
+  private void setConfid(final AccountInfo ainfo) {
+    if (config.getPwIsToken()) {
+      ainfo.setConfid(PasswordGenerator.generate(10));
+    } else {
+      ainfo.setConfid(UUID.randomUUID().toString());
+    }
   }
 
   private boolean createLdapAccount(final String accountName,
