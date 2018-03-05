@@ -50,7 +50,7 @@
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>default</servlet-name>
-    <url-pattern>*.htm</url-pattern>
+    <url-pattern>*.gif</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>default</servlet-name>
@@ -64,4 +64,37 @@
   <session-config>
     <session-timeout>1</session-timeout>
   </session-config>
+
+  <welcome-file-list>
+    <welcome-file>setup</welcome-file>
+  </welcome-file-list>
+
+  <!-- The role name of * below means all roles defined in this web.xml -->
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>CalendarAdmin</web-resource-name>
+      <description>Public events Administration</description>
+      <url-pattern>/authinit</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>*</role-name>
+    </auth-constraint>
+    <user-data-constraint>
+      <description>no description</description>
+      <transport-guarantee>${app.transport.guarantee}</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+
+  <login-config>
+    <auth-method>FORM</auth-method>
+    <realm-name>${app.security.domain}</realm-name>
+    <form-login-config>
+      <form-login-page>/docs/login/login.html</form-login-page>
+      <form-error-page>/docs/login/error.html</form-error-page>
+    </form-login-config>
+  </login-config>
+
+  <security-role>
+    <role-name>*</role-name>
+  </security-role>
 </web-app>

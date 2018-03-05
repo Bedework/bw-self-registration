@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.bedework.selfreg</groupId>
-		<artifactId>bw-selfreg</artifactId>
+		<artifactId>bw-self-registration</artifactId>
 		<version>4.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>bw-selfreg-common</artifactId>
+	<artifactId>bw-self-registration-common</artifactId>
 	<name>bw-self-registration-common</name>
 
 	<dependencies>
