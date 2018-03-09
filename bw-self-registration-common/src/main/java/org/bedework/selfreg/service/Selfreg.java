@@ -62,6 +62,11 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
 
     @Override
     public void completed(final String status) {
+      if (status.equals(SchemaThread.statusDone)) {
+        Selfreg.this.setStatus(ConfBase.statusDone);
+      } else {
+        Selfreg.this.setStatus(ConfBase.statusFailed);
+      }
       setExport(false);
       info("Schema build completed with status " + status);
     }
@@ -493,6 +498,8 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
       buildSchema = new SchemaBuilder(getSchemaOutFile(),
                                       getExport(),
                                       hc.getHibConfiguration().getProperties());
+
+      setStatus(statusRunning);
 
       buildSchema.start();
 

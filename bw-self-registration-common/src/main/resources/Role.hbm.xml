@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+  "-//Hibernate/Hibernate Mapping DTD//EN"
+  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!-- ===================================================================
+     Object to represent a user registration.
+     =================================================================== -->
+
+<hibernate-mapping>
+  <class name="org.bedework.selfreg.common.RoleInfo"
+         table="bw_roles" >
+    <cache usage="read-write"/>
+
+    <id name="id" type="long" column="bw_id">
+      <generator class="native"/>
+    </id>
+
+    <!-- db entity properties -->
+
+    <version name="seq" column="bw_seq" type="integer" />
+
+    <property name="account" column="bw_account" type="string" length="250"
+              unique="true"
+              not-null="true"
+              index="bwidx_raccount" />
+
+    <property name="role" column="bw_role" type="string" length="300"
+              not-null="true"/>
+  </class>
+</hibernate-mapping>
+
