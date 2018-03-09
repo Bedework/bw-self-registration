@@ -512,6 +512,13 @@ public class DirMaintImpl extends Logged implements DirMaint {
     try {
       db.startTransaction();
       db.addAccount(ainfo);
+
+        /* have to create one of these to satisfy jboss */
+      final RoleInfo ri = new RoleInfo();
+      ri.setAccount(ainfo.getAccount());
+      ri.setRole("user");
+
+      db.addRole(ri);
     } finally {
       db.endTransaction();
     }
