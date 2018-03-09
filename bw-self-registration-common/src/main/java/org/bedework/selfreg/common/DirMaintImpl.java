@@ -498,6 +498,8 @@ public class DirMaintImpl extends Logged implements DirMaint {
     ainfo.setFirstName(firstName);
     ainfo.setLastName(lastName);
     ainfo.setEmail(email);
+    ainfo.setDtstamp(new Timestamp(System.currentTimeMillis()).toString());
+    ainfo.setEnabled(true);
 
     if ((pw != null) && (encodedPw == null)) {
       ainfo.setPw(encodedPassword(pw));
