@@ -541,7 +541,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
                                     final String pw,
                                     final String encodedPw) throws SelfregException {
     try {
-      /** Build a directory record and add the attributes
+      /* Build a directory record and add the attributes
        */
       final DirRecord dirRec = new BasicDirRecord();
 
@@ -573,7 +573,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
       dirRec.setAttr("gidNumber", "999");
       */
 
-      LdapDirectory dir = getLdir();
+      final LdapDirectory dir = getLdir();
 
       if (dir == null) {
         // TODO need failure response
