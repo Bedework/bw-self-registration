@@ -5,6 +5,7 @@
 	<version>4.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>bw-self-registration</name>
+  <description>Provide a self rgistration service for users.</description>
   <url>https://github.com/Bedework/bw-self-registration</url>
 
 	<properties>
