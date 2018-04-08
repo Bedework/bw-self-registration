@@ -13,18 +13,15 @@
 		<maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
 		<maven.source.plugin.version>2.1.2</maven.source.plugin.version>
 		<!-- Bedework Versions -->
-		<bedework.releases.repo.url>scp://dev.bedework.org/data/repository/maven/maven2</bedework.releases.repo.url>
-		<bedework.snapshots.repo.url>scp://dev.bedework.org/data/repository/maven/maven2</bedework.snapshots.repo.url>
 		<bw-xml.version>4.0.4</bw-xml.version>
-		<bw-util.version>4.0.17-SNAPSHOT</bw-util.version>
-		<bw-access.version>4.0.1-SNAPSHOT</bw-access.version>
+		<bw-util.version>4.0.18</bw-util.version>
+		<bw-access.version>4.0.2</bw-access.version>
 		<!-- Third Party Library Versions -->
     <apache-http.version>4.2.2</apache-http.version>
 		<commons-codec.version>1.5</commons-codec.version>
     <hibernate.version>5.2.5.Final</hibernate.version>
     <hibernate-ehcache.version>5.2.5.Final</hibernate-ehcache.version>
     <ehcache.version>2.10.3</ehcache.version>
-    <ical4j.version>1.1-BW-SNAPSHOT</ical4j.version>
     <jackson.version>2.3.1</jackson.version>
     <jasypt.version>1.9.2</jasypt.version>
 		<junit.version>4.8.2</junit.version>
@@ -170,11 +167,6 @@
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-webmvc</artifactId>
 				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>net.fortuna.ical4j</groupId>
-				<artifactId>ical4j</artifactId>
-				<version>${ical4j.version}</version>
 			</dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>

@@ -27,8 +27,6 @@ import org.bedework.util.jmx.ConfBase;
 import org.bedework.util.jmx.InfoLines;
 import org.bedework.util.jmx.MBeanInfo;
 
-import org.hibernate.cfg.Configuration;
-
 import java.util.List;
 import java.util.Properties;
 
@@ -49,8 +47,6 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
   /* ==============================================================
    * Dump/restore
    * ============================================================== */
-
-  private Configuration hibCfg;
 
   private class SchemaBuilder extends SchemaThread {
 
