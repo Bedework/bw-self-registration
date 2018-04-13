@@ -58,7 +58,7 @@
 		<module>bw-self-registration-common</module>
 		<module>bw-self-registration-war</module>
 		<module>bw-self-registration-ear</module>
-    <module>bw-selfregistration-web</module>
+    <module>bw-self-registration-web</module>
   </modules>
 
   <developers>
