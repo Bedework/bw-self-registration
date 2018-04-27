@@ -149,7 +149,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
         thePw = pw;
       }
 
-      ainfo.setPw(encodedPassword(thePw));
+      ainfo.setPw(encodedPassword(thePw, false));
 
       db.addAccount(ainfo);
     } finally {
@@ -298,7 +298,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
         thePw = pw;
       }
 
-      ainfo.setPw(encodedPassword(thePw));
+      ainfo.setPw(encodedPassword(thePw, false));
 
       db.updateAccount(ainfo);
 
@@ -502,7 +502,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
     ainfo.setEnabled(true);
 
     if ((pw != null) && (encodedPw == null)) {
-      ainfo.setPw(encodedPassword(pw));
+      ainfo.setPw(encodedPassword(pw, false));
     } else if (encodedPw == null) {
       throw new SelfregException("No password supplied");
     } else {
@@ -560,7 +560,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
       dirRec.setAttr("mail", email);
 
       if (pw != null) {
-        dirRec.setAttr("userPassword", encodedPassword(pw));
+        dirRec.setAttr("userPassword", encodedPassword(pw, true));
       } else if (encodedPw != null) {
         dirRec.setAttr("userPassword", encodedPw.toCharArray());
       }
@@ -621,8 +621,9 @@ public class DirMaintImpl extends Logged implements DirMaint {
   @Override
   public void setUserPassword(final String account,
                               final String password) throws SelfregException {
-    final BasicAttribute attr = new BasicAttribute("userPassword",
-                                             encodedPassword(password));
+    final BasicAttribute attr =
+            new BasicAttribute("userPassword",
+                               encodedPassword(password, true));
     final ModificationItem mi = new ModificationItem(DirContext.REPLACE_ATTRIBUTE,
                                                attr);
 
@@ -700,7 +701,8 @@ public class DirMaintImpl extends Logged implements DirMaint {
     }
   }
 
-  private String encodedPassword(final String pw) throws SelfregException {
+  private String encodedPassword(final String pw,
+                                 final boolean ldap) throws SelfregException {
     try {
       /*
       final MessageDigest md = MessageDigest.getInstance(pwEncryption);
@@ -727,6 +729,10 @@ public class DirMaintImpl extends Logged implements DirMaint {
 
       if (!encpw.startsWith(prefix)) {
         throw new SelfregException("Doesn't start with " + prefix);
+      }
+
+      if (ldap) {
+        return encpw;
       }
 
       return encpw.substring(prefix.length());
