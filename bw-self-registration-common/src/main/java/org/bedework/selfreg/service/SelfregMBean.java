@@ -84,8 +84,8 @@ public interface SelfregMBean extends ConfBaseMBean,
    */
   @MBeanInfo("Add a user")
   String addUser(@MBeanInfo("Account")String account,
-                 @MBeanInfo("First name")String first,
-                 @MBeanInfo("Last name")String last,
+                 @MBeanInfo("Firstname")String first,
+                 @MBeanInfo("Lastname")String last,
                  @MBeanInfo("Email")String email,
                  @MBeanInfo("Password")String password);
 
