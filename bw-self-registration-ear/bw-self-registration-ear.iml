@@ -22,7 +22,7 @@
     <orderEntry type="module" module-name="bw-self-registration-war" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-config:4.0.18" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-xml:4.0.18" level="project" />
-    <orderEntry type="library" name="Maven: org.bedework:bw-util-hibernate:4.0.18" level="project" />
+    <orderEntry type="module" module-name="bw-util-hibernate" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-http:4.0.18" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-jmx:4.0.18" level="project" />
     <orderEntry type="library" name="Maven: org.bedework:bw-util-misc:4.0.18" level="project" />
