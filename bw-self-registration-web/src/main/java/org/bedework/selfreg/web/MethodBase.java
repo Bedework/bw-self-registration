@@ -23,6 +23,7 @@ import org.bedework.selfreg.common.DirMaintImpl;
 import org.bedework.selfreg.common.exception.SelfregException;
 import org.bedework.selfreg.service.SelfregConfigProperties;
 import org.bedework.util.http.BasicHttpClient;
+import org.bedework.util.logging.Logged;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.Consts;
@@ -50,7 +51,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 /** Base class for all webdav servlet methods.
  */
-public abstract class MethodBase {
+public abstract class MethodBase implements Logged {
   protected boolean dumpContent;
 
   protected SelfregConfigProperties config;

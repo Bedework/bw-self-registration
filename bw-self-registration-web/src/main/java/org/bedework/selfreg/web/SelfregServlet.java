@@ -21,6 +21,7 @@ package org.bedework.selfreg.web;
 import org.bedework.selfreg.service.Selfreg;
 import org.bedework.selfreg.web.MethodBase.MethodInfo;
 import org.bedework.util.jmx.ConfBase;
+import org.bedework.util.logging.Logged;
 import org.bedework.util.servlet.io.CharArrayWrappedResponse;
 import org.bedework.util.xml.XmlEmit;
 import org.bedework.util.xml.tagdefs.WebdavTags;
@@ -51,12 +52,8 @@ import javax.xml.namespace.QName;
  * @version 1.0
  */
 public class SelfregServlet extends HttpServlet
-        implements HttpSessionListener, ServletContextListener {
-  protected boolean debug;
-
+        implements Logged, HttpSessionListener, ServletContextListener {
   protected boolean dumpContent;
-
-  protected transient Logger log;
 
   /** Table of methods - set at init
    */
@@ -88,8 +85,6 @@ public class SelfregServlet extends HttpServlet
     boolean serverError = false;
 
     try {
-      debug = getLogger().isDebugEnabled();
-
       if (debug()) {
         debug("entry: " + req.getMethod());
         dumpRequest(req);
@@ -104,9 +99,8 @@ public class SelfregServlet extends HttpServlet
         }
       }
 
-      if (debug && dumpContent) {
-        resp = new CharArrayWrappedResponse(resp,
-                                            getLogger());
+      if (debug() && dumpContent) {
+        resp = new CharArrayWrappedResponse(resp);
       }
 
       String methodName = req.getHeader("X-HTTP-Method-Override");
@@ -118,7 +112,7 @@ public class SelfregServlet extends HttpServlet
       final MethodBase method = getMethod(methodName);
 
       if (method == null) {
-        logIt("No method for '" + methodName + "'");
+        debug("No method for '" + methodName + "'");
 
         // ================================================================
         //     Set the correct response
@@ -133,7 +127,7 @@ public class SelfregServlet extends HttpServlet
         tryWait(req, false);
       } catch (Throwable t) {}
 
-      if (debug && dumpContent &&
+      if (debug() && dumpContent &&
               (resp instanceof CharArrayWrappedResponse)) {
         /* instanceof check because we might get a subsequent exception before
          * we wrap the response
@@ -176,7 +170,7 @@ public class SelfregServlet extends HttpServlet
     }
 
     try {
-      getLogger().error(this, t);
+      getLogger().error(t);
       sendError(t, resp);
       return true;
     } catch (Throwable t1) {
@@ -306,7 +300,7 @@ public class SelfregServlet extends HttpServlet
       wtr.waiting++;
       while (wtr.active) {
         if (debug()) {
-          log.debug("in: waiters=" + wtr.waiting);
+          debug("in: waiters=" + wtr.waiting);
         }
 
         wtr.wait();
@@ -344,43 +338,41 @@ public class SelfregServlet extends HttpServlet
    * @param req
    */
   public void dumpRequest(final HttpServletRequest req) {
-    Logger log = getLogger();
-
     try {
       Enumeration names = req.getHeaderNames();
 
       String title = "Request headers";
 
-      log.debug(title);
+      debug(title);
 
       while (names.hasMoreElements()) {
         String key = (String)names.nextElement();
         String val = req.getHeader(key);
-        log.debug("  " + key + " = \"" + val + "\"");
+        debug("  " + key + " = \"" + val + "\"");
       }
 
       names = req.getParameterNames();
 
       title = "Request parameters";
 
-      log.debug(title + " - global info and uris");
-      log.debug("getRemoteAddr = " + req.getRemoteAddr());
-      log.debug("getRequestURI = " + req.getRequestURI());
-      log.debug("getRemoteUser = " + req.getRemoteUser());
-      log.debug("getRequestedSessionId = " + req.getRequestedSessionId());
-      log.debug("HttpUtils.getRequestURL(req) = " + req.getRequestURL());
-      log.debug("contextPath=" + req.getContextPath());
-      log.debug("query=" + req.getQueryString());
-      log.debug("contentlen=" + req.getContentLength());
-      log.debug("request=" + req);
-      log.debug("parameters:");
+      debug(title + " - global info and uris");
+      debug("getRemoteAddr = " + req.getRemoteAddr());
+      debug("getRequestURI = " + req.getRequestURI());
+      debug("getRemoteUser = " + req.getRemoteUser());
+      debug("getRequestedSessionId = " + req.getRequestedSessionId());
+      debug("HttpUtils.getRequestURL(req) = " + req.getRequestURL());
+      debug("contextPath=" + req.getContextPath());
+      debug("query=" + req.getQueryString());
+      debug("contentlen=" + req.getContentLength());
+      debug("request=" + req);
+      debug("parameters:");
 
-      log.debug(title);
+      debug(title);
 
       while (names.hasMoreElements()) {
         String key = (String)names.nextElement();
         String val = req.getParameter(key);
-        log.debug("  " + key + " = \"" + val + "\"");
+        debug("  " + key + " = \"" + val + "\"");
       }
     } catch (Throwable t) {
     }
@@ -439,36 +431,5 @@ public class SelfregServlet extends HttpServlet
   @Override
   public void contextDestroyed(final ServletContextEvent sce) {
     conf.stop();
-  }
-
-  /**
-   * @return LOgger
-   */
-  public Logger getLogger() {
-    if (log == null) {
-      log = Logger.getLogger(this.getClass());
-    }
-
-    return log;
-  }
-
-  /** Debug
-   *
-   * @param msg
-   */
-  public void debug(final String msg) {
-    getLogger().debug(msg);
-  }
-
-  /** Info messages
-   *
-   * @param msg
-   */
-  public void logIt(final String msg) {
-    getLogger().info(msg);
-  }
-
-  protected void error(final Throwable t) {
-    getLogger().error(this, t);
   }
 }
