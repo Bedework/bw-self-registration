@@ -28,7 +28,7 @@ import org.bedework.selfreg.common.mail.Mailer;
 import org.bedework.selfreg.common.mail.MailerIntf;
 import org.bedework.selfreg.common.mail.Message;
 import org.bedework.selfreg.service.SelfregConfigProperties;
-import org.bedework.util.misc.Logged;
+import org.bedework.util.logging.Logged;
 import org.bedework.util.security.PasswordGenerator;
 
 import org.apache.http.client.utils.URIBuilder;
@@ -49,7 +49,7 @@ import javax.naming.directory.ModificationItem;
 /** Handle accounts.
  *
  */
-public class DirMaintImpl extends Logged implements DirMaint {
+public class DirMaintImpl implements Logged, DirMaint {
   private SelfregConfigProperties config;
 
   /* We'll store the outstanding requests with the
@@ -693,7 +693,7 @@ public class DirMaintImpl extends Logged implements DirMaint {
       pr.put(Context.PROVIDER_URL, config.getLdapUrl());
 
       ldir = new LdapDirectory(pr, config.getAdminId(),
-                               config.getAdminPw(), debug);
+                               config.getAdminPw());
 
       return ldir;
     } catch (final Throwable t) {

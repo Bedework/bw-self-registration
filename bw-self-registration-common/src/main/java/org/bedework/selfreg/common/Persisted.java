@@ -24,7 +24,7 @@ import org.bedework.util.hibernate.HibException;
 import org.bedework.util.hibernate.HibSession;
 import org.bedework.util.hibernate.HibSessionFactory;
 import org.bedework.util.hibernate.HibSessionImpl;
-import org.bedework.util.misc.Logged;
+import org.bedework.util.logging.Logged;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * User: mike Date: 8/31/15 Time: 17:04
  */
-public class Persisted extends Logged {
+public class Persisted implements Logged {
   private final HibernateConfigI config;
 
   /** */
@@ -78,7 +78,7 @@ public class Persisted extends Logged {
     try {
       checkOpen();
 
-      if (debug) {
+      if (debug()) {
         debug("End transaction for " + sessionCt);
       }
 
@@ -182,7 +182,7 @@ public class Persisted extends Logged {
 
       long total = 0;
 
-      if (debug) {
+      if (debug()) {
         debug(" ----------- count = " + counts.size());
         if (counts.size() > 0) {
           debug(" ---------- first el class is " + counts.iterator()
@@ -283,7 +283,7 @@ public class Persisted extends Logged {
     sessionCt = globalSessionCt.incrementAndGet();
 
     if (sess == null) {
-      if (debug) {
+      if (debug()) {
         debug("New hibernate session for " + sessionCt);
       }
       sess = new HibSessionImpl();
@@ -301,13 +301,13 @@ public class Persisted extends Logged {
 
   protected synchronized void closeSession() throws SelfregException {
     if (!isOpen()) {
-      if (debug) {
+      if (debug()) {
         debug("Close for " + sessionCt + " closed session");
       }
       return;
     }
 
-    if (debug) {
+    if (debug()) {
       debug("Close for " + sessionCt);
     }
 
@@ -338,7 +338,7 @@ public class Persisted extends Logged {
   private void beginTransaction() throws SelfregException {
     checkOpen();
 
-    if (debug) {
+    if (debug()) {
       debug("Begin transaction for " + sessionCt);
     }
     try {

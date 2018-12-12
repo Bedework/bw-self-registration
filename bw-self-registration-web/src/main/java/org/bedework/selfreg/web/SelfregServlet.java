@@ -25,8 +25,6 @@ import org.bedework.util.servlet.io.CharArrayWrappedResponse;
 import org.bedework.util.xml.XmlEmit;
 import org.bedework.util.xml.tagdefs.WebdavTags;
 
-import org.apache.log4j.Logger;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Enumeration;
@@ -92,8 +90,8 @@ public class SelfregServlet extends HttpServlet
     try {
       debug = getLogger().isDebugEnabled();
 
-      if (debug) {
-        debugMsg("entry: " + req.getMethod());
+      if (debug()) {
+        debug("entry: " + req.getMethod());
         dumpRequest(req);
       }
 
@@ -101,8 +99,8 @@ public class SelfregServlet extends HttpServlet
 
       if (req.getCharacterEncoding() == null) {
         req.setCharacterEncoding("UTF-8");
-        if (debug) {
-          debugMsg("No charset specified in request; forced to UTF-8");
+        if (debug()) {
+          debug("No charset specified in request; forced to UTF-8");
         }
       }
 
@@ -143,17 +141,17 @@ public class SelfregServlet extends HttpServlet
         CharArrayWrappedResponse wresp = (CharArrayWrappedResponse)resp;
 
         if (wresp.getUsedOutputStream()) {
-          debugMsg("------------------------ response written to output stream -------------------");
+          debug("------------------------ response written to output stream -------------------");
         } else {
           String str = wresp.toString();
 
-          debugMsg("------------------------ Dump of response -------------------");
-          debugMsg(str);
-          debugMsg("---------------------- End dump of response -----------------");
+          debug("------------------------ Dump of response -------------------");
+          debug(str);
+          debug("---------------------- End dump of response -----------------");
 
           byte[] bs = str.getBytes();
           resp = (HttpServletResponse)wresp.getResponse();
-          debugMsg("contentLength=" + bs.length);
+          debug("contentLength=" + bs.length);
           resp.setContentLength(bs.length);
           resp.getOutputStream().write(bs);
         }
@@ -190,8 +188,8 @@ public class SelfregServlet extends HttpServlet
   private void sendError(final Throwable t,
                          final HttpServletResponse resp) {
     try {
-      if (debug) {
-        debugMsg("setStatus(" + HttpServletResponse.SC_INTERNAL_SERVER_ERROR + ")");
+      if (debug()) {
+        debug("setStatus(" + HttpServletResponse.SC_INTERNAL_SERVER_ERROR + ")");
       }
       resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                      t.getMessage());
@@ -268,7 +266,7 @@ public class SelfregServlet extends HttpServlet
 
       return mb;
     } catch (final Throwable t) {
-      if (debug) {
+      if (debug()) {
         error(t);
       }
       throw new Exception(t);
@@ -307,7 +305,7 @@ public class SelfregServlet extends HttpServlet
 
       wtr.waiting++;
       while (wtr.active) {
-        if (debug) {
+        if (debug()) {
           log.debug("in: waiters=" + wtr.waiting);
         }
 
@@ -458,7 +456,7 @@ public class SelfregServlet extends HttpServlet
    *
    * @param msg
    */
-  public void debugMsg(final String msg) {
+  public void debug(final String msg) {
     getLogger().debug(msg);
   }
 

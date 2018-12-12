@@ -21,8 +21,7 @@ package org.bedework.selfreg.common.mail;
 
 import org.bedework.selfreg.common.exception.SelfregException;
 import org.bedework.selfreg.service.SelfregConfigProperties;
-
-import org.apache.log4j.Logger;
+import org.bedework.util.logging.Logged;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,18 +43,13 @@ import javax.mail.internet.MimeMessage;
  *
  * @author  Mike Douglass douglm@rpi.edu
  */
-public class Mailer implements MailerIntf {
-  private boolean debug;
-
+public class Mailer implements Logged, MailerIntf {
   private SelfregConfigProperties config;
 
   private Session sess;
 
-  private transient Logger log;
-
   @Override
   public void init(final SelfregConfigProperties config) throws SelfregException {
-    debug = getLog().isDebugEnabled();
     this.config = config;
 
     final Properties props = new Properties();
@@ -100,19 +94,19 @@ public class Mailer implements MailerIntf {
       sess = Session.getInstance(props);
     }
 
-    sess.setDebug(debug);
+    sess.setDebug(debug());
   }
 
   @Override
   public Collection<String> listLists() throws SelfregException {
-    debugMsg("listLists called");
+    debug("listLists called");
     return new ArrayList<>();
   }
 
   @Override
   public void post(final Message val) throws SelfregException {
-    debugMsg("Mailer called with:");
-    debugMsg(val.toString());
+    debug("Mailer called with:");
+    debug(val.toString());
 
     if (config.getMailDisabled()) {
       return;
@@ -147,7 +141,7 @@ public class Mailer implements MailerIntf {
       tr.connect();
       tr.sendMessage(msg, tos);
     } catch (final Throwable t) {
-      if (debug) {
+      if (debug()) {
         t.printStackTrace();
       }
 
@@ -171,17 +165,5 @@ public class Mailer implements MailerIntf {
     protected PasswordAuthentication getPasswordAuthentication() {
       return authentication;
     }
-  }
-
-  private Logger getLog() {
-    if (log == null) {
-      log = Logger.getLogger(this.getClass());
-    }
-
-    return log;
-  }
-
-  private void debugMsg(final String msg) {
-    getLog().debug(msg);
   }
 }

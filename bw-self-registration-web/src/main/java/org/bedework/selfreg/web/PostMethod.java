@@ -69,8 +69,8 @@ public class PostMethod extends MethodBase {
         return;
       }
 
-      if (debug) {
-        debugMsg("Illegal action " + action);
+      if (debug()) {
+        debug("Illegal action " + action);
       }
 
       resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -83,12 +83,12 @@ public class PostMethod extends MethodBase {
 
   private void processNewid(final HttpServletRequest req,
                             final HttpServletResponse resp) throws SelfregException {
-    if (debug) {
-      debugMsg("Process new id request");
+    if (debug()) {
+      debug("Process new id request");
     }
 
     if (!verifyCaptcha(req)) {
-      debugMsg("failed captcha");
+      debug("failed captcha");
       sendError(resp,
                 "Incorrect captcha response");
       return;
@@ -105,8 +105,8 @@ public class PostMethod extends MethodBase {
             (lastName == null) ||
             (email == null) ||
             (pw == null)) {
-      if (debug) {
-        debugMsg("Failed to create new id: missing fields");
+      if (debug()) {
+        debug("Failed to create new id: missing fields");
       }
 
       sendError(resp,
@@ -124,8 +124,8 @@ public class PostMethod extends MethodBase {
       return;
     }
 
-    if (debug) {
-      debugMsg("Failed to create new id with reason " + failMsg);
+    if (debug()) {
+      debug("Failed to create new id with reason " + failMsg);
     }
 
     sendError(resp,
@@ -134,12 +134,12 @@ public class PostMethod extends MethodBase {
 
   private void processForgotid(final HttpServletRequest req,
                                final HttpServletResponse resp) throws SelfregException {
-    if (debug) {
-      debugMsg("Process forgot id request");
+    if (debug()) {
+      debug("Process forgot id request");
     }
 
     if (!verifyCaptcha(req)) {
-      debugMsg("failed captcha");
+      debug("failed captcha");
       sendError(resp,
                 "Incorrect captcha response");
       return;
@@ -156,12 +156,12 @@ public class PostMethod extends MethodBase {
 
   private void processForgotpw(final HttpServletRequest req,
                                final HttpServletResponse resp) throws SelfregException {
-    if (debug) {
-      debugMsg("Process forgot pw request");
+    if (debug()) {
+      debug("Process forgot pw request");
     }
 
     if (!verifyCaptcha(req)) {
-      debugMsg("failed captcha");
+      debug("failed captcha");
       sendError(resp,
                 "Incorrect captcha response");
       return;
@@ -178,8 +178,8 @@ public class PostMethod extends MethodBase {
 
   private void processSetpw(final HttpServletRequest req,
                             final HttpServletResponse resp) throws SelfregException {
-    if (debug) {
-      debugMsg("Process set pw request");
+    if (debug()) {
+      debug("Process set pw request");
     }
 
     final ReqUtil rutil = new ReqUtil(req, resp);
@@ -189,8 +189,8 @@ public class PostMethod extends MethodBase {
 
     if ((confid == null) ||
             (pw == null)) {
-      if (debug) {
-        debugMsg("Failed to set pw: missing fields");
+      if (debug()) {
+        debug("Failed to set pw: missing fields");
       }
 
       sendError(resp,

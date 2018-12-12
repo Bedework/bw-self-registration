@@ -30,7 +30,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
 import java.io.InputStream;
@@ -52,11 +51,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 /** Base class for all webdav servlet methods.
  */
 public abstract class MethodBase {
-  protected boolean debug;
-
   protected boolean dumpContent;
-
-  protected transient Logger log;
 
   protected SelfregConfigProperties config;
 
@@ -83,12 +78,6 @@ public abstract class MethodBase {
     this.config = config;
     this.dumpContent = dumpContent;
     this.context = context;
-
-    debug = getLogger().isDebugEnabled();
-//    xml = syncher.getXmlEmit();
-
-    // content = null;
-    //resourceUri = null;
 
     init();
   }
@@ -370,8 +359,8 @@ public abstract class MethodBase {
       os.close();
     } catch (final Throwable ignored) {
       // Pretty much screwed if we get here
-      if (debug) {
-        debugMsg("Unable to send error: " + msg);
+      if (debug()) {
+        debug("Unable to send error: " + msg);
       }
     }
   }
@@ -410,45 +399,6 @@ public abstract class MethodBase {
     dm.init(config);
 
     return dm;
-  }
-
-  /** ===================================================================
-   *                   Logging methods
-   *  =================================================================== */
-
-  /**
-   * @return Logger
-   */
-  protected Logger getLogger() {
-    if (log == null) {
-      log = Logger.getLogger(this.getClass());
-    }
-
-    return log;
-  }
-
-  protected void debugMsg(final String msg) {
-    getLogger().debug(msg);
-  }
-
-  protected void error(final Throwable t) {
-    getLogger().error(this, t);
-  }
-
-  protected void error(final String msg) {
-    getLogger().error(msg);
-  }
-
-  protected void warn(final String msg) {
-    getLogger().warn(msg);
-  }
-
-  protected void logIt(final String msg) {
-    getLogger().info(msg);
-  }
-
-  protected void trace(final String msg) {
-    getLogger().debug(msg);
   }
 }
 

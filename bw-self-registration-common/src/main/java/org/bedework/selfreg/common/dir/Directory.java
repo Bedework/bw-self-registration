@@ -19,8 +19,7 @@
 package org.bedework.selfreg.common.dir;
 
 import org.bedework.selfreg.common.exception.SelfregException;
-
-import org.apache.log4j.Logger;
+import org.bedework.util.logging.Logged;
 
 import java.util.Properties;
 
@@ -45,11 +44,7 @@ import javax.naming.directory.SearchControls;
  directory, even a sequential input stream of records.
  *************************************************************************/
 
-public abstract class Directory {
-  protected boolean debug = false;
-
-  private transient Logger log;
-
+public abstract class Directory implements Logged {
   /** pr is the properties provided at init
    */
   protected Properties pr;
@@ -72,31 +67,27 @@ public abstract class Directory {
    * @param pr
    * @param mngrDN
    * @param pw
-   * @param debug
    * @throws SelfregException
    */
   public Directory(final Properties pr, final String mngrDN,
-                   final String pw,
-                   final boolean debug) throws SelfregException {
-    init(pr, mngrDN, pw, debug);
+                   final String pw) throws SelfregException {
+    init(pr, mngrDN, pw);
   }
 
   /**
    * @param pr
    * @param mngrDN
    * @param pw
-   * @param debug
    * @throws SelfregException
    */
-  public void init(final Properties pr, final String mngrDN, final String pw,
-                   final boolean debug) throws SelfregException {
+  public void init(final Properties pr,
+                   final String mngrDN,
+                   final String pw) throws SelfregException {
     if (pr == null) {
       this.pr = new Properties();
     } else {
       this.pr = pr;
     }
-
-    this.debug = debug;
   }
 
   /** If possible, reInit should allow reuse after a close
@@ -235,21 +226,5 @@ public abstract class Directory {
    *
    */
   public abstract void close();
-
-  protected Logger getLog() {
-    if (log == null) {
-      log = Logger.getLogger(this.getClass());
-    }
-
-    return log;
-  }
-
-  protected void error(final String msg) {
-    getLog().error(msg);
-  }
-
-  protected void debugMsg(final String msg) {
-    getLog().debug(msg);
-  }
 
 }

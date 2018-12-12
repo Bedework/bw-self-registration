@@ -119,25 +119,21 @@ public class LdapDirectory extends Directory {
    * @param pr
    * @param mngrDN
    * @param pw
-   * @param debug
    * @throws SelfregException
    */
   public LdapDirectory(final Properties pr, final String mngrDN,
-                       final String pw,
-                       final boolean debug) throws SelfregException {
-    super(pr, mngrDN, pw, debug);
+                       final String pw) throws SelfregException {
+    super(pr, mngrDN, pw);
   }
 
-  /* (non-Javadoc)
-   * @see org.bedework.tools.directory.Directory#init(java.util.Properties, java.lang.String, java.lang.String, boolean)
-   */
   @Override
-  public void init(final Properties pr, final String mngrDN, final String pw,
-                   final boolean debug) throws SelfregException {
+  public void init(final Properties pr,
+                   final String mngrDN,
+                   final String pw) throws SelfregException {
     if (pr == null) {
       throw new SelfregException("No properties supplied");
     }
-    super.init(pr, mngrDN, pw, debug);
+    super.init(pr, mngrDN, pw);
     this.mngrDN = mngrDN;
     this.pw = pw;
     reInit();
@@ -146,7 +142,7 @@ public class LdapDirectory extends Directory {
   @Override
   public void reInit() throws SelfregException {
     try {
-      /** If we weren't given a url try to get one.
+      /* If we weren't given a url try to get one.
        */
 
       if (pr == null) {
@@ -164,14 +160,14 @@ public class LdapDirectory extends Directory {
       // Make simple authentication the default
       checkProp(pr, Context.SECURITY_AUTHENTICATION, "simple");
 
-      if (debug) {
-        debugMsg("Directory: get new context for " +
+      if (debug()) {
+        debug("Directory: get new context for " +
             pr.get(Context.PROVIDER_URL));
       }
       ctx = new InitialDirContext(pr);
       constraints = new SearchControls();
-      if (debug) {
-        debugMsg("Directory: init OK " + pr.get(Context.PROVIDER_URL));
+      if (debug()) {
+        debug("Directory: init OK " + pr.get(Context.PROVIDER_URL));
       }
     } catch (Throwable t) {
       throw new SelfregException(t);
@@ -190,8 +186,8 @@ public class LdapDirectory extends Directory {
   @Override
   public DirSearchResult search(final String base, String filter,
                                 final int scope) throws SelfregException {
-    if (debug) {
-      debugMsg("About to search: base=" + base + " filter=" + filter +
+    if (debug()) {
+      debug("About to search: base=" + base + " filter=" + filter +
                " scope=" + scope);
     }
 
@@ -213,8 +209,8 @@ public class LdapDirectory extends Directory {
       }
     } catch (NameNotFoundException e) {
       // Allow that one.
-      if (debug) {
-        debugMsg("NameNotFoundException: return with null");
+      if (debug()) {
+        debug("NameNotFoundException: return with null");
       }
       sres = null;
     } catch (Throwable t) {
