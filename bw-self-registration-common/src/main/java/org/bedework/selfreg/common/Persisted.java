@@ -24,6 +24,7 @@ import org.bedework.util.hibernate.HibException;
 import org.bedework.util.hibernate.HibSession;
 import org.bedework.util.hibernate.HibSessionFactory;
 import org.bedework.util.hibernate.HibSessionImpl;
+import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -398,5 +399,20 @@ public class Persisted implements Logged {
         } catch (final Throwable ignored) {}
       }
     }
+  }
+
+  /* ====================================================================
+   *                   Logged methods
+   * ==================================================================== */
+
+  private BwLogger logger = new BwLogger();
+
+  @Override
+  public BwLogger getLogger() {
+    if ((logger.getLoggedClass() == null) && (logger.getLoggedName() == null)) {
+      logger.setLoggedClass(getClass());
+    }
+
+    return logger;
   }
 }

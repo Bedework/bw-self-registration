@@ -23,6 +23,7 @@ import org.bedework.selfreg.common.DirMaintImpl;
 import org.bedework.selfreg.common.exception.SelfregException;
 import org.bedework.selfreg.service.SelfregConfigProperties;
 import org.bedework.util.http.BasicHttpClient;
+import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -400,6 +401,21 @@ public abstract class MethodBase implements Logged {
     dm.init(config);
 
     return dm;
+  }
+
+  /* ====================================================================
+   *                   Logged methods
+   * ==================================================================== */
+
+  private BwLogger logger = new BwLogger();
+
+  @Override
+  public BwLogger getLogger() {
+    if ((logger.getLoggedClass() == null) && (logger.getLoggedName() == null)) {
+      logger.setLoggedClass(getClass());
+    }
+
+    return logger;
   }
 }
 

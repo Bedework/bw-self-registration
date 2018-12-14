@@ -21,6 +21,7 @@ package org.bedework.selfreg.common.mail;
 
 import org.bedework.selfreg.common.exception.SelfregException;
 import org.bedework.selfreg.service.SelfregConfigProperties;
+import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
 import java.util.ArrayList;
@@ -165,5 +166,20 @@ public class Mailer implements Logged, MailerIntf {
     protected PasswordAuthentication getPasswordAuthentication() {
       return authentication;
     }
+  }
+
+  /* ====================================================================
+   *                   Logged methods
+   * ==================================================================== */
+
+  private BwLogger logger = new BwLogger();
+
+  @Override
+  public BwLogger getLogger() {
+    if ((logger.getLoggedClass() == null) && (logger.getLoggedName() == null)) {
+      logger.setLoggedClass(getClass());
+    }
+
+    return logger;
   }
 }

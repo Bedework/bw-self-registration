@@ -21,6 +21,7 @@ package org.bedework.selfreg.web;
 import org.bedework.selfreg.service.Selfreg;
 import org.bedework.selfreg.web.MethodBase.MethodInfo;
 import org.bedework.util.jmx.ConfBase;
+import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 import org.bedework.util.servlet.io.CharArrayWrappedResponse;
 import org.bedework.util.xml.XmlEmit;
@@ -431,5 +432,20 @@ public class SelfregServlet extends HttpServlet
   @Override
   public void contextDestroyed(final ServletContextEvent sce) {
     conf.stop();
+  }
+
+  /* ====================================================================
+   *                   Logged methods
+   * ==================================================================== */
+
+  private BwLogger logger = new BwLogger();
+
+  @Override
+  public BwLogger getLogger() {
+    if ((logger.getLoggedClass() == null) && (logger.getLoggedName() == null)) {
+      logger.setLoggedClass(getClass());
+    }
+
+    return logger;
   }
 }

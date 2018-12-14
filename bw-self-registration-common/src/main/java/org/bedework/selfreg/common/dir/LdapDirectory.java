@@ -19,6 +19,7 @@
 package org.bedework.selfreg.common.dir;
 
 import org.bedework.selfreg.common.exception.SelfregException;
+import org.bedework.util.logging.BwLogger;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -325,5 +326,20 @@ public class LdapDirectory extends Directory {
     }
 
     return val;
+  }
+
+  /* ====================================================================
+   *                   Logged methods
+   * ==================================================================== */
+
+  private BwLogger logger = new BwLogger();
+
+  @Override
+  public BwLogger getLogger() {
+    if ((logger.getLoggedClass() == null) && (logger.getLoggedName() == null)) {
+      logger.setLoggedClass(getClass());
+    }
+
+    return logger;
   }
 }
