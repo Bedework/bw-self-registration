@@ -15,11 +15,12 @@
 		<maven.source.plugin.version>2.1.2</maven.source.plugin.version>
 
 		<!-- Bedework Versions -->
-    <bw-access.version>4.0.4</bw-access.version>
-    <bw-util.version>4.0.20</bw-util.version>
-    <bw-util-logging.version>4.0.0</bw-util-logging.version>
-    <bw-util-hibernate.version>4.0.20</bw-util-hibernate.version>
-    <bw-xml.version>4.0.7</bw-xml.version>
+    <bw-access.version>4.0.6</bw-access.version>
+    <bw-util.version>4.0.24</bw-util.version>
+    <bw-util-deploy.version>4.0.24</bw-util-deploy.version>
+    <bw-util-logging.version>4.0.2</bw-util-logging.version>
+    <bw-util-hibernate.version>4.0.21</bw-util-hibernate.version>
+    <bw-xml.version>4.0.8</bw-xml.version>
 
 		<!-- Third Party Library Versions -->
     <apache-http.version>4.2.2</apache-http.version>
@@ -27,7 +28,7 @@
     <hibernate.version>5.2.5.Final</hibernate.version>
     <hibernate-ehcache.version>5.2.5.Final</hibernate-ehcache.version>
     <ehcache.version>2.10.3</ehcache.version>
-    <jackson.version>2.3.1</jackson.version>
+    <jackson.version>2.8.11.1</jackson.version>
     <jasypt.version>1.9.2</jasypt.version>
 		<junit.version>4.8.2</junit.version>
     <servlet-api.version>4.0.0</servlet-api.version>

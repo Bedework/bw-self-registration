@@ -177,7 +177,7 @@
       <plugin>
         <groupId>org.bedework</groupId>
         <artifactId>bw-util-maven-deploy</artifactId>
-        <version>${bw-util.version}</version>
+        <version>${bw-util-deploy.version}</version>
         <executions>
           <execution>
             <phase>install</phase>
@@ -187,6 +187,7 @@
           </execution>
         </executions>
         <configuration>
+          <checkonly>${org.bedework.deploy.checkonly}</checkonly>
           <noversion>true</noversion>
           <delete>true</delete>
           <earName>bw-self-registration</earName>

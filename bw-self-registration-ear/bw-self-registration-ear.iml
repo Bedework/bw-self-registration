@@ -21,16 +21,17 @@
     <orderEntry type="module" module-name="bw-self-registration-common" />
     <orderEntry type="module" module-name="bw-self-registration-web" />
     <orderEntry type="module" module-name="bw-self-registration-war" />
-    <orderEntry type="library" name="Maven: org.bedework:bw-util-config:4.0.20" level="project" />
-    <orderEntry type="library" name="Maven: org.bedework:bw-util-logging:4.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.bedework:bw-util-xml:4.0.20" level="project" />
-    <orderEntry type="library" name="Maven: org.bedework:bw-util-hibernate:4.0.20" level="project" />
-    <orderEntry type="library" name="Maven: org.bedework:bw-util-http:4.0.20" level="project" />
-    <orderEntry type="library" name="Maven: org.bedework:bw-util-jmx:4.0.20" level="project" />
-    <orderEntry type="library" name="Maven: org.bedework:bw-util-misc:4.0.20" level="project" />
-    <orderEntry type="library" name="Maven: org.bedework:bw-util-security:4.0.20" level="project" />
+    <orderEntry type="library" name="Maven: org.bedework:bw-util-config:4.0.24" level="project" />
+    <orderEntry type="library" name="Maven: org.bedework:bw-util-logging:4.0.2" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.8.11.1" level="project" />
+    <orderEntry type="library" name="Maven: org.bedework:bw-util-xml:4.0.24" level="project" />
+    <orderEntry type="library" name="Maven: org.bedework:bw-util-hibernate:4.0.21" level="project" />
+    <orderEntry type="library" name="Maven: org.bedework:bw-util-http:4.0.24" level="project" />
+    <orderEntry type="library" name="Maven: org.bedework:bw-util-jmx:4.0.24" level="project" />
+    <orderEntry type="library" name="Maven: org.bedework:bw-util-misc:4.0.24" level="project" />
+    <orderEntry type="library" name="Maven: org.bedework:bw-util-security:4.0.24" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.5" level="project" />
-    <orderEntry type="library" name="Maven: org.bedework:bw-util-servlet:4.0.20" level="project" />
+    <orderEntry type="library" name="Maven: org.bedework:bw-util-servlet:4.0.24" level="project" />
     <orderEntry type="library" name="Maven: net.sf.ehcache:ehcache:2.10.3" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.7" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-ehcache:5.2.5.Final" level="project" />
