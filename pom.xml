@@ -23,12 +23,13 @@
     <bw-xml.version>4.0.8</bw-xml.version>
 
 		<!-- Third Party Library Versions -->
-    <apache-http.version>4.2.2</apache-http.version>
 		<commons-codec.version>1.5</commons-codec.version>
     <hibernate.version>5.2.5.Final</hibernate.version>
     <hibernate-ehcache.version>5.2.5.Final</hibernate-ehcache.version>
+    <http-client.version>4.5.3</http-client.version>
+    <http-core.version>4.4.8</http-core.version>
     <ehcache.version>2.10.3</ehcache.version>
-    <jackson.version>2.8.11.1</jackson.version>
+    <jackson.version>2.9.8</jackson.version>
     <jasypt.version>1.9.2</jasypt.version>
 		<junit.version>4.8.2</junit.version>
     <servlet-api.version>4.0.0</servlet-api.version>
@@ -162,7 +163,20 @@
 				<version>${bw-xml.version}</version>
 			</dependency>
 			<!-- Third Party Libraries -->
-			<dependency>
+
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>${http-client.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpcore</artifactId>
+        <version>${http-core.version}</version>
+      </dependency>
+
+      <dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-core</artifactId>
 				<version>${spring.version}</version>
@@ -186,16 +200,6 @@
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-webmvc</artifactId>
 				<version>${spring.version}</version>
-			</dependency>
-      <dependency>
-        <groupId>org.apache.httpcomponents</groupId>
-        <artifactId>httpclient</artifactId>
-        <version>${apache-http.version}</version>
-      </dependency>
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpcore</artifactId>
-				<version>${apache-http.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-codec</groupId>

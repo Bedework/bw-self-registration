@@ -64,12 +64,6 @@
     <dependency>
       <groupId>org.bedework</groupId>
       <artifactId>bw-util-http</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
