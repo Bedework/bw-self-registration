@@ -41,5 +41,8 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.7" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-ehcache:5.2.5.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jasypt:jasypt:1.9.2" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.mail:javax.mail:1.5.4" level="project" />
+    <orderEntry type="library" name="Maven: javax.activation:activation:1.1" level="project" />
+    <orderEntry type="library" name="Maven: javax.mail:javax.mail-api:1.5.4" level="project" />
   </component>
 </module>

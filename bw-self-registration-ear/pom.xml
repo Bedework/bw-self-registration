@@ -113,30 +113,17 @@
       <artifactId>jasypt</artifactId>
     </dependency>
 
-    <!--
-		<dependency>
-			<groupId>com.sun.mail</groupId>
-			<artifactId>mailapi</artifactId>
-			<version>1.4.5</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>activation</artifactId>
-					<groupId>javax.activation</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.mail</groupId>
-			<artifactId>imap</artifactId>
-			<version>1.4.5</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>activation</artifactId>
-					<groupId>javax.activation</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		-->
+    <dependency>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>javax.mail</artifactId>
+      <version>${javax.mail.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>javax.mail-api</artifactId>
+      <version>${javax.mail.version}</version>
+    </dependency>
 	</dependencies>
 
 	<build>
