@@ -22,7 +22,9 @@ import org.bedework.selfreg.common.DirMaint;
 import org.bedework.selfreg.common.DirMaintImpl;
 import org.bedework.selfreg.common.exception.SelfregException;
 import org.bedework.selfreg.service.SelfregConfigProperties;
-import org.bedework.util.http.BasicHttpClient;
+import org.bedework.util.http.HttpUtil;
+import org.bedework.util.http.PooledHttpClient;
+import org.bedework.util.http.PooledHttpClient.ResponseHolder;
 import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
@@ -30,6 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.Consts;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
@@ -49,6 +52,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import static org.apache.http.HttpStatus.SC_OK;
 
 /** Base class for all webdav servlet methods.
  */
@@ -90,13 +95,10 @@ public abstract class MethodBase implements Logged {
 
   protected boolean verifyCaptcha(final HttpServletRequest req)
     throws SelfregException {
-    BasicHttpClient cl = null;
+    PooledHttpClient cl = null;
     try {
-      cl = new BasicHttpClient(15 * 1000,
-                               false);
-      cl.setBaseURI(
+      cl = new PooledHttpClient(
               new URI("https://www.google.com/recaptcha/api/siteverify"));
-
 
       final List <NameValuePair> nvps = new ArrayList<>();
       nvps.add(new BasicNameValuePair("secret",
@@ -108,30 +110,51 @@ public abstract class MethodBase implements Logged {
       final StringEntity content =
               new UrlEncodedFormEntity(nvps, Consts.UTF_8);
 
-      final InputStream is = cl.post("https://www.google.com/recaptcha/api/siteverify",
-                                     null,
-                                     content);
+      final ResponseHolder resp = cl.post("",
+                                     content,
+                                     this::processResponse);
+
+      if (resp.failed) {
+        return false;
+      }
+
+      return (Boolean)resp.response;
+    } catch (final Throwable t) {
+      throw new SelfregException(t);
+    }
+  }
+
+  final ResponseHolder processResponse(final String path,
+                                       final CloseableHttpResponse resp) {
+    try {
+      final int status = HttpUtil.getStatus(resp);
+
+      if (status != SC_OK) {
+        return new ResponseHolder(status,
+                                  "Failed response from server");
+      }
+
+      if (resp.getEntity() == null) {
+        return new ResponseHolder(status,
+                                  "No content in response from server");
+      }
+
+      final InputStream is = resp.getEntity().getContent();
 
       final Map vals = (Map)om.readValue(is,
-                              Object.class);
+                                         Object.class);
 
       final Object o = vals.get("success");
 
-      if (o == null) {
-        return false;
-      }
+      final boolean success = (o != null) &&
+              (o instanceof Boolean) &&
+              (Boolean)o;
 
-      if (!(o instanceof Boolean)) {
-        return false;
-      }
-
-      return (Boolean)o;
+      Boolean sb = success;
+      return new ResponseHolder(sb);
     } catch (final Throwable t) {
-      throw new SelfregException(t);
-    } finally {
-      cl.close();
+      return new ResponseHolder(t);
     }
-
   }
 
   private SimpleDateFormat httpDateFormatter =
