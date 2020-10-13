@@ -36,7 +36,7 @@
     <jackson.version>2.10.0</jackson.version>
     <jasypt.version>1.9.2</jasypt.version>
     <javax.mail.version>1.5.4</javax.mail.version>
-		<junit.version>4.8.2</junit.version>
+		<junit.version>4.13.1</junit.version>
     <servlet-api.version>4.0.0</servlet-api.version>
 	</properties>
 
