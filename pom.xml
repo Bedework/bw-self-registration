@@ -16,24 +16,23 @@
 
 		<!-- Bedework Versions -->
     <bw-access.version>4.0.8</bw-access.version>
-    <bw-util.version>4.0.27</bw-util.version>
-    <bw-util-conf.version>4.1.0</bw-util-conf.version>
-    <bw-util-deploy.version>4.0.26</bw-util-deploy.version>
-    <bw-util-logging.version>4.0.5</bw-util-logging.version>
+    <bw-util.version>4.0.28</bw-util.version>
+    <bw-util-conf.version>4.1.1</bw-util-conf.version>
+    <bw-util-deploy.version>4.0.28</bw-util-deploy.version>
+    <bw-util-logging.version>5.0.0</bw-util-logging.version>
     <bw-util-hibernate.version>4.0.23</bw-util-hibernate.version>
-    <bw-util-network.version>4.1.0</bw-util-network.version>
-    <bw-util-security.version>4.1.0</bw-util-security.version>
+    <bw-util-network.version>4.1.1</bw-util-network.version>
+    <bw-util-security.version>4.1.1</bw-util-security.version>
     <bw-xml.version>4.0.10</bw-xml.version>
 
 		<!-- Third Party Library Versions -->
 		<commons-codec.version>1.15</commons-codec.version>
-    <dom4j-version>1.6.1</dom4j-version>
     <hibernate.version>5.2.5.Final</hibernate.version>
     <hibernate-ehcache.version>5.2.5.Final</hibernate-ehcache.version>
     <http-client.version>4.5.3</http-client.version>
     <http-core.version>4.4.8</http-core.version>
     <ehcache.version>2.10.3</ehcache.version>
-    <jackson.version>2.10.0</jackson.version>
+    <jackson.version>2.11.0</jackson.version>
     <jasypt.version>1.9.2</jasypt.version>
     <javax.mail.version>1.5.4</javax.mail.version>
 		<junit.version>4.13.1</junit.version>
@@ -77,7 +76,7 @@
       <organization>
         Bedework
       </organization>
-      <organizationUrl>http://bedework.com/</organizationUrl>
+      <organizationUrl>https://bedework.com/</organizationUrl>
     </developer>
     <developer>
       <name>Arlen Johnson</name>
@@ -186,12 +185,6 @@
 				<artifactId>commons-codec</artifactId>
 				<version>${commons-codec.version}</version>
 			</dependency>
-
-      <dependency>
-        <groupId>dom4j</groupId>
-        <artifactId>dom4j</artifactId>
-        <version>${dom4j-version}</version>
-      </dependency>
 
 			<dependency>
 				<groupId>javax.servlet</groupId>
