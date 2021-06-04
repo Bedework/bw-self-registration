@@ -29,7 +29,7 @@
 		<commons-codec.version>1.15</commons-codec.version>
     <hibernate.version>5.2.5.Final</hibernate.version>
     <hibernate-ehcache.version>5.2.5.Final</hibernate-ehcache.version>
-    <http-client.version>4.5.3</http-client.version>
+    <http-client.version>4.5.13</http-client.version>
     <http-core.version>4.4.8</http-core.version>
     <ehcache.version>2.10.3</ehcache.version>
     <jackson.version>2.11.0</jackson.version>
