@@ -1,17 +1,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.bedework.selfreg</groupId>
-		<artifactId>bw-self-registration</artifactId>
-		<version>4.0.11-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
-	<artifactId>bw-self-registration-ear</artifactId>
-	<packaging>ear</packaging>
-	<name>bw-self-registration-ear</name>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.bedework.selfreg</groupId>
+    <artifactId>bw-self-registration</artifactId>
+    <version>4.0.11-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  <artifactId>bw-self-registration-ear</artifactId>
+  <packaging>ear</packaging>
+  <name>bw-self-registration-ear</name>
 
-	<dependencies>
-		<!-- Project Dependencies -->
+  <dependencies>
+    <!-- Project Dependencies -->
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>bw-self-registration-war</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency>
+    <!--
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>bw-self-registration-common</artifactId>
@@ -36,14 +44,7 @@
       </exclusions>
     </dependency>
 
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-			<artifactId>bw-self-registration-war</artifactId>
-			<version>${project.version}</version>
-			<type>war</type>
-		</dependency>
-
-		<!-- Third Party Dependencies (needed by the above) -->
+		< ! - - Third Party Dependencies (needed by the above) - - >
 
     <dependency>
       <groupId>org.bedework</groupId>
@@ -129,36 +130,39 @@
       <artifactId>javax.mail-api</artifactId>
       <version>${javax.mail.version}</version>
     </dependency>
-	</dependencies>
+    -->
+  </dependencies>
 
-	<build>
-		<finalName>bw-self-registration-${project.version}</finalName>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-ear-plugin</artifactId>
+  <build>
+    <finalName>bw-self-registration-${project.version}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-ear-plugin</artifactId>
         <version>2.10</version>
-				<configuration>
-					<!-- Exclude eclipse generated application.xml during mvn package -->
-					<earSourceExcludes>**/application.xml</earSourceExcludes>
-					<defaultLibBundleDir>lib</defaultLibBundleDir>
+        <configuration>
+          <!-- Exclude eclipse generated application.xml during mvn package -->
+          <earSourceExcludes>**/application.xml</earSourceExcludes>
+          <defaultLibBundleDir>lib</defaultLibBundleDir>
           <skinnyWars>true</skinnyWars>
-					<!-- use maven generated application.xml instead -->
-					<generateApplicationXml>true</generateApplicationXml>
+          <!-- use maven generated application.xml instead -->
+          <generateApplicationXml>true</generateApplicationXml>
           <unpackTypes>sar,rar,war</unpackTypes>
-					<modules>
-						<webModule>
-							<groupId>${project.groupId}</groupId>
-							<artifactId>bw-self-registration-war</artifactId>
-							<contextRoot>/selfreg</contextRoot>
-						</webModule>
-						<jarModule>
-							<groupId>${project.groupId}</groupId>
-							<artifactId>bw-self-registration-common</artifactId>
-						</jarModule>
-					</modules>
-				</configuration>
-			</plugin>
+          <modules>
+            <webModule>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>bw-self-registration-war</artifactId>
+              <contextRoot>/selfreg</contextRoot>
+            </webModule>
+            <!-- wfmodules
+            <jarModule>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>bw-self-registration-common</artifactId>
+            </jarModule>
+						-->
+          </modules>
+        </configuration>
+      </plugin>
 
       <plugin>
         <groupId>org.bedework</groupId>
@@ -181,7 +185,7 @@
           <propsPath>${org.bedework.deployment.properties}</propsPath>
         </configuration>
       </plugin>
-		</plugins>
-	</build>
+    </plugins>
+  </build>
 
 </project>
