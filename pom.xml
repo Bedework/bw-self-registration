@@ -16,6 +16,13 @@
   <description>Provide a self rgistration service for users.</description>
   <url>https://github.com/Bedework/bw-self-registration</url>
 
+	<scm>
+		<connection>scm:git:git@github.com:Bedework/bw-self-registration.git</connection>
+		<developerConnection>scm:git:git@github.com:Bedework/bw-self-registration.git</developerConnection>
+		<url>https://github.com/Bedework/bw-self-registration</url>
+		<tag>HEAD</tag>
+	</scm>
+
 	<modules>
 		<module>bw-self-registration-common</module>
 		<module>bw-self-registration-war</module>
