@@ -28,5 +28,6 @@
 		<module>bw-self-registration-war</module>
 		<module>bw-self-registration-ear</module>
     <module>bw-self-registration-web</module>
-  </modules>
+		<module>bw-wf-self-registration-feature-pack</module>
+	</modules>
 </project>
