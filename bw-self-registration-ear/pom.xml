@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.bedework.selfreg</groupId>
     <artifactId>bw-self-registration</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
+    <version>5.0.0</version>
   </parent>
 
   <artifactId>bw-self-registration-ear</artifactId>
