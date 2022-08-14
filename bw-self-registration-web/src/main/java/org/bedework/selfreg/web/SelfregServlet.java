@@ -387,7 +387,9 @@ public class SelfregServlet extends HttpServlet
     Selfreg selfreg;
 
     Configurator() {
-      super("org.bedework.selfreg:service=Selfreg");
+      super("org.bedework.selfreg:service=Selfreg",
+            (String)null,
+            null);
     }
 
     @Override

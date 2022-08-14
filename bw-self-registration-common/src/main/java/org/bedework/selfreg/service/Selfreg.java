@@ -35,8 +35,8 @@ import java.util.List;
  */
 public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
         implements SelfregMBean {
-  /* Name of the property holding the location of the config data */
-  private static final String datauriPname = "org.bedework.selfreg.confuri";
+  /* Name of the directory holding the config data */
+  private static final String confDirName = "selfreg";
 
   private final static String nm = "config";
 
@@ -73,10 +73,7 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
   /**
    */
   public Selfreg() {
-    super(getServiceName(nm));
-
-    setConfigName(nm);
-    setConfigPname(datauriPname);
+    super(getServiceName(nm), confDirName, nm);
   }
 
   /**
