@@ -19,6 +19,7 @@
 package org.bedework.selfreg.common.dir;
 
 import org.bedework.selfreg.common.exception.SelfregException;
+import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
 import java.util.Properties;
@@ -53,7 +54,7 @@ public abstract class Directory implements Logged {
   public abstract static class DirSearchResult {
     /**
      * @return DirRecord
-     * @throws SelfregException
+     * @throws SelfregException on fatal error
      */
     public abstract DirRecord nextRecord() throws SelfregException;
   }
@@ -67,7 +68,7 @@ public abstract class Directory implements Logged {
    * @param pr
    * @param mngrDN
    * @param pw
-   * @throws SelfregException
+   * @throws SelfregException on fatal error
    */
   public Directory(final Properties pr, final String mngrDN,
                    final String pw) throws SelfregException {
@@ -78,7 +79,7 @@ public abstract class Directory implements Logged {
    * @param pr
    * @param mngrDN
    * @param pw
-   * @throws SelfregException
+   * @throws SelfregException on fatal error
    */
   public void init(final Properties pr,
                    final String mngrDN,
@@ -92,13 +93,13 @@ public abstract class Directory implements Logged {
 
   /** If possible, reInit should allow reuse after a close
    *
-   * @throws SelfregException
+   * @throws SelfregException on fatal error
    */
   public abstract void reInit() throws SelfregException;
 
   /**
    * @param dn
-   * @throws SelfregException
+   * @throws SelfregException on fatal error
    */
   public abstract void destroy(String dn) throws SelfregException;
 
@@ -117,7 +118,7 @@ public abstract class Directory implements Logged {
    * @param base
    * @param filter
    * @return DirSearchResult
-   * @throws SelfregException
+   * @throws SelfregException on fatal error
    */
   public DirSearchResult search(final String base, final String filter) throws SelfregException {
     return search(base, filter, scopeSub);
@@ -129,7 +130,7 @@ public abstract class Directory implements Logged {
    * @param base
    * @param filter
    * @return DirSearchResult or null
-   * @throws SelfregException
+   * @throws SelfregException on fatal error
    */
   public DirSearchResult searchBase(final String base, final String filter) throws SelfregException {
     return search(base, filter, scopeBase);
@@ -140,7 +141,7 @@ public abstract class Directory implements Logged {
    * @param base
    * @param filter
    * @return DirSearchResult
-   * @throws SelfregException
+   * @throws SelfregException on fatal error
    */
   public DirSearchResult searchOne(final String base, final String filter) throws SelfregException {
     return search(base, filter, scopeOne);
@@ -152,7 +153,7 @@ public abstract class Directory implements Logged {
    * @param filter
    * @param scope
    * @return DirSearchResult null means no record(s) found.
-   * @throws SelfregException
+   * @throws SelfregException on fatal error
    */
   public abstract DirSearchResult search(String base, String filter, int scope)
       throws SelfregException;
@@ -173,7 +174,7 @@ public abstract class Directory implements Logged {
   /**
    * @param rec
    * @return boolean true if created, false if already exists
-   * @throws SelfregException
+   * @throws SelfregException on fatal error
    */
   public abstract boolean create(DirRecord rec) throws SelfregException;
 
@@ -185,7 +186,7 @@ public abstract class Directory implements Logged {
    * @param dn
    * @param attrName
    * @param val
-   * @throws SelfregException
+   * @throws SelfregException on fatal error
    */
   public abstract void replace(String dn, String attrName, Object val) throws SelfregException;
 
@@ -194,7 +195,7 @@ public abstract class Directory implements Logged {
    * @param dn
    * @param attrName
    * @param val
-   * @throws SelfregException
+   * @throws SelfregException on fatal error
    */
   public abstract void replace(String dn, String attrName, Object[] val) throws SelfregException;
 
@@ -204,7 +205,7 @@ public abstract class Directory implements Logged {
    * @param attrName
    * @param oldval
    * @param newval
-   * @throws SelfregException
+   * @throws SelfregException on fatal error
    */
   public abstract void replace(String dn, String attrName, Object oldval,
                                Object newval) throws SelfregException;
@@ -212,13 +213,13 @@ public abstract class Directory implements Logged {
   /**
    * @param dn
    * @param mods
-   * @throws SelfregException
+   * @throws SelfregException on fatal error
    */
   public abstract void modify(String dn, ModificationItem[] mods) throws SelfregException;
 
   /**
    * @return Properties
-   * @throws SelfregException
+   * @throws SelfregException on fatal error
    */
   public abstract Properties getEnvironment() throws SelfregException;
 
@@ -227,4 +228,18 @@ public abstract class Directory implements Logged {
    */
   public abstract void close();
 
+  /* ====================================================================
+   *                   Logged methods
+   * ==================================================================== */
+
+  private final BwLogger logger = new BwLogger();
+
+  @Override
+  public BwLogger getLogger() {
+    if ((logger.getLoggedClass() == null) && (logger.getLoggedName() == null)) {
+      logger.setLoggedClass(getClass());
+    }
+
+    return logger;
+  }
 }
