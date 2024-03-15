@@ -9,4 +9,23 @@
 	<artifactId>bw-self-registration-war</artifactId>
 	<packaging>war</packaging>
 	<name>Bedework Self Registration: self registration service war</name>
+
+	<properties>
+		<org.bedework.war.dependency>org.bedework.selfreg.web</org.bedework.war.dependency>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.bedework</groupId>
+				<artifactId>bw-util-maven-deploy</artifactId>
+
+				<configuration>
+					<warName>${project.artifactId}</warName>
+					<baseDirPath>${project.basedir}/../..</baseDirPath>
+					<propsPath>${org.bedework.deployment.properties}</propsPath>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.bedework</groupId>
     <artifactId>bedework-parent</artifactId>
-    <version>35-SNAPSHOT</version>
+    <version>37-SNAPSHOT</version>
   </parent>
 
 	<groupId>org.bedework.selfreg</groupId>
@@ -26,7 +26,6 @@
 	<modules>
 		<module>bw-self-registration-common</module>
 		<module>bw-self-registration-war</module>
-		<module>bw-self-registration-ear</module>
     <module>bw-self-registration-web</module>
 	</modules>
 </project>
