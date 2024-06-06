@@ -67,4 +67,8 @@ For full details, see [Sonatype's documentation for using Maven to publish relea
 * ehcache needs a name.
 * Simplify the configuration utilities.
 * Turn selfreg into war
+
+#### 5.0.2
+* Upgrade library versions
+* Fix needed to deal with util.hibernate bug relating to static sessionFactory variable.
   

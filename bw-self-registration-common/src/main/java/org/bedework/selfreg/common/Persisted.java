@@ -28,6 +28,7 @@ import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.SessionFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -50,6 +51,10 @@ public class Persisted implements Logged {
   private final static AtomicLong globalSessionCt = new AtomicLong();
 
   private long sessionCt;
+
+  /* Factory used to obtain a session
+   */
+  private static SessionFactory sessionFactory;
 
   /** Current hibernate session - exists only across one user interaction
    */
@@ -271,30 +276,34 @@ public class Persisted implements Logged {
       throw new SelfregException("Already open");
     }
 
-    open = true;
-
-    if (sess != null) {
-      warn("Session is not null. Will close");
-      try {
-        endTransaction();
-      } catch (final Throwable ignored) {
+    try {
+      if (sessionFactory == null) {
+        sessionFactory = HibSessionFactory.
+                getSessionFactory(config.getHibernateProperties());
       }
-    }
 
-    sessionCt = globalSessionCt.incrementAndGet();
+      open = true;
 
-    if (sess == null) {
-      if (debug()) {
-        debug("New hibernate session for " + sessionCt);
+      if (sess != null) {
+        warn("Session is not null. Will close");
+        try {
+          endTransaction();
+        } catch (final Throwable ignored) {
+        }
       }
-      sess = new HibSessionImpl();
-      try {
-        sess.init(HibSessionFactory.getSessionFactory(
-                config.getHibernateProperties()));
-      } catch (final HibException he) {
-        throw new SelfregException(he);
+
+      sessionCt = globalSessionCt.incrementAndGet();
+
+      if (sess == null) {
+        if (debug()) {
+          debug("New hibernate session for " + sessionCt);
+        }
+        sess = new HibSessionImpl();
+        sess.init(sessionFactory);
+        debug("Open session for " + sessionCt);
       }
-      debug("Open session for " + sessionCt);
+    } catch (final HibException he) {
+      throw new SelfregException(he);
     }
 
     beginTransaction();
