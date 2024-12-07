@@ -66,7 +66,7 @@ public class Persisted implements Logged {
     this.config = config;
   }
 
-  public boolean startTransaction() throws SelfregException {
+  public boolean startTransaction() {
     if (isOpen()) {
       return false;
     }
@@ -80,7 +80,7 @@ public class Persisted implements Logged {
     return open;
   }
 
-  public void endTransaction() throws SelfregException {
+  public void endTransaction() {
     try {
       checkOpen();
 
@@ -112,7 +112,7 @@ public class Persisted implements Logged {
           "from " + AccountInfo.class.getName() +
                   " a where a.account=:account";
 
-  public AccountInfo getAccount(final String account) throws SelfregException {
+  public AccountInfo getAccount(final String account) {
     try {
       sess.createQuery(findByAccountQuery);
       sess.setString("account", account);
@@ -127,7 +127,7 @@ public class Persisted implements Logged {
           "from " + AccountInfo.class.getName() +
                   " a where a.confid=:confid";
 
-  public AccountInfo getAccountByConfid(final String confid) throws SelfregException {
+  public AccountInfo getAccountByConfid(final String confid) {
     try {
       sess.createQuery(findByConfidQuery);
       sess.setString("confid", confid);
@@ -142,14 +142,14 @@ public class Persisted implements Logged {
           "from " + AccountInfo.class.getName() +
                   " a where a.email=:email";
 
-  public AccountInfo getAccountByEmail(final String email) throws SelfregException {
+  public AccountInfo getAccountByEmail(final String email) {
     try {
       sess.createQuery(findByEmailQuery);
       sess.setString("email", email);
 
-      final List l = sess.getList();
+      final List<?> l = sess.getList();
 
-      if (l.size() == 0) {
+      if (l.isEmpty()) {
         return null;
       }
 
@@ -163,11 +163,11 @@ public class Persisted implements Logged {
     }
   }
 
-  public boolean emailPresent(final String val) throws SelfregException {
+  public boolean emailPresent(final String val) {
     return getAccountByEmail(val) != null;
   }
 
-  public void addAccount(final AccountInfo val) throws SelfregException {
+  public void addAccount(final AccountInfo val) {
     validate(val);
 
     try {
@@ -180,7 +180,7 @@ public class Persisted implements Logged {
   private static final String countQuery =
           "select count(*) from " + AccountInfo.class.getName();
 
-  public long numAccounts() throws SelfregException {
+  public long numAccounts() {
     try {
       sess.createQuery(countQuery);
       @SuppressWarnings("unchecked")
@@ -190,7 +190,7 @@ public class Persisted implements Logged {
 
       if (debug()) {
         debug(" ----------- count = " + counts.size());
-        if (counts.size() > 0) {
+        if (!counts.isEmpty()) {
           debug(" ---------- first el class is " + counts.iterator()
                                                          .next()
                                                          .getClass()
@@ -208,7 +208,7 @@ public class Persisted implements Logged {
     }
   }
 
-  public void addRole(final RoleInfo val) throws SelfregException {
+  public void addRole(final RoleInfo val) {
     try {
       sess.save(val);
     } catch (final HibException he) {
@@ -216,7 +216,7 @@ public class Persisted implements Logged {
     }
   }
 
-  public void updateAccount(final AccountInfo val) throws SelfregException {
+  public void updateAccount(final AccountInfo val) {
     validate(val);
 
     try {
@@ -226,7 +226,7 @@ public class Persisted implements Logged {
     }
   }
 
-  private void validate(final AccountInfo val) throws SelfregException {
+  private void validate(final AccountInfo val) {
     if (val.getEmail() == null) {
       throw new SelfregException("No email");
     }
@@ -244,7 +244,7 @@ public class Persisted implements Logged {
           "from " + RoleInfo.class.getName() +
                   " r where r.account=:account";
 
-  public void removeAccount(final AccountInfo val) throws SelfregException {
+  public void removeAccount(final AccountInfo val) {
     try {
       sess.createQuery(findRoleByAccountQuery);
       sess.setString("account", val.getAccount());
@@ -265,13 +265,13 @@ public class Persisted implements Logged {
    *                   Session methods
    * ==================================================================== */
 
-  protected void checkOpen() throws SelfregException {
+  protected void checkOpen() {
     if (!isOpen()) {
       throw new SelfregException("Session call when closed");
     }
   }
 
-  protected synchronized void openSession() throws SelfregException {
+  protected synchronized void openSession() {
     if (isOpen()) {
       throw new SelfregException("Already open");
     }
@@ -309,7 +309,7 @@ public class Persisted implements Logged {
     beginTransaction();
   }
 
-  protected synchronized void closeSession() throws SelfregException {
+  protected synchronized void closeSession() {
     if (!isOpen()) {
       if (debug()) {
         debug("Close for " + sessionCt + " closed session");
@@ -345,7 +345,7 @@ public class Persisted implements Logged {
     }
   }
 
-  private void beginTransaction() throws SelfregException {
+  private void beginTransaction() {
     checkOpen();
 
     if (debug()) {
@@ -358,7 +358,7 @@ public class Persisted implements Logged {
     }
   }
 
-  protected void rollbackTransaction() throws SelfregException {
+  protected void rollbackTransaction() {
     try {
       checkOpen();
       sess.rollback();
@@ -367,12 +367,12 @@ public class Persisted implements Logged {
     }
   }
 
-  /** ===================================================================
+  /** =============================================================
    *                   Json methods
-   *  =================================================================== */
+   *  ============================================================= */
 
   protected void writeJson(final OutputStream out,
-                           final Object val) throws SelfregException {
+                           final Object val) {
     try {
       mapper.writeValue(out, val);
     } catch (final Throwable t) {
@@ -380,7 +380,7 @@ public class Persisted implements Logged {
     }
   }
 
-  protected byte[] bytesJson(final Object val) throws SelfregException {
+  protected byte[] bytesJson(final Object val) {
     try {
       final ByteArrayOutputStream os = new ByteArrayOutputStream();
 
@@ -393,28 +393,19 @@ public class Persisted implements Logged {
   }
 
   protected <T> T getJson(final byte[] value,
-                          final Class<T> valueType) throws SelfregException {
-    InputStream is = null;
-    try {
-      is = new ByteArrayInputStream(value);
-
+                          final Class<T> valueType) {
+    try (final InputStream is = new ByteArrayInputStream(value)) {
       return mapper.readValue(is, valueType);
     } catch (final Throwable t) {
       throw new SelfregException(t);
-    } finally {
-      if (is != null) {
-        try {
-          is.close();
-        } catch (final Throwable ignored) {}
-      }
     }
   }
 
-  /* ====================================================================
+  /* ==============================================================
    *                   Logged methods
-   * ==================================================================== */
+   * ============================================================== */
 
-  private BwLogger logger = new BwLogger();
+  private final BwLogger logger = new BwLogger();
 
   @Override
   public BwLogger getLogger() {

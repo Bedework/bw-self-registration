@@ -18,7 +18,6 @@
 */
 package org.bedework.selfreg.common;
 
-import org.bedework.selfreg.common.exception.SelfregException;
 import org.bedework.selfreg.service.SelfregConfigProperties;
 
 /** Define methods for directory maintenance. Most methods here corrspond to
@@ -28,10 +27,9 @@ import org.bedework.selfreg.service.SelfregConfigProperties;
  */
 public interface DirMaint {
   /**
-   * @param config
-   * @throws SelfregException
+   * @param config our properties
    */
-  void init(SelfregConfigProperties config) throws SelfregException;
+  void init(SelfregConfigProperties config);
 
 	/** First step in obtaining a new account. The response is an encoded UUID
 	 * which identifies this request. It should be provided as a parameter to
@@ -43,165 +41,150 @@ public interface DirMaint {
    * @param account non-null if allowed to specify
 	 * @param pw pw they want
 	 * @return null for OK or error message
-	 * @throws SelfregException
 	 */
 	String requestId(String firstName,
                    String lastName,
 	                 String email,
                    String account,
-	                 String pw) throws SelfregException;
+	                 String pw);
 
   /** Send the user their account.
    *
-   * @param email
+   * @param email their email
    * @return null for OK, otherwise error message
-   * @throws SelfregException
    */
-  String sendAccount(String email)  throws SelfregException;
+  String sendAccount(String email) ;
 
   /** Send the user a message to allow pw reset.
    *
-   * @param account -
+   * @param account of user
    * @return null for OK, otherwise error message
-   * @throws SelfregException
    */
-  String sendForgotpw(String account)  throws SelfregException;
+  String sendForgotpw(String account) ;
 
   /** Set pw.
    *
-   * @param confid -
-   * @param pw -
+   * @param confid th econfirmation id
+   * @param pw new pw
    * @return null for OK, otherwise error message
-   * @throws SelfregException
    */
-  String setpw(String confid, String pw)  throws SelfregException;
+  String setpw(String confid, String pw) ;
 
   /** Return account info for the account
    *
    * @param account of user
    * @return null if confId is bad
-   * @throws SelfregException
    */
-  AccountInfo getAccount(String account) throws SelfregException;
+  AccountInfo getAccount(String account);
 
   /** Return account info for the account represented by the confid.
    *
    * @param confId supplied by system
    * @return null if confId is bad
-   * @throws SelfregException
    */
-  AccountInfo getAccountByConfid(String confId) throws SelfregException;
+  AccountInfo getAccountByConfid(String confId);
 
   /** Return account info for the account represented by the email.
    *
    * @param email for user
    * @return null if confId is bad
-   * @throws SelfregException
    */
-  AccountInfo getAccountByEmail(String email) throws SelfregException;
+  AccountInfo getAccountByEmail(String email);
 
   /** Delete the account given a confirmation id
    *
-   * @param confId
-   * @return
-   * @throws SelfregException
+   * @param confId supplied by system
+   * @return true for ok
    */
-  boolean deleteAccount(final String confId) throws SelfregException;
+  boolean deleteAccount(String confId);
 
 	/** Create (or enable) the account represented by the confid.
 	 *
    * @param confId supplied by system
 	 * @return account for OK - null if confId is bad
-	 * @throws SelfregException
 	 */
-	String confirm(String confId) throws SelfregException;
+	String confirm(String confId);
 
 	/** Called to send a message providing the recipient with their id
 	 *
    * @param email of recipient
 	 * @return true if email known - false otherwise
-	 * @throws SelfregException
 	 */
-	boolean lostId(String email) throws SelfregException;
+	boolean lostId(String email);
 
-  /** Called to send a message providing a way for the recipient their password
+  /** Called to send a message providing a way for the recipient
+   * to change their password
    *
-   * @param id
+   * @param id for user
    * @return true if id known - false otherwise
-   * @throws SelfregException
    */
-  boolean lostPw(String id) throws SelfregException;
+  boolean lostPw(String id);
 
   /** Called with the confId sent by lostPw
-   * @param confid
+   * @param confId supplied by system
    * @return true for valid confId else false
-   * @throws SelfregException
    */
-  boolean confirmPwChange(String confid) throws SelfregException;
+  boolean confirmPwChange(String confId);
 
   /** Called with the confId sent by lostPw
    *
-   * @param confid
-   * @param newPw
+   * @param confId supplied by system
+   * @param newPw password
    * @return true for valid confId else false
-   * @throws SelfregException
    */
-  boolean confirmPwChange(String confid,
-                          String newPw) throws SelfregException;
+  boolean confirmPwChange(String confId,
+                          String newPw);
 
-  /* ========================================================================
+  /* ==============================================================
    * Service interface methods
-   * ======================================================================== */
+   * ============================================================== */
 
   /** Create an account. Used by the service interface
-   * @param accountName
-   * @param firstName
-   * @param lastName
-   * @param email
-   * @param pw
+   *
+   * @param accountName non-null if allowed to specify
+   * @param firstName users first
+   * @param lastName users last
+   * @param email their email
+   * @param pw pw they want
+   *
    * @return true if created OK - false if exists
-   * @throws SelfregException
    */
   boolean createAccount(String accountName,
                         String firstName,
                         String lastName,
                         String email,
                         String pw,
-                        String encodedPw) throws SelfregException;
+                        String encodedPw);
 
   /** Display an account
    *
-   * @param account
+   * @param account for user
    * @return message or displayable information
-   * @throws SelfregException
    */
-  public String displayAccount(String account) throws SelfregException;
+  String displayAccount(String account);
 
   /** Set account password
    *
-   * @param account
-   * @param password
-   * @throws SelfregException
+   * @param account for user
+   * @param password for user
    */
-  public void setUserPassword(String account,
-                                String password) throws SelfregException;
+  void setUserPassword(String account,
+                       String password);
 
   /** Add a group
    *
-   * @param group
-   * @param account
+   * @param group name
+   * @param account for user
    * @return true if created OK - false if exists
-   * @throws SelfregException
    */
-  public boolean createGroup(String group,
-                             String account) throws SelfregException;
+  boolean createGroup(String group,
+                      String account);
 
   /** Add a group member
    *
-   * @param group
-   * @param account
-   * @throws SelfregException
+   * @param group name
+   * @param account for user
    */
-  public void addGroupMember(String group,
-                             String account) throws SelfregException;
+  void addGroupMember(String group,
+                      String account);
 }

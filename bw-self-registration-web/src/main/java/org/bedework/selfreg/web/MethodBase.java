@@ -41,6 +41,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -64,24 +65,22 @@ public abstract class MethodBase implements Logged {
 
   private DirMaint dm;
 
-  private ObjectMapper om = new ObjectMapper();
+  private final ObjectMapper om = new ObjectMapper();
   
   private ServletContext context;
 
   /** Called at each request
    *
-   * @throws SelfregException
    */
-  public abstract void init() throws SelfregException;
+  public abstract void init();
 
   /** Called at each request
    *
-   * @param dumpContent
-   * @throws SelfregException
+   * @param dumpContent true for dump of content - requires a wrapper
    */
   public void init(final SelfregConfigProperties config,
                    final ServletContext context,
-                   final boolean dumpContent) throws SelfregException {
+                   final boolean dumpContent) {
     this.config = config;
     this.dumpContent = dumpContent;
     this.context = context;
@@ -94,8 +93,8 @@ public abstract class MethodBase implements Logged {
   }
 
   protected boolean verifyCaptcha(final HttpServletRequest req)
-    throws SelfregException {
-    PooledHttpClient cl = null;
+    {
+    final PooledHttpClient cl;
     try {
       cl = new PooledHttpClient(
               new URI("https://www.google.com/recaptcha/api/siteverify"));
@@ -110,7 +109,7 @@ public abstract class MethodBase implements Logged {
       final StringEntity content =
               new UrlEncodedFormEntity(nvps, Consts.UTF_8);
 
-      final ResponseHolder resp = cl.post("",
+      final ResponseHolder<Boolean> resp = cl.post("",
                                      content,
                                      this::processResponse);
 
@@ -118,14 +117,14 @@ public abstract class MethodBase implements Logged {
         return false;
       }
 
-      return (Boolean)resp.response;
+      return resp.response;
     } catch (final Throwable t) {
       throw new SelfregException(t);
     }
   }
 
-  final ResponseHolder processResponse(final String path,
-                                       final CloseableHttpResponse resp) {
+  final ResponseHolder<?> processResponse(final String path,
+                                          final CloseableHttpResponse resp) {
     try {
       final int status = HttpUtil.getStatus(resp);
 
@@ -141,44 +140,40 @@ public abstract class MethodBase implements Logged {
 
       final InputStream is = resp.getEntity().getContent();
 
-      final Map vals = (Map)om.readValue(is,
-                                         Object.class);
+      final Map<?, ?> vals = (Map<?, ?>)om.readValue(is,
+                                                     Object.class);
 
       final Object o = vals.get("success");
 
-      final boolean success = (o != null) &&
-              (o instanceof Boolean) &&
+      final Boolean sb = (o instanceof Boolean) &&
               (Boolean)o;
-
-      Boolean sb = success;
       return new ResponseHolder(sb);
     } catch (final Throwable t) {
       return new ResponseHolder(t);
     }
   }
 
-  private SimpleDateFormat httpDateFormatter =
+  private final SimpleDateFormat httpDateFormatter =
       new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss ");
 
   /**
-   * @param req
-   * @param resp
-   * @throws SelfregException
+   * @param req http request
+   * @param resp http response
    */
   public abstract void doMethod(HttpServletRequest req,
                                 HttpServletResponse resp)
-        throws SelfregException;
+       ;
 
   /** Allow servlet to create method.
    */
   public static class MethodInfo {
-    private Class<? extends MethodBase> methodClass;
+    private final Class<? extends MethodBase> methodClass;
 
-    private boolean requiresAuth;
+    private final boolean requiresAuth;
 
     /**
-     * @param methodClass
-     * @param requiresAuth
+     * @param methodClass class of th emethod
+     * @param requiresAuth true for auth needed
      */
     public MethodInfo(final Class<? extends MethodBase> methodClass,
                       final boolean requiresAuth) {
@@ -215,13 +210,12 @@ public abstract class MethodBase implements Logged {
    *
    * @param req      Servlet request object
    * @return List    Path elements of fixed up uri
-   * @throws SelfregException
    */
   public List<String> getResourceUri(final HttpServletRequest req)
-      throws SelfregException {
+      {
     String uri = req.getServletPath();
 
-    if ((uri == null) || (uri.length() == 0)) {
+    if ((uri == null) || (uri.isEmpty())) {
       /* No path specified - set it to root. */
       uri = "/";
     }
@@ -231,22 +225,21 @@ public abstract class MethodBase implements Logged {
 
   /** Return a path, broken into its elements, after "." and ".." are removed.
    * If the parameter path attempts to go above the root we return null.
-   *
+   * <p>
    * Other than the backslash thing why not use URI?
    *
    * @param path      String path to be fixed
    * @return String[]   fixed path broken into elements
-   * @throws SelfregException
    */
-  public static List<String> fixPath(final String path) throws SelfregException {
+  public static List<String> fixPath(final String path) {
     if (path == null) {
       return null;
     }
 
     String decoded;
     try {
-      decoded = URLDecoder.decode(path, "UTF8");
-    } catch (Throwable t) {
+      decoded = URLDecoder.decode(path, StandardCharsets.UTF_8);
+    } catch (final Throwable t) {
       throw new SelfregException("bad path: " + path);
     }
 
@@ -254,38 +247,40 @@ public abstract class MethodBase implements Logged {
       return (null);
     }
 
-    /** Make any backslashes into forward slashes.
+    /* Make any backslashes into forward slashes.
      */
     if (decoded.indexOf('\\') >= 0) {
       decoded = decoded.replace('\\', '/');
     }
 
-    /** Ensure a leading '/'
+    /* Ensure a leading '/'
      */
     if (!decoded.startsWith("/")) {
       decoded = "/" + decoded;
     }
 
-    /** Remove all instances of '//'.
+    /* Remove all instances of '//'.
      */
-    while (decoded.indexOf("//") >= 0) {
+    while (decoded.contains("//")) {
       decoded = decoded.replaceAll("//", "/");
     }
 
-    /** Somewhere we may have /./ or /../
+    /* Somewhere we may have /./ or /../
      */
 
-    StringTokenizer st = new StringTokenizer(decoded, "/");
+    final StringTokenizer st = new StringTokenizer(decoded, "/");
 
-    ArrayList<String> al = new ArrayList<String>();
+    final ArrayList<String> al = new ArrayList<>();
     while (st.hasMoreTokens()) {
-      String s = st.nextToken();
+      final String s = st.nextToken();
 
       if (s.equals(".")) {
-        // ignore
-      } else if (s.equals("..")) {
+        continue;
+      }
+
+      if (s.equals("..")) {
         // Back up 1
-        if (al.size() == 0) {
+        if (al.isEmpty()) {
           // back too far
           return null;
         }
@@ -299,7 +294,7 @@ public abstract class MethodBase implements Logged {
     return al;
   }
 
-  protected void addHeaders(final HttpServletResponse resp) throws SelfregException {
+  protected void addHeaders(final HttpServletResponse resp) {
     // This probably needs changes
 /*
     StringBuilder methods = new StringBuilder();
@@ -321,19 +316,30 @@ public abstract class MethodBase implements Logged {
    * @param req        Servlet request object
    * @param resp       Servlet response object for bad status
    * @return Document  Parsed body or null for no body
-   * @exception Throwable Some error occurred.
    */
   protected Document parseContent(final HttpServletRequest req,
-                                  final HttpServletResponse resp)
-      throws SelfregException {
-    int len = req.getContentLength();
+                                  final HttpServletResponse resp) {
+    final int len = req.getContentLength();
     if (len == 0) {
       return null;
     }
 
     try {
-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      final DocumentBuilderFactory factory =
+              DocumentBuilderFactory.newInstance();
       factory.setNamespaceAware(true);
+      factory.setFeature(
+              "http://javax.xml.XMLConstants/feature/secure-processing",
+              true);
+      factory.setFeature(
+              "http://xml.org/sax/features/external-general-entities",
+              false);
+      factory.setFeature(
+              "http://xml.org/sax/features/external-parameter-entities",
+              false);
+      factory.setAttribute(
+              "http://apache.org/xml/features/nonvalidating/load-external-dtd",
+              false);
 
       //DocumentBuilder builder = factory.newDocumentBuilder();
 /*
@@ -349,7 +355,7 @@ public abstract class MethodBase implements Logged {
 //    } catch (SAXException e) {
   //    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     //  throw new SynchException(HttpServletResponse.SC_BAD_REQUEST);
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       throw new SelfregException(t);
     }
@@ -414,7 +420,7 @@ public abstract class MethodBase implements Logged {
     }
   }
 
-  protected DirMaint getDir() throws SelfregException {
+  protected DirMaint getDir() {
     if (dm != null) {
       return dm;
     }
@@ -426,11 +432,11 @@ public abstract class MethodBase implements Logged {
     return dm;
   }
 
-  /* ====================================================================
+  /* ==============================================================
    *                   Logged methods
-   * ==================================================================== */
+   * ============================================================== */
 
-  private BwLogger logger = new BwLogger();
+  private final BwLogger logger = new BwLogger();
 
   @Override
   public BwLogger getLogger() {

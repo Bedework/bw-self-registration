@@ -22,6 +22,7 @@ import org.bedework.selfreg.common.exception.SelfregException;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Objects;
 import java.util.Properties;
 
 import javax.naming.Context;
@@ -66,11 +67,11 @@ public class LdapDirectory extends Directory {
 
   /** */
   public static class LdapSearchResult extends DirSearchResult {
-    NamingEnumeration recs;
+    NamingEnumeration<?> recs;
     String base;
 
     @Override
-    public DirRecord nextRecord() throws SelfregException {
+    public DirRecord nextRecord() {
       try {
         SearchResult s = null;
 
@@ -89,7 +90,7 @@ public class LdapDirectory extends Directory {
           if (s == null) {
             try {
               recs.close();
-            } catch (Exception e) {};
+            } catch (final Exception ignored) {}
 
             recs = null;
           }
@@ -99,12 +100,12 @@ public class LdapDirectory extends Directory {
           return null;
         }
 
-        DirRecord rec = new BasicDirRecord(s.getAttributes());
+        final DirRecord rec = new BasicDirRecord(s.getAttributes());
 
         rec.setName(s.getName());
 
         return rec;
-      } catch (Throwable t) {
+      } catch (final Throwable t) {
         throw new SelfregException(t);
       }
     }
@@ -116,20 +117,20 @@ public class LdapDirectory extends Directory {
   }
 
   /**
-   * @param pr
-   * @param mngrDN
-   * @param pw
-   * @throws SelfregException
+   * @param pr properties
+   * @param mngrDN management dn
+   * @param pw password
    */
-  public LdapDirectory(final Properties pr, final String mngrDN,
-                       final String pw) throws SelfregException {
+  public LdapDirectory(final Properties pr,
+                       final String mngrDN,
+                       final String pw) {
     super(pr, mngrDN, pw);
   }
 
   @Override
   public void init(final Properties pr,
                    final String mngrDN,
-                   final String pw) throws SelfregException {
+                   final String pw) {
     if (pr == null) {
       throw new SelfregException("No properties supplied");
     }
@@ -140,7 +141,7 @@ public class LdapDirectory extends Directory {
   }
 
   @Override
-  public void reInit() throws SelfregException {
+  public void reInit() {
     try {
       /* If we weren't given a url try to get one.
        */
@@ -169,23 +170,24 @@ public class LdapDirectory extends Directory {
       if (debug()) {
         debug("Directory: init OK " + pr.get(Context.PROVIDER_URL));
       }
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       throw new SelfregException(t);
     }
   }
 
   @Override
-  public void destroy(final String dn) throws SelfregException {
+  public void destroy(final String dn) {
     try {
       ctx.destroySubcontext(dn);
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       throw new SelfregException(t);
     }
   }
 
   @Override
-  public DirSearchResult search(final String base, String filter,
-                                final int scope) throws SelfregException {
+  public DirSearchResult search(final String base,
+                                final String filter,
+                                final int scope) {
     if (debug()) {
       debug("About to search: base=" + base + " filter=" + filter +
                " scope=" + scope);
@@ -198,22 +200,22 @@ public class LdapDirectory extends Directory {
     constraints.setCountLimit(1000);
 
     try {
-      if (filter == null) {
-        filter = "(objectClass=*)";
-      }
+      final String theFilter =
+              Objects.requireNonNullElse(filter,
+                                         "(objectClass=*)");
 
-      sres.recs = ctx.search(base, filter, constraints);
+      sres.recs = ctx.search(base, theFilter, constraints);
 
       if ((sres.recs == null) || !sres.recs.hasMore()) {
         sres = null;
       }
-    } catch (NameNotFoundException e) {
+    } catch (final NameNotFoundException e) {
       // Allow that one.
       if (debug()) {
         debug("NameNotFoundException: return with null");
       }
       sres = null;
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       throw new SelfregException(t);
     }
 
@@ -221,13 +223,13 @@ public class LdapDirectory extends Directory {
   }
 
   @Override
-  public boolean create(final DirRecord rec) throws SelfregException {
+  public boolean create(final DirRecord rec) {
     try {
       ctx.createSubcontext(rec.getDn(), rec.getAttributes());
       return true;
-    } catch (NameAlreadyBoundException nabe) {
+    } catch (final NameAlreadyBoundException nabe) {
       return false;
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       throw new SelfregException(t);
     }
   }
@@ -235,11 +237,11 @@ public class LdapDirectory extends Directory {
   @Override
   public void replace(final String dn,
                       final String attrName,
-                      final Object val) throws SelfregException {
+                      final Object val) {
     try {
-      BasicAttributes attrs = new BasicAttributes(attrName, val);
+      final BasicAttributes attrs = new BasicAttributes(attrName, val);
       ctx.modifyAttributes(dn, DirContext.REPLACE_ATTRIBUTE, attrs);
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       throw new SelfregException(t);
     }
   }
@@ -247,16 +249,16 @@ public class LdapDirectory extends Directory {
   @Override
   public void replace(final String dn,
                       final String attrName,
-                      final Object[] val) throws SelfregException {
+                      final Object[] val) {
     try {
-      BasicAttributes attrs = new BasicAttributes();
-      BasicAttribute attr = new BasicAttribute(attrName);
+      final BasicAttributes attrs = new BasicAttributes();
+      final BasicAttribute attr = new BasicAttribute(attrName);
 
-      for (Object o: val) {
+      for (final Object o: val) {
         attr.add(o);
       }
       ctx.modifyAttributes(dn, DirContext.REPLACE_ATTRIBUTE, attrs);
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       throw new SelfregException(t);
     }
   }
@@ -265,34 +267,34 @@ public class LdapDirectory extends Directory {
   public void replace(final String dn,
                       final String attrName,
                       final Object oldval,
-                      final Object newval) throws SelfregException {
+                      final Object newval) {
     throw new SelfregException("ldap replace(old, new) not implemented");
   }
 
   @Override
-  public void modify(final String dn, final ModificationItem[] mods) throws SelfregException {
+  public void modify(final String dn, final ModificationItem[] mods) {
     try {
       ctx.modifyAttributes(dn, mods);
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       throw new SelfregException(t);
     }
   }
 
   @Override
-  public Properties getEnvironment() throws SelfregException {
+  public Properties getEnvironment() {
     try {
-      Properties pr = new Properties();
+      final Properties pr = new Properties();
 
-      Hashtable<?, ?> tbl = ctx.getEnvironment();
-      Enumeration e = tbl.keys();
+      final Hashtable<?, ?> tbl = ctx.getEnvironment();
+      final Enumeration<?> e = tbl.keys();
       while (e.hasMoreElements()) {
-        String name = (String)e.nextElement();
-        String val = (String)tbl.get(name);
+        final String name = (String)e.nextElement();
+        final String val = (String)tbl.get(name);
 
         pr.put(name, val);
       }
       return pr;
-    } catch (Throwable t) {
+    } catch (final Throwable t) {
       throw new SelfregException(t);
     }
   }
@@ -302,7 +304,7 @@ public class LdapDirectory extends Directory {
     if (ctx != null) {
       try {
         ctx.close();
-      } catch (Exception e) {};
+      } catch (final Exception ignored) {}
 
       ctx = null;
     }
@@ -311,12 +313,14 @@ public class LdapDirectory extends Directory {
   /** If the named property is present and has a value use that.
    *  Otherwise, set the value to the given default and use that.
    *
-   * @param pr
-   * @param name
-   * @param defaultVal
+   * @param pr properties
+   * @param name of property
+   * @param defaultVal if property absent
    * @return String
    */
-  public String checkProp(final Properties pr, final String name, final String defaultVal) {
+  public String checkProp(final Properties pr,
+                          final String name,
+                          final String defaultVal) {
     String val = pr.getProperty(name);
 
     if (val == null) {

@@ -34,7 +34,6 @@ public class PostMethod extends MethodBase {
   public void init() throws SelfregException {
   }
 
-  @SuppressWarnings({"unchecked"})
   @Override
   public void doMethod(final HttpServletRequest req,
                        final HttpServletResponse resp) throws SelfregException {
@@ -49,24 +48,23 @@ public class PostMethod extends MethodBase {
 
       final String action = resourceUri.get(0);
 
-      if (action.equals("newid")) {
-        processNewid(req, resp);
-        return;
-      }
-
-      if (action.equals("fid")) {
-        processForgotid(req, resp);
-        return;
-      }
-
-      if (action.equals("fpw")) {
-        processForgotpw(req, resp);
-        return;
-      }
-
-      if (action.equals("setpw")) {
-        processSetpw(req, resp);
-        return;
+      switch (action) {
+        case "newid" -> {
+          processNewid(req, resp);
+          return;
+        }
+        case "fid" -> {
+          processForgotid(req, resp);
+          return;
+        }
+        case "fpw" -> {
+          processForgotpw(req, resp);
+          return;
+        }
+        case "setpw" -> {
+          processSetpw(req, resp);
+          return;
+        }
       }
 
       if (debug()) {

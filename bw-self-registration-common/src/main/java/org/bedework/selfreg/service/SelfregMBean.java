@@ -32,24 +32,24 @@ public interface SelfregMBean extends ConfBaseMBean,
         SelfregConfigProperties {
   /** Export schema to database?
    *
-   * @param val
+   * @param val Export schema to database?
    */
-  public void setExport(boolean val);
+  void setExport(boolean val);
 
   /**
    * @return true for export schema
    */
   @MBeanInfo("Export (write) schema to database?")
-  public boolean getExport();
+  boolean getExport();
 
-  /* ========================================================================
+  /* ==============================================================
    * Operations
-   * ======================================================================== */
+   * ============================================================== */
 
   /** Create or dump new schema. If export and drop set will try to drop tables.
    * Export and create will create a schema in the db and export, drop, create
    * will drop tables, and try to create  anew schema.
-   *
+   * <p>
    * The export, create and drop flags will all be reset to false after this,
    * whatever the result. This avoids accidental damage to the db.
    *
@@ -67,19 +67,19 @@ public interface SelfregMBean extends ConfBaseMBean,
 
   /** Display request status
    *
-   * @param confid
+   * @param confId supplied by system
    * @return status
    */
   @MBeanInfo("Display request status")
-  String displayRequest(@MBeanInfo("Confid")String confid);
+  String displayRequest(@MBeanInfo("Confid")String confId);
 
   /** Add a user
    *
-   * @param account
-   * @param first
-   * @param last
-   * @param email
-   * @param password
+   * @param account non-null if allowed to specify
+   * @param first users first
+   * @param last users last
+   * @param email their email
+   * @param password pw they want
    * @return status
    */
   @MBeanInfo("Add a user")
@@ -91,7 +91,7 @@ public interface SelfregMBean extends ConfBaseMBean,
 
   /** Display a user
    *
-   * @param account
+   * @param account for user
    * @return status
    */
   @MBeanInfo("Display a user")
@@ -99,8 +99,8 @@ public interface SelfregMBean extends ConfBaseMBean,
 
   /** Set a user password
    *
-   * @param account
-   * @param password
+   * @param account for user
+   * @param password for user
    * @return status
    */
   @MBeanInfo("Set a user password")
@@ -109,7 +109,7 @@ public interface SelfregMBean extends ConfBaseMBean,
 
   /** Remove a user
    *
-   * @param account
+   * @param account for user
    * @return status
    */
   @MBeanInfo("Remove a user")
@@ -117,8 +117,8 @@ public interface SelfregMBean extends ConfBaseMBean,
 
   /** Add a group
    *
-   * @param group
-   * @param account
+   * @param group name
+   * @param account for user
    * @return status
    */
   @MBeanInfo("Add a group")
@@ -127,8 +127,8 @@ public interface SelfregMBean extends ConfBaseMBean,
 
   /** Add a group member
    *
-   * @param group
-   * @param account
+   * @param group name
+   * @param account for user
    * @return status
    */
   @MBeanInfo("Add a group member")

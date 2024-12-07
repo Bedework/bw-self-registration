@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class GetMethod extends MethodBase {
   @Override
-  public void init() throws SelfregException {
+  public void init() {
   }
   
   private final static Set<String> validActions = new TreeSet<>();
@@ -48,10 +48,9 @@ public class GetMethod extends MethodBase {
     validActions.add("confirmed");
   }
 
-  @SuppressWarnings({"unchecked"})
   @Override
   public void doMethod(final HttpServletRequest req,
-                       final HttpServletResponse resp) throws SelfregException {
+                       final HttpServletResponse resp) {
     try {
       final List<String> resourceUri = getResourceUri(req);
 
@@ -105,7 +104,7 @@ public class GetMethod extends MethodBase {
   }
 
   private void processConfirm(final HttpServletRequest req,
-                              final HttpServletResponse resp) throws SelfregException {
+                              final HttpServletResponse resp) {
     final ReqUtil rutil = new ReqUtil(req, resp);
 
     final String confid = rutil.getReqPar("confid");

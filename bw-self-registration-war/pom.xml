@@ -23,7 +23,6 @@
 				<configuration>
 					<warName>${project.artifactId}</warName>
 					<baseDirPath>${project.basedir}/../..</baseDirPath>
-					<propsPath>${org.bedework.deployment.properties}</propsPath>
 				</configuration>
 			</plugin>
 		</plugins>

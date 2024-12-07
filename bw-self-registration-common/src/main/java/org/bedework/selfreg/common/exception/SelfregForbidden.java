@@ -34,7 +34,7 @@ public class SelfregForbidden extends SelfregException {
   }
 
   /** Constructor
-   * @param msg
+   * @param msg a message
    */
   public SelfregForbidden(final String msg) {
     super(HttpServletResponse.SC_FORBIDDEN, msg);
@@ -42,7 +42,7 @@ public class SelfregForbidden extends SelfregException {
 
   /** Constructor
    *
-   * @param errorTag
+   * @param errorTag for response
    */
   public SelfregForbidden(final QName errorTag) {
     super(HttpServletResponse.SC_FORBIDDEN, errorTag);
@@ -50,8 +50,8 @@ public class SelfregForbidden extends SelfregException {
 
   /** Constructor
    *
-   * @param errorTag
-   * @param msg
+   * @param errorTag for response
+   * @param msg a message
    */
   public SelfregForbidden(final QName errorTag, final String msg) {
     super(HttpServletResponse.SC_FORBIDDEN, errorTag, msg);

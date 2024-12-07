@@ -21,7 +21,6 @@ package org.bedework.selfreg.common.dir;
 import org.bedework.util.misc.ToString;
 
 import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.BasicAttributes;
@@ -38,14 +37,14 @@ public class BasicDirRecord extends DirRecord {
   }
 
   /** Create a record with the given attributes.
-   * @param attrs
+   * @param attrs Attributes
    */
   public BasicDirRecord(final Attributes attrs) {
     this.attrs = attrs;
   }
 
   @Override
-  public Attributes getAttributes() throws NamingException {
+  public Attributes getAttributes() {
     if (attrs == null) {
       attrs = new BasicAttributes(true);
     }
@@ -61,17 +60,18 @@ public class BasicDirRecord extends DirRecord {
 
   @Override
   public String toString() {
-    ToString ts = ToString.valuesOnly();
+    final ToString ts = ToString.valuesOnly();
 
     try {
-      NamingEnumeration<? extends Attribute> ne = getAttributes().getAll();
+      final NamingEnumeration<? extends Attribute> ne =
+              getAttributes().getAll();
 
       while (ne.hasMore()) {
         ts.append(ne.next());
         ts.newLine();
       }
-    } catch (Throwable t) {
-      ts.append("Exception",  t.getMessage());
+    } catch (final Throwable t) {
+      ts.append(t);
     }
 
     return ts.toString();

@@ -18,6 +18,7 @@
 */
 package org.bedework.selfreg.web;
 
+import org.bedework.selfreg.common.exception.SelfregException;
 import org.bedework.selfreg.service.Selfreg;
 import org.bedework.selfreg.web.MethodBase.MethodInfo;
 import org.bedework.util.jmx.ConfBase;
@@ -58,7 +59,7 @@ public class SelfregServlet extends HttpServlet
 
   /** Table of methods - set at init
    */
-  protected HashMap<String, MethodInfo> methods = new HashMap<String, MethodInfo>();
+  protected HashMap<String, MethodInfo> methods = new HashMap<>();
 
   /* Try to serialize requests from a single session
    * This is very imperfect.
@@ -68,7 +69,7 @@ public class SelfregServlet extends HttpServlet
     int waiting;
   }
 
-  private static volatile HashMap<String, Waiter> waiters = new HashMap<String, Waiter>();
+  private static final HashMap<String, Waiter> waiters = new HashMap<>();
 
   @Override
   public void init(final ServletConfig config) throws ServletException {
@@ -82,7 +83,7 @@ public class SelfregServlet extends HttpServlet
   @Override
   protected void service(final HttpServletRequest req,
                          HttpServletResponse resp)
-          throws ServletException, IOException {
+          throws IOException {
     boolean serverError = false;
 
     try {
@@ -115,9 +116,9 @@ public class SelfregServlet extends HttpServlet
       if (method == null) {
         debug("No method for '" + methodName + "'");
 
-        // ================================================================
+        // ========================================================
         //     Set the correct response
-        // ================================================================
+        // ========================================================
       } else {
         method.doMethod(req, resp);
       }
@@ -126,25 +127,25 @@ public class SelfregServlet extends HttpServlet
     } finally {
       try {
         tryWait(req, false);
-      } catch (Throwable t) {}
+      } catch (final Throwable ignored) {}
 
       if (debug() && dumpContent &&
               (resp instanceof CharArrayWrappedResponse)) {
         /* instanceof check because we might get a subsequent exception before
          * we wrap the response
          */
-        CharArrayWrappedResponse wresp = (CharArrayWrappedResponse)resp;
+        final CharArrayWrappedResponse wresp = (CharArrayWrappedResponse)resp;
 
         if (wresp.getUsedOutputStream()) {
           debug("------------------------ response written to output stream -------------------");
         } else {
-          String str = wresp.toString();
+          final String str = wresp.toString();
 
           debug("------------------------ Dump of response -------------------");
           debug(str);
           debug("---------------------- End dump of response -----------------");
 
-          byte[] bs = str.getBytes();
+          final byte[] bs = str.getBytes();
           resp = (HttpServletResponse)wresp.getResponse();
           debug("contentLength=" + bs.length);
           resp.setContentLength(bs.length);
@@ -154,11 +155,11 @@ public class SelfregServlet extends HttpServlet
 
       /* WebDAV is stateless - toss away the session */
       try {
-        HttpSession sess = req.getSession(false);
+        final HttpSession sess = req.getSession(false);
         if (sess != null) {
           sess.invalidate();
         }
-      } catch (Throwable t) {}
+      } catch (final Throwable ignored) {}
     }
   }
 
@@ -174,7 +175,7 @@ public class SelfregServlet extends HttpServlet
       getLogger().error(t);
       sendError(t, resp);
       return true;
-    } catch (Throwable t1) {
+    } catch (final Throwable t1) {
       // Pretty much screwed if we get here
       return true;
     }
@@ -188,7 +189,7 @@ public class SelfregServlet extends HttpServlet
       }
       resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                      t.getMessage());
-    } catch (Throwable t1) {
+    } catch (final Throwable t1) {
       // Pretty much screwed if we get here
     }
   }
@@ -197,7 +198,7 @@ public class SelfregServlet extends HttpServlet
                             final String extra,
                             final Writer wtr) {
     try {
-      XmlEmit xml = new XmlEmit();
+      final XmlEmit xml = new XmlEmit();
 //      syncher.addNamespace(xml);
 
       xml.startEmit(wtr);
@@ -209,7 +210,7 @@ public class SelfregServlet extends HttpServlet
       xml.flush();
 
       return true;
-    } catch (Throwable t1) {
+    } catch (final Throwable t1) {
       // Pretty much screwed if we get here
       return false;
     }
@@ -241,12 +242,11 @@ public class SelfregServlet extends HttpServlet
   }
 
   /**
-   * @param name
+   * @param name of method
    * @return method
-   * @throws Exception
    */
-  public MethodBase getMethod(final String name) throws Exception {
-    MethodInfo mi = methods.get(name.toUpperCase());
+  public MethodBase getMethod(final String name) {
+    final MethodInfo mi = methods.get(name.toUpperCase());
 
 //    if ((mi == null) || (getAnonymous() && mi.getRequiresAuth())) {
     //    return null;
@@ -264,16 +264,16 @@ public class SelfregServlet extends HttpServlet
       if (debug()) {
         error(t);
       }
-      throw new Exception(t);
+      throw new SelfregException(t);
     }
   }
 
   private void tryWait(final HttpServletRequest req,
-                       final boolean in) throws Throwable {
-    Waiter wtr = null;
+                       final boolean in) throws InterruptedException {
+    Waiter wtr;
     synchronized (waiters) {
       //String key = req.getRequestedSessionId();
-      String key = req.getRemoteUser();
+      final String key = req.getRemoteUser();
       if (key == null) {
         return;
       }
@@ -311,20 +311,14 @@ public class SelfregServlet extends HttpServlet
     }
   }
 
-  /* (non-Javadoc)
-   * @see javax.servlet.http.HttpSessionListener#sessionCreated(javax.servlet.http.HttpSessionEvent)
-   */
   @Override
   public void sessionCreated(final HttpSessionEvent se) {
   }
 
-  /* (non-Javadoc)
-   * @see javax.servlet.http.HttpSessionListener#sessionDestroyed(javax.servlet.http.HttpSessionEvent)
-   */
   @Override
   public void sessionDestroyed(final HttpSessionEvent se) {
-    HttpSession session = se.getSession();
-    String sessid = session.getId();
+    final HttpSession session = se.getSession();
+    final String sessid = session.getId();
     if (sessid == null) {
       return;
     }
@@ -336,23 +330,23 @@ public class SelfregServlet extends HttpServlet
 
   /** Debug
    *
-   * @param req
+   * @param req http request
    */
   public void dumpRequest(final HttpServletRequest req) {
     try {
-      Enumeration names = req.getHeaderNames();
+      final Enumeration<String> hnames = req.getHeaderNames();
 
       String title = "Request headers";
 
       debug(title);
 
-      while (names.hasMoreElements()) {
-        String key = (String)names.nextElement();
-        String val = req.getHeader(key);
+      while (hnames.hasMoreElements()) {
+        final String key = hnames.nextElement();
+        final String val = req.getHeader(key);
         debug("  " + key + " = \"" + val + "\"");
       }
 
-      names = req.getParameterNames();
+      final Enumeration<String> pnames = req.getParameterNames();
 
       title = "Request parameters";
 
@@ -370,16 +364,16 @@ public class SelfregServlet extends HttpServlet
 
       debug(title);
 
-      while (names.hasMoreElements()) {
-        String key = (String)names.nextElement();
-        String val = req.getParameter(key);
+      while (pnames.hasMoreElements()) {
+        final String key = pnames.nextElement();
+        final String val = req.getParameter(key);
         debug("  " + key + " = \"" + val + "\"");
       }
-    } catch (Throwable t) {
+    } catch (final Throwable ignored) {
     }
   }
 
-  /* -----------------------------------------------------------------------
+  /* --------------------------------------------------------------
    *                         JMX support
    */
 
@@ -408,7 +402,7 @@ public class SelfregServlet extends HttpServlet
 
         selfreg.loadConfig();
 //        selfreg.start();
-      } catch (Throwable t){
+      } catch (final Throwable t){
         t.printStackTrace();
       }
     }
@@ -418,13 +412,13 @@ public class SelfregServlet extends HttpServlet
       try {
 //        selfreg.stop();
         getManagementContext().stop();
-      } catch (Throwable t){
+      } catch (final Throwable t){
         t.printStackTrace();
       }
     }
   }
 
-  private static Configurator conf = new Configurator();
+  private static final Configurator conf = new Configurator();
 
   @Override
   public void contextInitialized(final ServletContextEvent sce) {
@@ -436,11 +430,11 @@ public class SelfregServlet extends HttpServlet
     conf.stop();
   }
 
-  /* ====================================================================
+  /* ==============================================================
    *                   Logged methods
-   * ==================================================================== */
+   * ============================================================== */
 
-  private BwLogger logger = new BwLogger();
+  private final BwLogger logger = new BwLogger();
 
   @Override
   public BwLogger getLogger() {

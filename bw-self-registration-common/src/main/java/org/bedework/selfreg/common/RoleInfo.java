@@ -22,7 +22,7 @@ import org.bedework.util.misc.ToString;
 
 /** This isn't used other than to create a table so that the jboss
  * module works without errors.
- *
+ * <br/>
  * User: mike Date: 8/31/15 Time: 17:04
  */
 public class RoleInfo {

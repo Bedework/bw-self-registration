@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
  *
  *   @author Mike Douglass   douglm@rpi.edu
  */
-public class SelfregException extends Throwable {
+public class SelfregException extends RuntimeException {
   /** > 0 if set
    */
   int statusCode = -1;
@@ -35,29 +35,25 @@ public class SelfregException extends Throwable {
 
   /** Constructor
    *
-   * @param s
+   * @param msg a message
    */
-  public SelfregException(final String s) {
-    super(s);
-    if (statusCode < 0) {
-      statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-    }
+  public SelfregException(final String msg) {
+    super(msg);
+    statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
   }
 
   /** Constructor
    *
-   * @param t
+   * @param t Throwable
    */
   public SelfregException(final Throwable t) {
     super(t);
-    if (statusCode < 0) {
-      statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-    }
+    statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
   }
 
   /** Constructor
    *
-   * @param st
+   * @param st status code
    */
   public SelfregException(final int st) {
     statusCode = st;
@@ -65,8 +61,8 @@ public class SelfregException extends Throwable {
 
   /** Constructor
    *
-   * @param st
-   * @param msg
+   * @param st status code
+   * @param msg a message
    */
   public SelfregException(final int st, final String msg) {
     super(msg);
@@ -75,7 +71,7 @@ public class SelfregException extends Throwable {
 
   /** Constructor
    *
-   * @param errorTag
+   * @param errorTag for response
    */
   public SelfregException(final QName errorTag) {
     statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
@@ -84,8 +80,8 @@ public class SelfregException extends Throwable {
 
   /** Constructor
    *
-   * @param st
-   * @param errorTag
+   * @param st status code
+   * @param errorTag for response
    */
   public SelfregException(final int st, final QName errorTag) {
     statusCode = st;
@@ -94,9 +90,9 @@ public class SelfregException extends Throwable {
 
   /** Constructor
    *
-   * @param st
-   * @param errorTag
-   * @param msg
+   * @param st status code
+   * @param errorTag for response
+   * @param msg a message
    */
   public SelfregException(final int st, final QName errorTag, final String msg) {
     super(msg);

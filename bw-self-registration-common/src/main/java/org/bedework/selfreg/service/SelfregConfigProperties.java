@@ -29,11 +29,11 @@ import org.bedework.util.jmx.MBeanInfo;
  */
 @ConfInfo(elementName = "selfreg")
 public interface SelfregConfigProperties extends HibernateConfigI {
-  /** True if accounts should be copied to ldap
+  /**
    *
-   * @param val
+   * @param val True if accounts should be copied to ldap
    */
-  void setUseLdap(final boolean val);
+  void setUseLdap(boolean val);
 
   /**
    * @return boolean True if accounts should be copied to ldap
@@ -45,7 +45,7 @@ public interface SelfregConfigProperties extends HibernateConfigI {
    *
    * @param val the value
    */
-  void setLdapUrl(final String val);
+  void setLdapUrl(String val);
 
   /**
    * @return String
@@ -55,9 +55,9 @@ public interface SelfregConfigProperties extends HibernateConfigI {
 
   /**
    *
-   * @param val
+   * @param val base dn
    */
-  void setBaseDn(final String val);
+  void setBaseDn(String val);
 
   /**
    * @return String
@@ -67,9 +67,9 @@ public interface SelfregConfigProperties extends HibernateConfigI {
 
   /**
    *
-   * @param val
+   * @param val accounts ou
    */
-  void setAccountsOu(final String val);
+  void setAccountsOu(String val);
 
   /**
    * @return String
@@ -79,9 +79,9 @@ public interface SelfregConfigProperties extends HibernateConfigI {
 
   /**
    *
-   * @param val
+   * @param val Ldap accounts dn
    */
-  void setAccountsDn(final String val);
+  void setAccountsDn(String val);
 
   /**
    * @return String
@@ -91,9 +91,9 @@ public interface SelfregConfigProperties extends HibernateConfigI {
 
   /**
    *
-   * @param val
+   * @param val Ldap accounts attribute
    */
-  void setAccountsAttr(final String val);
+  void setAccountsAttr(String val);
 
   /**
    * @return String
@@ -105,7 +105,7 @@ public interface SelfregConfigProperties extends HibernateConfigI {
    *
    * @param val an ou
    */
-  void setGroupsOu(final String val);
+  void setGroupsOu(String val);
 
   /**
    * @return String
@@ -117,7 +117,7 @@ public interface SelfregConfigProperties extends HibernateConfigI {
    *
    * @param val dn
    */
-  void setGroupsDn(final String val);
+  void setGroupsDn(String val);
 
   /**
    * @return String
@@ -129,7 +129,7 @@ public interface SelfregConfigProperties extends HibernateConfigI {
    *
    * @param val ldap attr 
    */
-  void setGroupsAttr(final String val);
+  void setGroupsAttr(String val);
 
   /**
    * @return String
@@ -141,7 +141,7 @@ public interface SelfregConfigProperties extends HibernateConfigI {
    *
    * @param val an id
    */
-  void setAdminId(final String val);
+  void setAdminId(String val);
 
   /**
    * @return String
@@ -153,7 +153,7 @@ public interface SelfregConfigProperties extends HibernateConfigI {
    *
    * @param val a password
    */
-  void setAdminPw(final String val);
+  void setAdminPw(String val);
 
   /**
    * @return String
@@ -165,7 +165,7 @@ public interface SelfregConfigProperties extends HibernateConfigI {
    *
    * @param val valid protocol for which an implementation exists, e.g "imap", "smtp"
    */
-  void setMailProtocol(final String val);
+  void setMailProtocol(String val);
 
   /**
    * @return String valid protocol for which an implementation exists, e.g "imap", "smtp"
@@ -177,7 +177,7 @@ public interface SelfregConfigProperties extends HibernateConfigI {
    *
    * @param val Implementation for the selected protocol
    */
-  void setMailProtocolClass(final String val);
+  void setMailProtocolClass(String val);
 
   /**
    * @return String
@@ -187,9 +187,9 @@ public interface SelfregConfigProperties extends HibernateConfigI {
 
   /** Where we send it.
    *
-   * @param val
+   * @param val Mail server ip
    */
-  void setMailServerHost(final String val);
+  void setMailServerHost(String val);
 
   /**
    * @return String
@@ -198,9 +198,9 @@ public interface SelfregConfigProperties extends HibernateConfigI {
   String getMailServerHost();
 
   /**
-   * @param val
+   * @param val Mail server port
    */
-  void setMailServerPort(final String val);
+  void setMailServerPort(String val);
 
   /**
    * @return String
@@ -212,7 +212,7 @@ public interface SelfregConfigProperties extends HibernateConfigI {
    *
    * @param val mail server account
    */
-  void setMailServerAccount(final String val);
+  void setMailServerAccount(String val);
 
   /**
    * @return String
@@ -224,7 +224,7 @@ public interface SelfregConfigProperties extends HibernateConfigI {
    *
    * @param val mail server pw
    */
-  void setMailServerPw(final String val);
+  void setMailServerPw(String val);
 
   /**
    * @return String
@@ -234,9 +234,9 @@ public interface SelfregConfigProperties extends HibernateConfigI {
 
   /** Mailer:
    *
-   * @param val
+   * @param val Mail 'from'
    */
-  void setMailFrom(final String val);
+  void setMailFrom(String val);
 
   /** Mailer:
    /**
@@ -247,9 +247,9 @@ public interface SelfregConfigProperties extends HibernateConfigI {
 
   /** Mailer: Subject we use when none supplied
    *
-   * @param val
+   * @param val Mailer: Subject we use when none supplied
    */
-  void setMailSubject(final String val);
+  void setMailSubject(String val);
 
   /**
    * @return String
@@ -259,9 +259,9 @@ public interface SelfregConfigProperties extends HibernateConfigI {
 
   /** Allow mailer to be disabled
    *
-   * @param val
+   * @param val Allow mailer to be disabled
    */
-  void setMailDisabled(final boolean val);
+  void setMailDisabled(boolean val);
 
   /**
    * @return boolean

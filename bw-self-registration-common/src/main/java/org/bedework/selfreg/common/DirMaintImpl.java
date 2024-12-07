@@ -92,7 +92,7 @@ public class DirMaintImpl implements Logged, DirMaint {
                           final String lastName,
                           final String email,
                           final String account,
-                          final String pw) throws SelfregException {
+                          final String pw) {
     final AccountInfo ainfo = new AccountInfo();
 
     setConfid(ainfo);
@@ -122,13 +122,13 @@ public class DirMaintImpl implements Logged, DirMaint {
           id = "";
         }
 
-        if ((firstName == null) || (firstName.length() == 0)) {
+        if ((firstName == null) || (firstName.isEmpty())) {
           return "Missing fields";
         }
 
         id += firstName.substring(0, 1).toLowerCase();
 
-        if ((lastName == null) || (lastName.length() == 0)) {
+        if ((lastName == null) || (lastName.isEmpty())) {
           id += "x";
         } else {
           id += lastName.substring(0, 1).toLowerCase();
@@ -179,7 +179,7 @@ public class DirMaintImpl implements Logged, DirMaint {
                       "Otherwise, click on, or copy and paste into your browser, " +
                       "the confirmation link below.\n" +
                       "\n" +
-                      builder.toString() + "\n");
+                      builder + "\n");
     } catch (final Throwable t) {
       error(t);
       return t.getLocalizedMessage();
@@ -190,7 +190,7 @@ public class DirMaintImpl implements Logged, DirMaint {
   }
 
   @Override
-  public String sendAccount(final String email) throws SelfregException {
+  public String sendAccount(final String email) {
     final AccountInfo ainfo = getAccountByEmail(email);
 
     if (ainfo == null) {
@@ -225,7 +225,7 @@ public class DirMaintImpl implements Logged, DirMaint {
   }
 
   @Override
-  public String sendForgotpw(final String account) throws SelfregException {
+  public String sendForgotpw(final String account) {
     try {
       db.startTransaction();
 
@@ -262,7 +262,7 @@ public class DirMaintImpl implements Logged, DirMaint {
                         "Otherwise, click on, or copy and paste into your browser, " +
                         "the confirmation link below.\n" +
                         "\n" +
-                        builder.toString() + "\n");
+                        builder + "\n");
       } catch (final Throwable t) {
         error(t);
         return t.getLocalizedMessage();
@@ -277,7 +277,7 @@ public class DirMaintImpl implements Logged, DirMaint {
 
   @Override
   public String setpw(final String confid,
-                      final String pw)  throws SelfregException {
+                      final String pw)  {
     try {
       db.startTransaction();
 
@@ -332,7 +332,7 @@ public class DirMaintImpl implements Logged, DirMaint {
 
   @Override
   public AccountInfo getAccount(final String account)
-          throws SelfregException {
+          {
     try {
       db.startTransaction();
       return db.getAccount(account);
@@ -343,7 +343,7 @@ public class DirMaintImpl implements Logged, DirMaint {
 
   @Override
   public AccountInfo getAccountByConfid(final String confId)
-          throws SelfregException {
+          {
     try {
       db.startTransaction();
       return db.getAccountByConfid(confId);
@@ -353,7 +353,7 @@ public class DirMaintImpl implements Logged, DirMaint {
   }
 
   @Override
-  public AccountInfo getAccountByEmail(final String email) throws SelfregException {
+  public AccountInfo getAccountByEmail(final String email) {
     try {
       db.startTransaction();
       return db.getAccountByEmail(email);
@@ -364,7 +364,7 @@ public class DirMaintImpl implements Logged, DirMaint {
 
   @Override
   public boolean deleteAccount(final String confId)
-          throws SelfregException {
+          {
     try {
       db.startTransaction();
       final AccountInfo ainfo = db.getAccountByConfid(confId);
@@ -382,7 +382,7 @@ public class DirMaintImpl implements Logged, DirMaint {
   }
 
   @Override
-  public String confirm(final String confId) throws SelfregException {
+  public String confirm(final String confId) {
     try {
       db.startTransaction();
       final AccountInfo ainfo = db.getAccountByConfid(confId);
@@ -445,26 +445,26 @@ public class DirMaintImpl implements Logged, DirMaint {
   }
 
   @Override
-  public boolean lostId(final String email) throws SelfregException {
+  public boolean lostId(final String email) {
     // TODO Auto-generated method stub
     return false;
   }
 
   @Override
-  public boolean lostPw(final String id) throws SelfregException {
+  public boolean lostPw(final String id) {
     // TODO Auto-generated method stub
     return false;
   }
 
   @Override
-  public boolean confirmPwChange(final String confid) throws SelfregException {
+  public boolean confirmPwChange(final String confid) {
     // TODO Auto-generated method stub
     return false;
   }
 
   @Override
   public boolean confirmPwChange(final String confid,
-                                 final String newPw) throws SelfregException {
+                                 final String newPw) {
     // TODO Auto-generated method stub
     return false;
   }
@@ -480,7 +480,7 @@ public class DirMaintImpl implements Logged, DirMaint {
                                final String lastName,
                                final String email,
                                final String pw,
-                               final String encodedPw) throws SelfregException {
+                               final String encodedPw) {
     if (config.getUseLdap()) {
       return createLdapAccount(accountName,
                                firstName,
@@ -540,7 +540,7 @@ public class DirMaintImpl implements Logged, DirMaint {
                                     final String lastName,
                                     final String email,
                                     final String pw,
-                                    final String encodedPw) throws SelfregException {
+                                    final String encodedPw) {
     try {
       /* Build a directory record and add the attributes
        */
@@ -593,10 +593,9 @@ public class DirMaintImpl implements Logged, DirMaint {
    *
    * @param account the account
    * @return boolean
-   * @throws SelfregException
    */
   @Override
-  public String displayAccount(final String account) throws SelfregException {
+  public String displayAccount(final String account) {
     final String search = "(&(" +
             config.getAccountsAttr() +
             "=" +
@@ -621,7 +620,7 @@ public class DirMaintImpl implements Logged, DirMaint {
 
   @Override
   public void setUserPassword(final String account,
-                              final String password) throws SelfregException {
+                              final String password) {
     final BasicAttribute attr =
             new BasicAttribute("userPassword",
                                encodedPassword(password, true));
@@ -634,7 +633,7 @@ public class DirMaintImpl implements Logged, DirMaint {
 
   @Override
   public boolean createGroup(final String group,
-                             final String account) throws SelfregException {
+                             final String account) {
     try {
       final DirRecord dirRec = new BasicDirRecord();
 
@@ -655,7 +654,7 @@ public class DirMaintImpl implements Logged, DirMaint {
 
   @Override
   public void addGroupMember(final String group,
-                               final String account) throws SelfregException {
+                               final String account) {
     //if (!accountExists(account)) {
     //  error("Account " + account + " does not exist");
     //}
@@ -683,7 +682,7 @@ public class DirMaintImpl implements Logged, DirMaint {
         config.getGroupsDn();
   }
 
-  private LdapDirectory getLdir() throws SelfregException {
+  private LdapDirectory getLdir() {
     try {
       if (ldir != null) {
         return ldir;
@@ -703,7 +702,7 @@ public class DirMaintImpl implements Logged, DirMaint {
   }
 
   private String encodedPassword(final String pw,
-                                 final boolean ldap) throws SelfregException {
+                                 final boolean ldap) {
     try {
       /*
       final MessageDigest md = MessageDigest.getInstance(pwEncryption);
@@ -744,7 +743,7 @@ public class DirMaintImpl implements Logged, DirMaint {
 
   private boolean sendConfirm(final String text,
                               final String subject,
-                              final String email) throws SelfregException {
+                              final String email) {
     if (email == null) {
       return false;
     }
@@ -763,7 +762,7 @@ public class DirMaintImpl implements Logged, DirMaint {
     return true;
   }
 
-  private MailerIntf getMailer() throws SelfregException {
+  private MailerIntf getMailer() {
     if (mailer == null) {
       mailer = new Mailer();
 
@@ -773,11 +772,11 @@ public class DirMaintImpl implements Logged, DirMaint {
     return mailer;
   }
 
-  /* ====================================================================
+  /* ==============================================================
    *                   Logged methods
-   * ==================================================================== */
+   * ============================================================== */
 
-  private BwLogger logger = new BwLogger();
+  private final BwLogger logger = new BwLogger();
 
   @Override
   public BwLogger getLogger() {

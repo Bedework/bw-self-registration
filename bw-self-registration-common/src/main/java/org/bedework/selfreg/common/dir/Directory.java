@@ -24,7 +24,6 @@ import org.bedework.util.logging.Logged;
 
 import java.util.Properties;
 
-import javax.naming.NamingException;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 
@@ -65,25 +64,24 @@ public abstract class Directory implements Logged {
   }
 
   /**
-   * @param pr
-   * @param mngrDN
-   * @param pw
-   * @throws SelfregException on fatal error
+   * @param pr properties
+   * @param mngrDN management dn
+   * @param pw password
    */
-  public Directory(final Properties pr, final String mngrDN,
-                   final String pw) throws SelfregException {
+  public Directory(final Properties pr,
+                   final String mngrDN,
+                   final String pw) {
     init(pr, mngrDN, pw);
   }
 
   /**
-   * @param pr
-   * @param mngrDN
-   * @param pw
-   * @throws SelfregException on fatal error
+   * @param pr properties
+   * @param mngrDN management dn
+   * @param pw password
    */
   public void init(final Properties pr,
                    final String mngrDN,
-                   final String pw) throws SelfregException {
+                   final String pw) {
     if (pr == null) {
       this.pr = new Properties();
     } else {
@@ -98,10 +96,9 @@ public abstract class Directory implements Logged {
   public abstract void reInit() throws SelfregException;
 
   /**
-   * @param dn
-   * @throws SelfregException on fatal error
+   * @param dn distinguished name
    */
-  public abstract void destroy(String dn) throws SelfregException;
+  public abstract void destroy(String dn);
 
   /* These define the values used for scope parameters
    */
@@ -115,122 +112,118 @@ public abstract class Directory implements Logged {
 
   /** Carry out a subtree search
    *
-   * @param base
-   * @param filter
+   * @param base search base
+   * @param filter for search
    * @return DirSearchResult
-   * @throws SelfregException on fatal error
    */
-  public DirSearchResult search(final String base, final String filter) throws SelfregException {
+  public DirSearchResult search(final String base,
+                                final String filter) {
     return search(base, filter, scopeSub);
   }
 
   /** Carry out a base level search. This should be the default if the scope
    *  is not specified.
    *
-   * @param base
-   * @param filter
+   * @param base search base
+   * @param filter for search
    * @return DirSearchResult or null
-   * @throws SelfregException on fatal error
    */
-  public DirSearchResult searchBase(final String base, final String filter) throws SelfregException {
+  public DirSearchResult searchBase(final String base,
+                                    final String filter) {
     return search(base, filter, scopeBase);
   }
 
   /** Carry out a one level search
    *
-   * @param base
-   * @param filter
+   * @param base search base
+   * @param filter for search
    * @return DirSearchResult
-   * @throws SelfregException on fatal error
    */
-  public DirSearchResult searchOne(final String base, final String filter) throws SelfregException {
+  public DirSearchResult searchOne(final String base, final String filter) {
     return search(base, filter, scopeOne);
   }
 
   /** Carry out a search with specified scope.
    *
-   * @param base
-   * @param filter
-   * @param scope
+   * @param base search base
+   * @param filter for search
+   * @param scope for search
    * @return DirSearchResult null means no record(s) found.
-   * @throws SelfregException on fatal error
    */
-  public abstract DirSearchResult search(String base, String filter, int scope)
-      throws SelfregException;
+  public abstract DirSearchResult search(String base, String filter, int scope);
 
   /** newRecord - Return a record which can have attribute values added.
    *  create should be called to create the directory entry.
    *
-   * @param entryDn
+   * @param entryDn new dn
    * @return DirRecord
-   * @throws NamingException
    */
-  public DirRecord newRecord(final String entryDn) throws NamingException {
-    DirRecord rec = new BasicDirRecord();
+  public DirRecord newRecord(final String entryDn) {
+    final DirRecord rec = new BasicDirRecord();
     rec.setDn(entryDn);
     return rec;
   }
 
   /**
-   * @param rec
+   * @param rec to create
    * @return boolean true if created, false if already exists
-   * @throws SelfregException on fatal error
    */
-  public abstract boolean create(DirRecord rec) throws SelfregException;
+  public abstract boolean create(DirRecord rec);
 
   /* The replace methods modify a directory record in the directory.
    */
 
   /** Replace an entire attribute with one containing only the given value
    *
-   * @param dn
-   * @param attrName
-   * @param val
-   * @throws SelfregException on fatal error
+   * @param dn a dn
+   * @param attrName for attribute
+   * @param val new single value
    */
-  public abstract void replace(String dn, String attrName, Object val) throws SelfregException;
+  public abstract void replace(String dn,
+                               String attrName,
+                               Object val);
 
   /** Replace an entire attribute with one containing only the given values
    *
-   * @param dn
-   * @param attrName
-   * @param val
-   * @throws SelfregException on fatal error
+   * @param dn a dn
+   * @param attrName for attribute
+   * @param val new multiple values
    */
-  public abstract void replace(String dn, String attrName, Object[] val) throws SelfregException;
+  public abstract void replace(String dn,
+                               String attrName,
+                               Object[] val);
 
   /** Replace a single given attribute value with the given value
    *
-   * @param dn
-   * @param attrName
-   * @param oldval
-   * @param newval
-   * @throws SelfregException on fatal error
+   * @param dn a dn
+   * @param attrName for attribute
+   * @param oldval to replace
+   * @param newval with this
    */
-  public abstract void replace(String dn, String attrName, Object oldval,
-                               Object newval) throws SelfregException;
+  public abstract void replace(String dn,
+                               String attrName,
+                               Object oldval,
+                               Object newval);
 
   /**
-   * @param dn
-   * @param mods
-   * @throws SelfregException on fatal error
+   * @param dn a dn
+   * @param mods modifications
    */
-  public abstract void modify(String dn, ModificationItem[] mods) throws SelfregException;
+  public abstract void modify(String dn, ModificationItem[] mods);
 
   /**
    * @return Properties
-   * @throws SelfregException on fatal error
    */
-  public abstract Properties getEnvironment() throws SelfregException;
+  public abstract Properties getEnvironment();
 
   /**
    *
    */
   public abstract void close();
 
-  /* ====================================================================
+  /* ==============================================================
    *                   Logged methods
-   * ==================================================================== */
+   * ============================================================== */
 
   private final BwLogger logger = new BwLogger();
 

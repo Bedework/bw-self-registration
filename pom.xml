@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.bedework</groupId>
     <artifactId>bedework-parent</artifactId>
-    <version>64</version>
+    <version>86</version>
   </parent>
 
 	<groupId>org.bedework.selfreg</groupId>
