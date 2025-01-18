@@ -18,7 +18,7 @@
 */
 package org.bedework.selfreg.common;
 
-import org.bedework.util.misc.ToString;
+import org.bedework.base.ToString;
 
 import java.io.Serializable;
 

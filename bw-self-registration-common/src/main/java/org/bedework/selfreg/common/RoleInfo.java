@@ -18,7 +18,7 @@
 */
 package org.bedework.selfreg.common;
 
-import org.bedework.util.misc.ToString;
+import org.bedework.base.ToString;
 
 /** This isn't used other than to create a table so that the jboss
  * module works without errors.
