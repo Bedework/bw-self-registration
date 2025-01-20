@@ -18,9 +18,9 @@
 */
 package org.bedework.selfreg.common;
 
+import org.bedework.base.exc.BedeworkException;
 import org.bedework.selfreg.common.exception.SelfregException;
 import org.bedework.util.config.HibernateConfigI;
-import org.bedework.util.hibernate.HibException;
 import org.bedework.util.hibernate.HibSession;
 import org.bedework.util.hibernate.HibSessionFactory;
 import org.bedework.util.hibernate.HibSessionImpl;
@@ -92,8 +92,8 @@ public class Persisted implements Logged {
         if (!sess.rolledback()) {
           sess.commit();
         }
-      } catch (final HibException he) {
-        throw new SelfregException(he);
+      } catch (final BedeworkException e) {
+        throw new SelfregException(e);
       }
     } catch (final SelfregException ne) {
       try {
@@ -118,8 +118,8 @@ public class Persisted implements Logged {
       sess.setString("account", account);
 
       return (AccountInfo)sess.getUnique();
-    } catch (final HibException he) {
-      throw new SelfregException(he);
+    } catch (final BedeworkException e) {
+      throw new SelfregException(e);
     }
   }
 
@@ -133,8 +133,8 @@ public class Persisted implements Logged {
       sess.setString("confid", confid);
 
       return (AccountInfo)sess.getUnique();
-    } catch (final HibException he) {
-      throw new SelfregException(he);
+    } catch (final BedeworkException e) {
+      throw new SelfregException(e);
     }
   }
 
@@ -158,8 +158,8 @@ public class Persisted implements Logged {
       }
 
       return (AccountInfo)l.get(0);
-    } catch (final HibException he) {
-      throw new SelfregException(he);
+    } catch (final BedeworkException e) {
+      throw new SelfregException(e);
     }
   }
 
@@ -172,8 +172,8 @@ public class Persisted implements Logged {
 
     try {
       sess.save(val);
-    } catch (final HibException he) {
-      throw new SelfregException(he);
+    } catch (final BedeworkException e) {
+      throw new SelfregException(e);
     }
   }
 
@@ -203,16 +203,16 @@ public class Persisted implements Logged {
       }
 
       return total;
-    } catch (final HibException he) {
-      throw new SelfregException(he);
+    } catch (final BedeworkException e) {
+      throw new SelfregException(e);
     }
   }
 
   public void addRole(final RoleInfo val) {
     try {
       sess.save(val);
-    } catch (final HibException he) {
-      throw new SelfregException(he);
+    } catch (final BedeworkException e) {
+      throw new SelfregException(e);
     }
   }
 
@@ -221,8 +221,8 @@ public class Persisted implements Logged {
 
     try {
       sess.update(val);
-    } catch (final HibException he) {
-      throw new SelfregException(he);
+    } catch (final BedeworkException e) {
+      throw new SelfregException(e);
     }
   }
 
@@ -256,8 +256,8 @@ public class Persisted implements Logged {
       if (ri != null) {
         sess.delete(ri);
       }
-    } catch (final HibException he) {
-      throw new SelfregException(he);
+    } catch (final BedeworkException e) {
+      throw new SelfregException(e);
     }
   }
 
@@ -302,8 +302,8 @@ public class Persisted implements Logged {
         sess.init(sessionFactory);
         debug("Open session for " + sessionCt);
       }
-    } catch (final HibException he) {
-      throw new SelfregException(he);
+    } catch (final BedeworkException e) {
+      throw new SelfregException(e);
     }
 
     beginTransaction();
@@ -331,7 +331,7 @@ public class Persisted implements Logged {
         if (sess.transactionStarted()) {
           sess.rollback();
         }
-//        sess.disconnect();
+
         sess.close();
         sess = null;
       }
@@ -353,8 +353,8 @@ public class Persisted implements Logged {
     }
     try {
       sess.beginTransaction();
-    } catch (final HibException he) {
-      throw new SelfregException(he);
+    } catch (final BedeworkException e) {
+      throw new SelfregException(e);
     }
   }
 
@@ -362,8 +362,8 @@ public class Persisted implements Logged {
     try {
       checkOpen();
       sess.rollback();
-    } catch (final HibException he) {
-      throw new SelfregException(he);
+    } catch (final BedeworkException e) {
+      throw new SelfregException(e);
     }
   }
 
