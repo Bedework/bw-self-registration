@@ -19,11 +19,11 @@
 package org.bedework.selfreg.common;
 
 import org.bedework.base.exc.BedeworkException;
-import org.bedework.selfreg.common.exception.SelfregException;
-import org.bedework.util.config.HibernateConfigI;
-import org.bedework.database.hibernate.HibSession;
+import org.bedework.database.db.DbSession;
 import org.bedework.database.hibernate.HibSessionFactory;
 import org.bedework.database.hibernate.HibSessionImpl;
+import org.bedework.selfreg.common.exception.SelfregException;
+import org.bedework.util.config.HibernateConfigI;
 import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
@@ -56,9 +56,9 @@ public class Persisted implements Logged {
    */
   private static SessionFactory sessionFactory;
 
-  /** Current hibernate session - exists only across one user interaction
+  /** Current database session - exists only across one user interaction
    */
-  protected HibSession sess;
+  protected DbSession sess;
 
   protected ObjectMapper mapper = new ObjectMapper(); // create once, reuse
 
