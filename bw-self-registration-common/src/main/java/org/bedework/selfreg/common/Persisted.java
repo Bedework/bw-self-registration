@@ -109,8 +109,8 @@ public class Persisted implements Logged {
   }
 
   private static final String findByAccountQuery =
-          "from " + AccountInfo.class.getName() +
-                  " a where a.account=:account";
+          "select a from AccountInfo a " +
+                  "where a.account=:account";
 
   public AccountInfo getAccount(final String account) {
     try {
@@ -124,8 +124,8 @@ public class Persisted implements Logged {
   }
 
   private static final String findByConfidQuery =
-          "from " + AccountInfo.class.getName() +
-                  " a where a.confid=:confid";
+          "select a from AccountInfo a " +
+                  "where a.confid=:confid";
 
   public AccountInfo getAccountByConfid(final String confid) {
     try {
@@ -139,8 +139,8 @@ public class Persisted implements Logged {
   }
 
   private static final String findByEmailQuery =
-          "from " + AccountInfo.class.getName() +
-                  " a where a.email=:email";
+          "select a from AccountInfo a " +
+                  "where a.email=:email";
 
   public AccountInfo getAccountByEmail(final String email) {
     try {
@@ -171,20 +171,20 @@ public class Persisted implements Logged {
     validate(val);
 
     try {
-      sess.save(val);
+      sess.add(val);
     } catch (final BedeworkException e) {
       throw new SelfregException(e);
     }
   }
 
   private static final String countQuery =
-          "select count(*) from " + AccountInfo.class.getName();
+          "select count(*) from AccountInfo";
 
   public long numAccounts() {
     try {
       sess.createQuery(countQuery);
       @SuppressWarnings("unchecked")
-      final Collection<Long> counts = sess.getList();
+      final Collection<Long> counts = (Collection<Long>)sess.getList();
 
       long total = 0;
 
@@ -210,7 +210,7 @@ public class Persisted implements Logged {
 
   public void addRole(final RoleInfo val) {
     try {
-      sess.save(val);
+      sess.add(val);
     } catch (final BedeworkException e) {
       throw new SelfregException(e);
     }
@@ -241,8 +241,8 @@ public class Persisted implements Logged {
   }
 
   private static final String findRoleByAccountQuery =
-          "from " + RoleInfo.class.getName() +
-                  " r where r.account=:account";
+          "select r from RoleInfo r " +
+                  "where r.account=:account";
 
   public void removeAccount(final AccountInfo val) {
     try {
