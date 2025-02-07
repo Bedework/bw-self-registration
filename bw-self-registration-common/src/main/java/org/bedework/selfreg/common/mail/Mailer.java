@@ -29,14 +29,14 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Properties;
 
-import javax.activation.CommandMap;
-import javax.activation.MailcapCommandMap;
-import javax.mail.Authenticator;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import jakarta.activation.CommandMap;
+import jakarta.activation.MailcapCommandMap;
+import jakarta.mail.Authenticator;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 
 /** A mailer which provides some minimal functionality for testing.
  * We do not consider many issues such as spam prevention, efficiency in
@@ -130,7 +130,7 @@ public class Mailer implements Logged, MailerIntf {
         i++;
       }
 
-      msg.setRecipients(javax.mail.Message.RecipientType.TO, tos);
+      msg.setRecipients(jakarta.mail.Message.RecipientType.TO, tos);
 
       msg.setSubject(val.getSubject());
       msg.setSentDate(new Date());

@@ -20,7 +20,7 @@ package org.bedework.selfreg.common;
 
 import org.bedework.base.exc.BedeworkException;
 import org.bedework.database.db.DbSession;
-import org.bedework.database.hibernate.HibSessionFactory;
+import org.bedework.database.hibernate.HibSessionFactoryProvider;
 import org.bedework.database.hibernate.HibSessionImpl;
 import org.bedework.selfreg.common.exception.SelfregException;
 import org.bedework.util.config.HibernateConfigI;
@@ -278,7 +278,7 @@ public class Persisted implements Logged {
 
     try {
       if (sessionFactory == null) {
-        sessionFactory = HibSessionFactory.
+        sessionFactory = HibSessionFactoryProvider.
                 getSessionFactory(config.getHibernateProperties());
       }
 
