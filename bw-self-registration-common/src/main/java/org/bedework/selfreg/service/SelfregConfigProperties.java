@@ -19,7 +19,7 @@
 package org.bedework.selfreg.service;
 
 import org.bedework.util.config.ConfInfo;
-import org.bedework.util.config.HibernateConfigI;
+import org.bedework.util.config.OrmConfigI;
 import org.bedework.util.jmx.MBeanInfo;
 
 /** Properties for mailers.
@@ -28,7 +28,7 @@ import org.bedework.util.jmx.MBeanInfo;
  *
  */
 @ConfInfo(elementName = "selfreg")
-public interface SelfregConfigProperties extends HibernateConfigI {
+public interface SelfregConfigProperties extends OrmConfigI {
   /**
    *
    * @param val True if accounts should be copied to ldap

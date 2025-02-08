@@ -423,13 +423,13 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
    * ======================================================================== */
 
   @Override
-  public void setHibernateProperties(final List<String> val) {
-    getConfig().setHibernateProperties(val);
+  public void setOrmProperties(final List<String> val) {
+    getConfig().setOrmProperties(val);
   }
 
   @Override
-  public List<String> getHibernateProperties() {
-    return getConfig().getHibernateProperties();
+  public List<String> getOrmProperties() {
+    return getConfig().getOrmProperties();
   }
 
   @Override
@@ -443,25 +443,25 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
   }
 
   @Override
-  public void removeHibernateProperty(final String name) {
-    getConfig().removeHibernateProperty(name);
+  public void removeOrmProperty(final String name) {
+    getConfig().removeOrmProperty(name);
   }
 
   @Override
-  public void addHibernateProperty(final String name,
-                                   final String value) {
-    getConfig().addHibernateProperty(name, value);
+  public void addOrmProperty(final String name,
+                             final String value) {
+    getConfig().addOrmProperty(name, value);
   }
 
   @Override
-  public String getHibernateProperty(final String name) {
-    return getConfig().getHibernateProperty(name);
+  public String getOrmProperty(final String name) {
+    return getConfig().getOrmProperty(name);
   }
 
   @Override
-  public void setHibernateProperty(final String name,
-                                   final String value) {
-    getConfig().setHibernateProperty(name, value);
+  public void setOrmProperty(final String name,
+                             final String value) {
+    getConfig().setOrmProperty(name, value);
   }
 
   /* ========================================================================

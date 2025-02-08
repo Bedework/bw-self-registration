@@ -23,7 +23,7 @@ import org.bedework.database.db.DbSession;
 import org.bedework.database.hibernate.HibSessionFactoryProvider;
 import org.bedework.database.hibernate.HibSessionImpl;
 import org.bedework.selfreg.common.exception.SelfregException;
-import org.bedework.util.config.HibernateConfigI;
+import org.bedework.util.config.OrmConfigI;
 import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * User: mike Date: 8/31/15 Time: 17:04
  */
 public class Persisted implements Logged {
-  private final HibernateConfigI config;
+  private final OrmConfigI config;
 
   /** */
   protected boolean open;
@@ -62,7 +62,7 @@ public class Persisted implements Logged {
 
   protected ObjectMapper mapper = new ObjectMapper(); // create once, reuse
 
-  public Persisted(final HibernateConfigI config) {
+  public Persisted(final OrmConfigI config) {
     this.config = config;
   }
 
@@ -279,7 +279,7 @@ public class Persisted implements Logged {
     try {
       if (sessionFactory == null) {
         sessionFactory = HibSessionFactoryProvider.
-                getSessionFactory(config.getHibernateProperties());
+                getSessionFactory(config.getOrmProperties());
       }
 
       open = true;

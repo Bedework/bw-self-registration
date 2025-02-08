@@ -19,7 +19,7 @@
 package org.bedework.selfreg.service;
 
 import org.bedework.util.config.ConfInfo;
-import org.bedework.util.config.HibernateConfigBase;
+import org.bedework.util.config.OrmConfigBase;
 import org.bedework.util.jmx.MBeanInfo;
 
 /** Properties for mailers.
@@ -29,7 +29,7 @@ import org.bedework.util.jmx.MBeanInfo;
  */
 @ConfInfo(elementName = "selfreg")
 public class SelfregConfigPropertiesImpl
-        extends HibernateConfigBase<SelfregConfigPropertiesImpl>
+        extends OrmConfigBase<SelfregConfigPropertiesImpl>
         implements SelfregConfigProperties {
   private boolean useLdap;
 
