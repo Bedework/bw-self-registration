@@ -21,10 +21,7 @@ package org.bedework.selfreg.service;
 import org.bedework.selfreg.common.AccountInfo;
 import org.bedework.selfreg.common.DirMaint;
 import org.bedework.selfreg.common.DirMaintImpl;
-import org.bedework.database.hibernate.HibConfig;
-import org.bedework.database.hibernate.SchemaThread;
 import org.bedework.util.jmx.ConfBase;
-import org.bedework.util.jmx.InfoLines;
 import org.bedework.util.jmx.MBeanInfo;
 
 import java.util.List;
@@ -47,6 +44,7 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
    * Dump/restore
    * ============================================================== */
 
+  /* TODO redo with jpa approach
   private class SchemaBuilder extends SchemaThread {
 
     SchemaBuilder(final String outFile,
@@ -69,7 +67,7 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
   }
 
   private SchemaBuilder buildSchema;
-
+*/
   /**
    */
   public Selfreg() {
@@ -485,6 +483,8 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
 
   @Override
   public String schema() {
+    return "Unimplemented";
+    /*
     try {
       buildSchema = new SchemaBuilder(
               getSchemaOutFile(),
@@ -499,11 +499,13 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
       error(t);
 
       return "Exception: " + t.getLocalizedMessage();
-    }
+    }*/
   }
 
   @Override
   public synchronized List<String> schemaStatus() {
+    return null;
+    /*
     if (buildSchema == null) {
       final InfoLines infoLines = new InfoLines();
 
@@ -513,6 +515,7 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
     }
 
     return buildSchema.infoLines;
+     */
   }
 
   @Override
