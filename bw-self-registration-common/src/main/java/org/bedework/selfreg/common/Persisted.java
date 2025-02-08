@@ -20,15 +20,14 @@ package org.bedework.selfreg.common;
 
 import org.bedework.base.exc.BedeworkException;
 import org.bedework.database.db.DbSession;
-import org.bedework.database.hibernate.HibSessionFactoryProvider;
-import org.bedework.database.hibernate.HibSessionImpl;
+import org.bedework.database.db.DbSessionFactoryProvider;
+import org.bedework.database.db.DbSessionFactoryProviderImpl;
 import org.bedework.selfreg.common.exception.SelfregException;
 import org.bedework.util.config.OrmConfigI;
 import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hibernate.SessionFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -54,7 +53,7 @@ public class Persisted implements Logged {
 
   /* Factory used to obtain a session
    */
-  private static SessionFactory sessionFactory;
+  private static DbSessionFactoryProvider factoryProvider;
 
   /** Current database session - exists only across one user interaction
    */
@@ -277,9 +276,10 @@ public class Persisted implements Logged {
     }
 
     try {
-      if (sessionFactory == null) {
-        sessionFactory = HibSessionFactoryProvider.
-                getSessionFactory(config.getOrmProperties());
+      if (factoryProvider == null) {
+        factoryProvider =
+                new DbSessionFactoryProviderImpl()
+                        .init(config.getOrmProperties());
       }
 
       open = true;
@@ -296,10 +296,10 @@ public class Persisted implements Logged {
 
       if (sess == null) {
         if (debug()) {
-          debug("New hibernate session for " + sessionCt);
+          debug("New orm session for " + sessionCt);
         }
-        sess = new HibSessionImpl();
-        sess.init(sessionFactory);
+        sess = factoryProvider.getNewSession();
+
         debug("Open session for " + sessionCt);
       }
     } catch (final BedeworkException e) {
