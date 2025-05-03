@@ -34,7 +34,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -113,10 +112,9 @@ public class Persisted implements Logged {
 
   public AccountInfo getAccount(final String account) {
     try {
-      sess.createQuery(findByAccountQuery);
-      sess.setString("account", account);
-
-      return (AccountInfo)sess.getUnique();
+      return (AccountInfo)sess.createQuery(findByAccountQuery)
+                              .setString("account", account)
+                              .getUnique();
     } catch (final BedeworkException e) {
       throw new SelfregException(e);
     }
@@ -128,10 +126,9 @@ public class Persisted implements Logged {
 
   public AccountInfo getAccountByConfid(final String confid) {
     try {
-      sess.createQuery(findByConfidQuery);
-      sess.setString("confid", confid);
-
-      return (AccountInfo)sess.getUnique();
+      return (AccountInfo)sess.createQuery(findByConfidQuery)
+                              .setString("confid", confid)
+                              .getUnique();
     } catch (final BedeworkException e) {
       throw new SelfregException(e);
     }
@@ -143,10 +140,9 @@ public class Persisted implements Logged {
 
   public AccountInfo getAccountByEmail(final String email) {
     try {
-      sess.createQuery(findByEmailQuery);
-      sess.setString("email", email);
-
-      final List<?> l = sess.getList();
+      final var l = sess.createQuery(findByEmailQuery)
+                        .setString("email", email)
+                        .getList();
 
       if (l.isEmpty()) {
         return null;
@@ -156,7 +152,7 @@ public class Persisted implements Logged {
         error("Bad data email has multiple occurences: " + email);
       }
 
-      return (AccountInfo)l.get(0);
+      return (AccountInfo)l.getFirst();
     } catch (final BedeworkException e) {
       throw new SelfregException(e);
     }
@@ -181,9 +177,9 @@ public class Persisted implements Logged {
 
   public long numAccounts() {
     try {
-      sess.createQuery(countQuery);
       @SuppressWarnings("unchecked")
-      final Collection<Long> counts = (Collection<Long>)sess.getList();
+      final var counts = (Collection<Long>)sess.createQuery(countQuery)
+                                               .getList();
 
       long total = 0;
 
@@ -245,10 +241,10 @@ public class Persisted implements Logged {
 
   public void removeAccount(final AccountInfo val) {
     try {
-      sess.createQuery(findRoleByAccountQuery);
-      sess.setString("account", val.getAccount());
-
-      final RoleInfo ri = (RoleInfo)sess.getUnique();
+      final var ri = (RoleInfo)sess.createQuery(findRoleByAccountQuery)
+                                   .setString("account",
+                                              val.getAccount())
+                                   .getUnique();
 
       sess.delete(val);
 
@@ -260,9 +256,9 @@ public class Persisted implements Logged {
     }
   }
 
-  /* ====================================================================
+  /* ============================================================
    *                   Session methods
-   * ==================================================================== */
+   * ============================================================ */
 
   protected void checkOpen() {
     if (!isOpen()) {
