@@ -149,7 +149,7 @@ public class Persisted implements Logged {
       }
 
       if (l.size() > 1) {
-        error("Bad data email has multiple occurences: " + email);
+        error("Bad data email has multiple occurrences: " + email);
       }
 
       return (AccountInfo)l.getFirst();
