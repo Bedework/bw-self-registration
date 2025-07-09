@@ -19,7 +19,6 @@
 
 package org.bedework.selfreg.common.mail;
 
-import org.bedework.selfreg.common.exception.SelfregException;
 import org.bedework.selfreg.service.SelfregConfigProperties;
 
 import java.io.Serializable;
@@ -30,22 +29,19 @@ import java.util.Collection;
  */
 public interface MailerIntf extends Serializable {
   /**
-   * @param config
-   * @throws SelfregException
+   * @param config properties
    */
-  public void init(SelfregConfigProperties config) throws SelfregException;
+  void init(SelfregConfigProperties config);
 
   /** Return a collection of mail list ids
    *
    * @return collection of mail list ids
-   * @throws SelfregException
    */
-  public Collection<String> listLists() throws SelfregException;
+  Collection<String> listLists();
 
   /**
-   * @param val
-   * @throws SelfregException
+   * @param val email message
    */
-  public void post(Message val) throws SelfregException;
+  void post(Message val);
 }
 

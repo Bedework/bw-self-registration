@@ -319,6 +319,18 @@ public interface SelfregConfigProperties extends OrmConfigI {
 
   /**
    *
+   * @param val path to a file to write the confirm url into
+   */
+  void setTestConfirmFile(String val);
+
+  /**
+   * @return String
+   */
+  @MBeanInfo("The path to a file to write the confirm url into")
+  String getTestConfirmFile();
+
+  /**
+   *
    * @param val the message digest (SHA, MD5 etc)
    */
   void setMessageDigest(String val);

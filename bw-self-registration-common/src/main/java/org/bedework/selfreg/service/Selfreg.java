@@ -327,6 +327,16 @@ public class Selfreg extends ConfBase<SelfregConfigPropertiesImpl>
   }
 
   @Override
+  public void setTestConfirmFile(final String val) {
+    getConfig().setTestConfirmFile(val);
+  }
+
+  @Override
+  public String getTestConfirmFile() {
+    return getConfig().getTestConfirmFile();
+  }
+
+  @Override
   public void setMessageDigest(final String val) {
     getConfig().setMessageDigest(val);
   }

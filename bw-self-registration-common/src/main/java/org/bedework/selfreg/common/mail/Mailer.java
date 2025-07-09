@@ -24,11 +24,6 @@ import org.bedework.selfreg.service.SelfregConfigProperties;
 import org.bedework.util.logging.BwLogger;
 import org.bedework.util.logging.Logged;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Properties;
-
 import jakarta.activation.CommandMap;
 import jakarta.activation.MailcapCommandMap;
 import jakarta.mail.Authenticator;
@@ -37,6 +32,11 @@ import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Properties;
 
 /** A mailer which provides some minimal functionality for testing.
  * We do not consider many issues such as spam prevention, efficiency in
@@ -50,7 +50,7 @@ public class Mailer implements Logged, MailerIntf {
   private Session sess;
 
   @Override
-  public void init(final SelfregConfigProperties config) throws SelfregException {
+  public void init(final SelfregConfigProperties config) {
     this.config = config;
 
     final Properties props = new Properties();
@@ -99,13 +99,13 @@ public class Mailer implements Logged, MailerIntf {
   }
 
   @Override
-  public Collection<String> listLists() throws SelfregException {
+  public Collection<String> listLists() {
     debug("listLists called");
     return new ArrayList<>();
   }
 
   @Override
-  public void post(final Message val) throws SelfregException {
+  public void post(final Message val) {
     debug("Mailer called with:");
     debug(val.toString());
 
@@ -156,7 +156,8 @@ public class Mailer implements Logged, MailerIntf {
     }
   }
 
-  private class MailerAuthenticator extends Authenticator {
+  private static class MailerAuthenticator
+          extends Authenticator {
     private final PasswordAuthentication authentication;
 
     MailerAuthenticator(final String user, final String password) {
@@ -168,11 +169,11 @@ public class Mailer implements Logged, MailerIntf {
     }
   }
 
-  /* ====================================================================
+  /* ==================================================
    *                   Logged methods
-   * ==================================================================== */
+   * ================================================== */
 
-  private BwLogger logger = new BwLogger();
+  private final BwLogger logger = new BwLogger();
 
   @Override
   public BwLogger getLogger() {

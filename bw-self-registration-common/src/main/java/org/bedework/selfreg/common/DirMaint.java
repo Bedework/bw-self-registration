@@ -18,6 +18,7 @@
 */
 package org.bedework.selfreg.common;
 
+import org.bedework.base.response.Response;
 import org.bedework.selfreg.service.SelfregConfigProperties;
 
 /** Define methods for directory maintenance. Most methods here corrspond to
@@ -40,13 +41,13 @@ public interface DirMaint {
 	 * @param email their email
    * @param account non-null if allowed to specify
 	 * @param pw pw they want
-	 * @return null for OK or error message
+	 * @return Response: OK or error message
 	 */
-	String requestId(String firstName,
-                   String lastName,
-	                 String email,
-                   String account,
-	                 String pw);
+  Response<?> requestId(String firstName,
+                        String lastName,
+                        String email,
+                        String account,
+                        String pw);
 
   /** Send the user their account.
    *

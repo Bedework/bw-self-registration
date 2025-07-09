@@ -79,6 +79,8 @@ public class SelfregConfigPropertiesImpl
 
   private String newpwForward;
 
+  private String testConfirmFile;
+
   private String schemaOutFile;
 
   private String messageDigest;
@@ -353,6 +355,16 @@ public class SelfregConfigPropertiesImpl
   @Override
   public String getNewpwForward() {
     return newpwForward;
+  }
+
+  @Override
+  public void setTestConfirmFile(final String val) {
+    testConfirmFile = val;
+  }
+
+  @Override
+  public String getTestConfirmFile() {
+    return testConfirmFile;
   }
 
   @Override

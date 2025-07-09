@@ -18,6 +18,7 @@
 */
 package org.bedework.selfreg.common;
 
+import org.bedework.base.response.Response;
 import org.bedework.selfreg.common.dir.BasicDirRecord;
 import org.bedework.selfreg.common.dir.DirRecord;
 import org.bedework.selfreg.common.dir.Directory;
@@ -33,11 +34,12 @@ import org.bedework.util.logging.Logged;
 import org.bedework.util.security.PasswordGenerator;
 
 import org.apache.http.client.utils.URIBuilder;
-import org.jasypt.util.password.PasswordEncryptor;
 import org.jasypt.util.password.rfc2307.RFC2307MD5PasswordEncryptor;
 import org.jasypt.util.password.rfc2307.RFC2307SHAPasswordEncryptor;
 import org.jasypt.util.password.rfc2307.RFC2307SSHAPasswordEncryptor;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.Properties;
 import java.util.UUID;
@@ -46,6 +48,8 @@ import javax.naming.Context;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
+
+import static java.nio.file.StandardOpenOption.CREATE;
 
 /** Handle accounts.
  *
@@ -88,12 +92,13 @@ public class DirMaintImpl implements Logged, DirMaint {
   }
 
   @Override
-  public String requestId(final String firstName,
-                          final String lastName,
-                          final String email,
-                          final String account,
-                          final String pw) {
-    final AccountInfo ainfo = new AccountInfo();
+  public Response<?> requestId(final String firstName,
+                               final String lastName,
+                               final String email,
+                               final String account,
+                               final String pw) {
+    final var ainfo = new AccountInfo();
+    final var resp = new Response<>();
 
     setConfid(ainfo);
 
@@ -101,7 +106,8 @@ public class DirMaintImpl implements Logged, DirMaint {
       db.startTransaction();
 
       if (db.emailPresent(email)) {
-        return "Account with that email already exists";
+        return resp.error(
+                "Account with that email already exists");
       }
 
       String id;
@@ -112,7 +118,7 @@ public class DirMaintImpl implements Logged, DirMaint {
         final int pos = email.indexOf("@");
         
         if (pos < 0) {
-          return "Invalid email";
+          return resp.error("Invalid email");
         }
         
         id = email.substring(0, pos);
@@ -123,7 +129,7 @@ public class DirMaintImpl implements Logged, DirMaint {
         }
 
         if ((firstName == null) || (firstName.isEmpty())) {
-          return "Missing fields";
+          return resp.error("Missing fields");
         }
 
         id += firstName.substring(0, 1).toLowerCase();
@@ -150,7 +156,7 @@ public class DirMaintImpl implements Logged, DirMaint {
         thePw = pw;
       }
 
-      ainfo.setPw(encodedPassword(thePw, false));
+      ainfo.setPw(encodedPassword(thePw, config.getUseLdap()));
 
       db.addAccount(ainfo);
     } finally {
@@ -170,6 +176,14 @@ public class DirMaintImpl implements Logged, DirMaint {
 
       builder.addParameter("confid", ainfo.getConfid());
 
+      if (config.getTestConfirmFile() != null) {
+        Files.writeString(
+                Paths.get(config.getTestConfirmFile()),
+                builder.toString(),
+                CREATE
+        );
+      }
+
       // Should be built from a template
       msg.setContent(
               "We have a request for a new account for this email address\n" +
@@ -182,11 +196,11 @@ public class DirMaintImpl implements Logged, DirMaint {
                       builder + "\n");
     } catch (final Throwable t) {
       error(t);
-      return t.getLocalizedMessage();
+      return resp.error(t);
     }
 
     getMailer().post(msg);
-    return null;
+    return resp.ok();
   }
 
   @Override
@@ -563,7 +577,7 @@ public class DirMaintImpl implements Logged, DirMaint {
       if (pw != null) {
         dirRec.setAttr("userPassword", encodedPassword(pw, true));
       } else if (encodedPw != null) {
-        dirRec.setAttr("userPassword", encodedPw.toCharArray());
+        dirRec.setAttr("userPassword", encodedPw);
       }
 
       /* Posix account requires these but we just set them to dummy values
@@ -713,16 +727,17 @@ public class DirMaintImpl implements Logged, DirMaint {
 
       return "{" + pwEncryption + "}" + new String(b64s);
       */
-      final PasswordEncryptor encryptor;
-      if ("SSHA".equals(config.getMessageDigest())) {
-        encryptor = new RFC2307SSHAPasswordEncryptor();
-      } else if ("SHA".equals(config.getMessageDigest())) {
-        encryptor = new RFC2307SHAPasswordEncryptor();
-      } else if ("MD5".equals(config.getMessageDigest())) {
-        encryptor = new RFC2307MD5PasswordEncryptor();
-      } else {
-        throw new SelfregException("Unsupported message digest");
-      }
+      final var encryptor =
+              switch (config.getMessageDigest()) {
+                case "SSHA" ->
+                        new RFC2307SSHAPasswordEncryptor();
+                case "SHA" ->
+                        new RFC2307SHAPasswordEncryptor();
+                case "MD5" ->
+                        new RFC2307MD5PasswordEncryptor();
+                default -> throw new SelfregException(
+                        "Unsupported message digest");
+              };
 
       final String encpw = encryptor.encryptPassword(pw);
       final String prefix = "{" + config.getMessageDigest() + "}";
