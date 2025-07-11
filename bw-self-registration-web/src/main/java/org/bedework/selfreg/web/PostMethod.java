@@ -22,10 +22,10 @@ import org.bedework.selfreg.common.exception.SelfregException;
 import org.bedework.util.misc.Util;
 import org.bedework.util.servlet.ReqUtil;
 
-import java.util.List;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.util.List;
 
 /** Handle POST for selfreg servlet.
  */
@@ -46,7 +46,7 @@ public class PostMethod extends MethodBase {
         return;
       }
 
-      final String action = resourceUri.get(0);
+      final String action = resourceUri.getFirst();
 
       switch (action) {
         case "newid" -> {
@@ -107,27 +107,26 @@ public class PostMethod extends MethodBase {
         debug("Failed to create new id: missing fields");
       }
 
-      sendError(resp,
-                "Missing fields");
+      sendError(resp, "Missing fields");
       return;
     }
 
-    final String failMsg = getDir().requestId(firstName, lastName, 
-                                              email, 
-                                              rutil.getReqPar("account"),
-                                              pw);
+    final var dresp = getDir().requestId(firstName,
+                                        lastName,
+                                        email,
+                                        rutil.getReqPar("account"),
+                                        pw);
 
-    if (failMsg == null) {
+    if (dresp.isOk()) {
       sendOkJsonData(resp);
       return;
     }
 
     if (debug()) {
-      debug("Failed to create new id with reason " + failMsg);
+      debug("Failed to create new id with reason " + dresp);
     }
 
-    sendError(resp,
-              failMsg);
+    sendError(resp, dresp.getMessage());
   }
 
   private void processForgotid(final HttpServletRequest req,

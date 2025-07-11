@@ -1,0 +1,5 @@
+[[introduction]]
+== Introduction
+This project provides a self-registration service for https://www.apereo.org/projects/bedework[Bedework].
+
+

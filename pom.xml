@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.bedework</groupId>
     <artifactId>bedework-parent</artifactId>
-    <version>200-SNAPSHOT</version>
+    <version>216</version>
   </parent>
 
 	<groupId>org.bedework.selfreg</groupId>
@@ -12,8 +12,8 @@
 	<version>6.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>Bedework Self Registration: self registration service for users</name>
-  <description>Provide a self rgistration service for users.</description>
+	<name>Bedework Self Registration: self-registration service for users</name>
+  <description>Provide a self-registration service for users.</description>
   <url>https://github.com/Bedework/bw-self-registration</url>
 
 	<scm>
@@ -27,5 +27,6 @@
 		<module>bw-self-registration-common</module>
 		<module>bw-self-registration-war</module>
     <module>bw-self-registration-web</module>
-	</modules>
+    <module>bw-self-registration-asciidocs</module>
+  </modules>
 </project>

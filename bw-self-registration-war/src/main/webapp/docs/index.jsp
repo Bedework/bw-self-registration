@@ -25,7 +25,7 @@ under the License.
   <head lang="en">
     <meta charset="UTF-8">
     <title>Bedework Account Creation</title>
-    <script src="docs/resources/jquery-1.11.3.min.js" type="text/javascript">/* jQuery */</script>
+    <script type="text/javascript" src="/javascript/jquery-3/jquery-3.7.1.min.js">/* jQuery */</script>
     <script src="docs/resources/selfreg.js" type="text/javascript">/* Selfreg */</script>
     <link href="docs/resources/selfreg.css" media="screen,all" type="text/css" rel="stylesheet" />
     <link href="docs/theme/custom.css" media="screen,all" type="text/css" rel="stylesheet" />
@@ -68,7 +68,7 @@ under the License.
                 $(".contentTab").hide();
                 $("#bwMessageSent").show();
               }
-            }).error(function () {
+            }).fail(function () {
               $(".contentTab").hide();
               $("#bwRegError").show();
             });
