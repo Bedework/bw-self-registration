@@ -6,7 +6,7 @@ This project provides a self-registration service for [Bedework](https://www.ape
 
 1. JDK 21
 2. Maven 3
-3. 
+
 ## Using this project
 See documentation at [github pages for this project](https://bedework.github.io/bw-self-registration/)
 
